@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin – Infoabend Baufinanz Düren</title>
+<link rel="icon" href="/assets/favicon.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+  body { background: var(--bg-soft); }
+  .box { background: #fff; padding: 20px; border-radius: var(--radius); margin: 20px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
+  .tag { padding: 2px 8px; border-radius: 10px; font-size: .8rem; color: #fff; }
+  .confirmed { background: #2e7d32; } .waitlist { background: var(--gold); } .cancelled { background: #999; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+  .row label { flex: 1; min-width: 160px; }
+  .scroll { overflow-x: auto; }
+  td button { font-size: .8rem; padding: 3px 8px; margin: 2px 0; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 style="margin-top:24px">Infoabend – Verwaltung</h1>
+
+  <div class="box" id="login">
+    <label>Passwort<input type="password" id="pw"></label>
+    <p><button class="btn btn-gold" id="login-btn">Anmelden</button></p>
+    <p class="error" id="login-err"></p>
+  </div>
+
+  <div id="app" hidden>
+    <div class="box">
+      <h2>Einstellungen</h2>
+      <div class="row">
+        <label>Plätze gesamt<input type="number" min="0" id="total"></label>
+        <label>Max. Plätze pro Person<input type="number" min="1" id="max"></label>
+        <label class="check"><input type="checkbox" id="open"> Anmeldung geöffnet</label>
+        <button class="btn btn-gold" id="save">Speichern</button>
+      </div>
+      <p id="summary" class="seat-hint"></p>
+    </div>
+
+    <div class="box">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Anmeldungen</h2>
+        <button class="btn btn-outline" id="csv">CSV exportieren</button>
+      </div>
+      <div class="scroll"><table>
+        <thead><tr><th>Status</th><th>Datum</th><th>Name</th><th>Kontakt</th><th>Plätze</th><th>Begleitung</th><th>Adresse</th><th>Fragen</th><th>Ticket</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+<script src="/admin.js" defer></script>
+</body>
+</html>
