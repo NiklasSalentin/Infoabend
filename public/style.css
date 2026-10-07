@@ -1,8 +1,12 @@
-/* VORLÄUFIG – Farben/Schriften werden 1:1 an baufinanz-dueren.de angeglichen */
+/* CI-Farben wie AskMeSomething (fragen.baufinanz-dueren.de).
+   VORLÄUFIG: Kopf, Fuß und Schriften werden 1:1 an baufinanz-dueren.de angeglichen. */
 :root {
-  --blue: #29399a;
-  --blue-dark: #1d2a75;
-  --gold: #c09a40;
+  --blue: #223d77;          /* CI-Blau Baufinanz Düren */
+  --blue-dark: #16294f;
+  --blue-light: #2b4a8a;
+  --orange: #f0a63a;        /* Knopf „Termin vereinbaren“ */
+  --orange-text: #1a1206;   /* Schrift auf Orange */
+  --orange-dark: #a8650a;   /* kleine orange Schrift auf Weiß (lesbar) */
   --text: #333;
   --muted: #666;
   --bg-soft: #f4f5f9;
@@ -18,11 +22,12 @@ h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; }
 h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .wrap { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
 .narrow { max-width: 760px; }
-.eyebrow { text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--gold); font-size: .85rem; margin: 0 0 .5em; }
+.eyebrow { text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--orange-dark); font-size: .85rem; margin: 0 0 .5em; }
 
 .btn { display: inline-block; padding: .7em 1.4em; border-radius: var(--radius); font-weight: 700; text-decoration: none; border: 2px solid transparent; cursor: pointer; font: inherit; font-weight: 700; }
-.btn-gold { background: var(--gold); color: #fff; }
-.btn-gold:hover { filter: brightness(.92); }
+.btn-orange { background: var(--orange); color: var(--orange-text); }
+.btn-orange:hover { filter: brightness(.95); }
+.btn:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 .btn-outline { border-color: var(--blue); color: var(--blue); background: #fff; }
 .btn-lg { padding: .9em 1.8em; font-size: 1.05rem; }
 .btn-block { width: 100%; }
@@ -34,14 +39,15 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .main-nav { display: flex; gap: 20px; margin-left: auto; }
 .main-nav a { text-decoration: none; color: var(--text); font-weight: 600; }
 
-.hero { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: #fff; padding: 56px 0; }
+.hero { background: linear-gradient(135deg, var(--blue-light), var(--blue) 55%, var(--blue-dark)); color: #fff; padding: 56px 0; }
+.hero .eyebrow { color: var(--orange); }
 .hero h1, .hero .lead { color: #fff; }
 .hero-inner { display: flex; gap: 40px; align-items: center; }
 .hero-text { flex: 1; }
 .lead { font-size: 1.25rem; }
 .facts { list-style: none; padding: 0; margin: 1.2em 0; }
 .facts li { padding-left: 1.4em; position: relative; margin: .3em 0; }
-.facts li::before { content: '■'; color: var(--gold); position: absolute; left: 0; font-size: .8em; top: .2em; }
+.facts li::before { content: '■'; color: var(--orange); position: absolute; left: 0; font-size: .8em; top: .2em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.5em; }
 .hero .btn-outline { background: transparent; color: #fff; border-color: #fff; }
 .free { font-weight: 700; margin-top: 1em; }
@@ -59,7 +65,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 .magazine { max-width: 280px; justify-self: center; }
 .venue { background: #111; color: #eee; padding: 56px 0; }
 .venue h2 { color: #fff; }
-.venue a { color: var(--gold); }
+.venue a { color: var(--orange); }
 .venue-logo { max-width: 360px; justify-self: center; }
 
 .signup { background: var(--bg-soft); padding: 64px 0; }
@@ -70,7 +76,7 @@ form { background: #fff; padding: 28px; border-radius: var(--radius); box-shadow
 .span2 { grid-column: span 2; }
 label { display: block; font-weight: 600; font-size: .95rem; }
 input, select, textarea { display: block; width: 100%; margin-top: 4px; padding: .7em .8em; border: 1px solid #ccc; border-radius: var(--radius); font: inherit; font-weight: 400; }
-input:focus, select:focus, textarea:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--orange); border-color: var(--orange); }
 .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; margin: 12px 0; }
 .check input { width: auto; margin-top: .3em; }
 .check.small { font-weight: 400; font-size: .88rem; }
@@ -80,12 +86,12 @@ legend { font-weight: 700; padding: 0 6px; }
 .center { text-align: center; }
 .error { color: #b00020; font-weight: 600; min-height: 1em; }
 .hp { position: absolute; left: -9999px; }
-.result { background: #fff; padding: 28px; border-left: 6px solid var(--gold); border-radius: var(--radius); }
+.result { background: #fff; padding: 28px; border-left: 6px solid var(--orange); border-radius: var(--radius); }
 .result-cta { text-align: center; margin-top: 32px; }
 
 .site-footer { background: var(--blue); color: #fff; padding: 28px 0; }
 .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-.footer-logo { height: 44px; width: auto; background: #fff; padding: 6px; border-radius: var(--radius); }
+.footer-logo { height: 52px; width: auto; }
 .site-footer nav { display: flex; gap: 20px; }
 .site-footer a { color: #fff; }
 

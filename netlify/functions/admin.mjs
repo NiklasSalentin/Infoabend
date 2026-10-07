@@ -1,6 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
 import { db, seatStatus, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
+import { useSite } from '../lib/event.mjs';
 
 function authorized(req) {
   const expected = process.env.ADMIN_PASSWORD || '';
@@ -10,7 +11,8 @@ function authorized(req) {
 }
 
 // /api/admin – Einstellungen & Anmeldeliste (passwortgeschützt)
-export default async (req) => {
+export default async (req, context) => {
+  useSite(context);
   if (!authorized(req)) return json({ error: 'Nicht berechtigt' }, 401);
 
   if (req.method === 'GET') {

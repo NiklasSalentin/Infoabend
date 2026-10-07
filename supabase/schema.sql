@@ -29,8 +29,11 @@ create table if not exists registrations (
   address_consent boolean not null default false,
   privacy_consent boolean not null check (privacy_consent),
   questions       text,
+  source          text,  -- Werbekanal, z. B. 'zeitung', 'flyer', 'plakat' (leer = direkt)
   ticket_code     text not null unique default upper(substr(md5(random()::text), 1, 8))
 );
+
+alter table registrations add column if not exists source text;
 
 -- Pro E-Mail-Adresse genau eine aktive Anmeldung (bestätigt ODER Warteliste)
 create unique index if not exists registrations_email_active
@@ -59,11 +62,12 @@ $$;
 
 -- Atomare Buchung. Sperrt die Settings-Zeile, damit gleichzeitige Anfragen
 -- nacheinander abgearbeitet werden und nie überbucht wird.
--- Ergebnis: status = 'confirmed' | 'waitlist' | 'duplicate' | 'closed' | 'too_many'
+-- Ergebnis: status = 'confirmed' | 'waitlist' | 'full' | 'duplicate' | 'closed' | 'too_many'
+drop function if exists book_seats(text, text, text, int, text[], text, text, text, boolean, text, boolean);
 create or replace function book_seats(
   p_name text, p_email text, p_phone text, p_seats int, p_companions text[],
   p_street text, p_zip text, p_city text, p_address_consent boolean,
-  p_questions text, p_waitlist_ok boolean
+  p_questions text, p_waitlist_ok boolean, p_source text default null
 ) returns table (status text, ticket_code text, free int)
 language plpgsql as $$
 #variable_conflict use_column
@@ -100,9 +104,9 @@ begin
   end if;
 
   insert into registrations (status, name, email, phone, seats, companions,
-                             street, zip, city, address_consent, privacy_consent, questions)
+                             street, zip, city, address_consent, privacy_consent, questions, source)
   values (v_status, p_name, p_email, p_phone, p_seats, coalesce(p_companions, '{}'),
-          p_street, p_zip, p_city, p_address_consent, true, p_questions)
+          p_street, p_zip, p_city, p_address_consent, true, p_questions, p_source)
   returning registrations.ticket_code into v_code;
 
   return query select v_status, v_code,

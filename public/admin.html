@@ -13,7 +13,7 @@
   table { width: 100%; border-collapse: collapse; font-size: .88rem; }
   th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
   .tag { padding: 2px 8px; border-radius: 10px; font-size: .8rem; color: #fff; }
-  .confirmed { background: #2e7d32; } .waitlist { background: var(--gold); } .cancelled { background: #999; }
+  .confirmed { background: #2e7d32; } .waitlist { background: var(--orange); } .cancelled { background: #999; }
   .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
   .row label { flex: 1; min-width: 160px; }
   .scroll { overflow-x: auto; }
@@ -26,7 +26,7 @@
 
   <div class="box" id="login">
     <label>Passwort<input type="password" id="pw"></label>
-    <p><button class="btn btn-gold" id="login-btn">Anmelden</button></p>
+    <p><button class="btn btn-orange" id="login-btn">Anmelden</button></p>
     <p class="error" id="login-err"></p>
   </div>
 
@@ -37,9 +37,10 @@
         <label>Plätze gesamt<input type="number" min="0" id="total"></label>
         <label>Max. Plätze pro Person<input type="number" min="1" id="max"></label>
         <label class="check"><input type="checkbox" id="open"> Anmeldung geöffnet</label>
-        <button class="btn btn-gold" id="save">Speichern</button>
+        <button class="btn btn-orange" id="save">Speichern</button>
       </div>
       <p id="summary" class="seat-hint"></p>
+      <p id="sources" class="note"></p>
     </div>
 
     <div class="box">
@@ -48,7 +49,7 @@
         <button class="btn btn-outline" id="csv">CSV exportieren</button>
       </div>
       <div class="scroll"><table>
-        <thead><tr><th>Status</th><th>Datum</th><th>Name</th><th>Kontakt</th><th>Plätze</th><th>Begleitung</th><th>Adresse</th><th>Fragen</th><th>Ticket</th><th></th></tr></thead>
+        <thead><tr><th>Status</th><th>Datum</th><th>Name</th><th>Kontakt</th><th>Plätze</th><th>Begleitung</th><th>Adresse</th><th>Fragen</th><th>Quelle</th><th>Ticket</th><th></th></tr></thead>
         <tbody id="rows"></tbody>
       </table></div>
     </div>

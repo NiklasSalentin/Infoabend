@@ -36,6 +36,19 @@ async function load() {
   const wait = data.registrations.filter((r) => r.status === 'waitlist');
   $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
 
+  // Anmeldungen und Plätze je Werbekanal (nur bestätigte)
+  const bySource = {};
+  for (const r of data.registrations.filter((x) => x.status === 'confirmed')) {
+    const k = r.source || 'direkt';
+    bySource[k] = bySource[k] || { n: 0, seats: 0 };
+    bySource[k].n++;
+    bySource[k].seats += r.seats;
+  }
+  $('#sources').textContent = Object.keys(bySource).length
+    ? 'Nach Quelle: ' + Object.entries(bySource).sort((a, b) => b[1].seats - a[1].seats)
+        .map(([k, v]) => `${k}: ${v.n} Anmeldungen / ${v.seats} Plätze`).join(' · ')
+    : '';
+
   $('#rows').innerHTML = data.registrations.map((r) => `
     <tr>
       <td><span class="tag ${r.status}">${LABEL[r.status]}</span></td>
@@ -46,6 +59,7 @@ async function load() {
       <td>${esc(r.companions.join(', '))}</td>
       <td>${esc([r.street, r.zip, r.city].filter(Boolean).join(', '))}${r.address_consent ? '<br>✓ Post' : ''}</td>
       <td>${esc(r.questions)}</td>
+      <td>${esc(r.source || 'direkt')}</td>
       <td>${esc(r.ticket_code)}</td>
       <td>
         ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
@@ -75,7 +89,7 @@ $('#rows').onclick = async (e) => {
 };
 
 $('#csv').onclick = () => {
-  const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'ticket_code'];
+  const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source', 'ticket_code'];
   const cell = (v) => '"' + String(Array.isArray(v) ? v.join(', ') : v ?? '').replace(/"/g, '""') + '"';
   const csv = '﻿' + [cols.join(';'), ...data.registrations.map((r) => cols.map((c) => cell(r[c])).join(';'))].join('\n');
   const a = document.createElement('a');

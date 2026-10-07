@@ -23,29 +23,30 @@ export const esc = (s = '') =>
 
 const layout = (body) => `<!doctype html><html><body style="margin:0;background:#f4f5f9;font-family:Arial,Helvetica,sans-serif;color:#333">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-top:6px solid #29399a">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-top:6px solid #223d77">
 <tr><td style="padding:28px 32px"><img src="${siteUrl()}/assets/logo-baufinanz.png" alt="Baufinanz Düren" width="160"></td></tr>
 <tr><td style="padding:0 32px 32px;font-size:15px;line-height:1.55">${body}</td></tr>
-<tr><td style="padding:16px 32px;background:#29399a;color:#fff;font-size:12px">${EVENT.organizer} · <a href="${EVENT.imprintUrl}" style="color:#fff">Impressum</a> · <a href="${EVENT.privacyUrl}" style="color:#fff">Datenschutz</a></td></tr>
+<tr><td style="padding:16px 32px;background:#223d77;color:#fff;font-size:12px">${EVENT.organizer} · <a href="${EVENT.imprintUrl}" style="color:#fff">Impressum</a> · <a href="${EVENT.privacyUrl}" style="color:#fff">Datenschutz</a></td></tr>
 </table></td></tr></table></body></html>`;
 
-const btn = (href, label) =>
-  `<a href="${href}" style="display:inline-block;background:#29399a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:bold;margin:4px 8px 4px 0">${label}</a>`;
+// accent = oranger Knopf wie auf der Website („Termin vereinbaren“)
+const btn = (href, label, accent = false) =>
+  `<a href="${href}" style="display:inline-block;background:${accent ? '#f0a63a' : '#223d77'};color:${accent ? '#1a1206' : '#fff'};text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:bold;margin:4px 8px 4px 0">${label}</a>`;
 
 export async function sendConfirmation(reg) {
   const pdf = await invitationPdf(reg);
   const html = layout(`
-    <h1 style="color:#29399a;font-size:22px;margin:0 0 12px">Sie sind angemeldet!</h1>
+    <h1 style="color:#223d77;font-size:22px;margin:0 0 12px">Sie sind angemeldet!</h1>
     <p>Hallo ${esc(reg.name)},</p>
     <p>vielen Dank für Ihre Anmeldung zu unserem Infoabend <strong>„${EVENT.title}“</strong>.
     Wir haben <strong>${reg.seats} ${reg.seats === 1 ? 'Platz' : 'Plätze'}</strong> für Sie reserviert.</p>
-    <p style="background:#f4f5f9;padding:14px 16px;border-left:4px solid #c09a40">
+    <p style="background:#f4f5f9;padding:14px 16px;border-left:4px solid #f0a63a">
       <strong>${EVENT.dateLabel}</strong><br>Einlass ${EVENT.admission} · Beginn ${EVENT.start}<br>
       ${EVENT.venue}<br>${EVENT.address}<br>Ticket-Code: <strong>${esc(reg.ticket_code)}</strong></p>
     <p>Ihre persönliche Einladung finden Sie <strong>als PDF im Anhang</strong> – mit allen Infos zum Abend.</p>
     <p>${btn(googleCalendarUrl(), 'In Google Kalender')} ${btn(siteUrl() + '/api/ics', 'In Apple/Outlook-Kalender')}</p>
     <p>Alle Informationen zum Abend: <a href="${siteUrl()}">${siteUrl().replace('https://', '')}</a></p>
-    <p>Sie möchten schon vorher persönlich sprechen?<br>${btn(EVENT.contactUrl, 'Termin vereinbaren')}</p>
+    <p>Sie möchten schon vorher persönlich sprechen?<br>${btn(EVENT.contactUrl, 'Termin vereinbaren', true)}</p>
     <p>Wir freuen uns auf Sie!<br>Ihr Team der Baufinanz Düren</p>`);
 
   await smtp().sendMail({
@@ -68,12 +69,12 @@ export async function sendWaitlist(reg) {
     replyTo: EVENT.notifyEmail,
     subject: 'Sie stehen auf der Warteliste – Infoabend Baufinanz Düren',
     html: layout(`
-      <h1 style="color:#29399a;font-size:22px;margin:0 0 12px">Sie stehen auf der Warteliste</h1>
+      <h1 style="color:#223d77;font-size:22px;margin:0 0 12px">Sie stehen auf der Warteliste</h1>
       <p>Hallo ${esc(reg.name)},</p>
       <p>der Infoabend am <strong>${EVENT.dateLabel}</strong> ist aktuell ausgebucht. Wir haben Sie mit
       <strong>${reg.seats} ${reg.seats === 1 ? 'Platz' : 'Plätzen'}</strong> auf die Warteliste gesetzt und melden uns,
       sobald ein Platz frei wird – dann erhalten Sie Ihre Einladung per E-Mail.</p>
-      <p>Gern beraten wir Sie auch persönlich:<br>${btn(EVENT.contactUrl, 'Termin vereinbaren')}</p>
+      <p>Gern beraten wir Sie auch persönlich:<br>${btn(EVENT.contactUrl, 'Termin vereinbaren', true)}</p>
       <p>Ihr Team der Baufinanz Düren</p>`),
   });
 }
@@ -86,7 +87,7 @@ export async function notifyTeam(reg) {
     ['Plätze', reg.seats], ['Begleitung', (reg.companions || []).join(', ') || '–'],
     ['Adresse', [reg.street, reg.zip, reg.city].filter(Boolean).join(', ') || '–'],
     ['Magazin per Post', reg.address_consent ? 'Ja' : 'Nein'],
-    ['Fragen vorab', reg.questions || '–'], ['Ticket', reg.ticket_code],
+    ['Fragen vorab', reg.questions || '–'], ['Quelle', reg.source || 'direkt'], ['Ticket', reg.ticket_code],
   ];
   await smtp().sendMail({
     from: from(),

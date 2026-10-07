@@ -7,12 +7,19 @@
 <meta name="description" content="Kostenloser Infoabend am 9. Dezember 2026 in der Festhalle Birkesdorf: Vom ersten Kontakt mit dem Makler bis zum Notartermin. Jetzt Platz sichern!">
 <meta property="og:title" content="Wie kaufe ich eigentlich eine Immobilie? – Infoabend am 9.12.2026">
 <meta property="og:description" content="Vom ersten Kontakt mit dem Makler bis zum Notartermin – der große Infoabend rund um Ihre Finanzierung. Teilnahme kostenlos.">
-<meta property="og:image" content="/assets/notariat.jpg">
+<meta property="og:image" content="https://anmeldung.baufinanz-dueren.de/assets/notariat.jpg">
+<meta property="og:url" content="https://anmeldung.baufinanz-dueren.de/">
 <meta property="og:type" content="website">
 <link rel="icon" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#223D77">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
+<!-- Plausible Analytics: cookiefrei, zählt Besucher je Quelle (utm_source) und die Ereignisse
+     „Anmeldung“, „Warteliste“ und „Termin vereinbaren“ (siehe README) -->
+<script defer data-domain="anmeldung.baufinanz-dueren.de" src="https://plausible.io/js/script.js"></script>
+<script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };</script>
 </head>
 <body>
 
@@ -24,7 +31,7 @@
       <a href="https://baufinanz-dueren.de/">Startseite</a>
       <a href="https://baufinanz-dueren.de/kontakt">Kontakt</a>
     </nav>
-    <a class="btn btn-gold" href="https://baufinanz-dueren.de/kontakt">Termin vereinbaren</a>
+    <a class="btn btn-orange" href="https://baufinanz-dueren.de/kontakt" data-track="kopf">Termin vereinbaren</a>
   </div>
 </header>
 
@@ -41,8 +48,8 @@
           <li>Festhalle Birkesdorf, An der Festhalle 3, 52353 Düren-Birkesdorf</li>
         </ul>
         <div class="hero-cta">
-          <a class="btn btn-gold btn-lg" href="#anmeldung">Jetzt Platz sichern</a>
-          <a class="btn btn-outline btn-lg" href="https://baufinanz-dueren.de/kontakt">Termin vereinbaren</a>
+          <a class="btn btn-orange btn-lg" href="#anmeldung">Jetzt Platz sichern</a>
+          <a class="btn btn-outline btn-lg" href="https://baufinanz-dueren.de/kontakt" data-track="start">Termin vereinbaren</a>
         </div>
         <p class="free">Die Teilnahme am Infoabend ist kostenlos.</p>
       </div>
@@ -139,7 +146,7 @@
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
         <p class="error" id="error" role="alert"></p>
-        <button class="btn btn-gold btn-lg btn-block" id="submit" type="submit">Platz verbindlich reservieren</button>
+        <button class="btn btn-orange btn-lg btn-block" id="submit" type="submit">Platz verbindlich reservieren</button>
         <p class="note center">* Pflichtfeld · Die Teilnahme ist kostenlos.</p>
       </form>
 
@@ -154,7 +161,7 @@
       </div>
       <div class="result-cta">
         <p>Lieber direkt persönlich sprechen?</p>
-        <a class="btn btn-outline" href="https://baufinanz-dueren.de/kontakt">Termin vereinbaren</a>
+        <a class="btn btn-orange" href="https://baufinanz-dueren.de/kontakt" data-track="anmeldung">Termin vereinbaren</a>
       </div>
     </div>
   </section>
@@ -163,7 +170,7 @@
 <!-- FOOTER: wird 1:1 an baufinanz-dueren.de angeglichen -->
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <img src="/assets/logo-baufinanz.png" alt="Baufinanz Düren" class="footer-logo">
+    <img src="/assets/logo-baufinanz-weiss.png" alt="Baufinanz Düren" class="footer-logo">
     <nav>
       <a href="https://baufinanz-dueren.de/kontakt">Kontakt</a>
       <a href="https://baufinanz-dueren.de/impressum/">Impressum</a>

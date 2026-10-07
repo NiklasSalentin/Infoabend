@@ -1,11 +1,13 @@
 import { db, json } from '../lib/db.mjs';
 import { sendConfirmation, sendWaitlist, notifyTeam } from '../lib/mail.mjs';
+import { useSite } from '../lib/event.mjs';
 
 const str = (v, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // POST /api/register
-export default async (req) => {
+export default async (req, context) => {
+  useSite(context);
   if (req.method !== 'POST') return json({ error: 'Methode nicht erlaubt' }, 405);
 
   let b;
@@ -25,6 +27,8 @@ export default async (req) => {
     city: str(b.city, 100) || null,
     address_consent: b.addressConsent === true,
     questions: str(b.questions, 2000) || null,
+    // Werbekanal aus dem QR-Code, z. B. 'zeitung' (leer = direkt aufgerufen)
+    source: str(b.source, 40).toLowerCase().replace(/[^a-z0-9-]/g, '') || null,
   };
   const hasAddress = Boolean(reg.street || reg.zip || reg.city);
 
@@ -41,7 +45,7 @@ export default async (req) => {
     p_name: reg.name, p_email: reg.email, p_phone: reg.phone, p_seats: reg.seats,
     p_companions: reg.companions, p_street: reg.street, p_zip: reg.zip, p_city: reg.city,
     p_address_consent: reg.address_consent, p_questions: reg.questions,
-    p_waitlist_ok: b.waitlist === true,
+    p_waitlist_ok: b.waitlist === true, p_source: reg.source,
   });
   if (error) {
     console.error(error);

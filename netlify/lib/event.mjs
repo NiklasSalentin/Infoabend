@@ -17,4 +17,11 @@ export const EVENT = {
   notifyEmail: 'infoabend@baufinanz-dueren.de',
 };
 
-export const siteUrl = () => (process.env.SITE_URL || process.env.URL || 'https://anmeldung.baufinanz-dueren.de').replace(/\/$/, '');
+// Basis-URL für Links in Mails/PDF: SITE_URL (falls gesetzt), sonst die primäre
+// Adresse des Netlify-Projekts (eigene Domain, solange keine da ist: *.netlify.app)
+let projectUrl = '';
+export function useSite(context) {
+  if (context?.site?.url) projectUrl = context.site.url;
+}
+export const siteUrl = () =>
+  (process.env.SITE_URL || projectUrl || 'https://anmeldung.baufinanz-dueren.de').replace(/\/$/, '');

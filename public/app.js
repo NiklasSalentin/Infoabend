@@ -5,6 +5,31 @@ const companionBox = $('#companions');
 const hasCompanion = $('#has-companion');
 let state = { free: null, maxPerPerson: 1, open: true };
 
+// Werbekanal aus dem QR-Code (z. B. /zeitung → ?utm_source=zeitung), bleibt für die Sitzung erhalten
+let source = new URLSearchParams(location.search).get('utm_source') || '';
+try {
+  if (source) sessionStorage.setItem('quelle', source);
+  else source = sessionStorage.getItem('quelle') || '';
+} catch {}
+
+// Plausible-Ereignis senden (ohne Plausible, z. B. bei Werbeblockern, passiert nichts)
+const track = (name, props, callback) => {
+  try { window.plausible(name, { props, callback }); } catch { callback?.(); }
+};
+
+// Klicks auf „Termin vereinbaren“ zählen, danach zur Kontaktseite der Website
+document.querySelectorAll('a[data-track]').forEach((a) => {
+  a.addEventListener('click', (e) => {
+    const props = { position: a.dataset.track };
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return track('Termin vereinbaren', props);
+    e.preventDefault();
+    let done = false;
+    const go = () => { if (!done) { done = true; location.href = a.href; } };
+    track('Termin vereinbaren', props, go);
+    setTimeout(go, 500);
+  });
+});
+
 // Countdown bis 9. Dezember 2026
 const eventDate = new Date('2026-12-09T18:00:00+01:00');
 const days = Math.max(0, Math.ceil((eventDate - Date.now()) / 864e5));
@@ -108,6 +133,7 @@ form.addEventListener('submit', async (e) => {
     questions: f.questions.value,
     website: f.website.value,
     waitlist: waitlistMode(),
+    source,
   };
 
   const btn = $('#submit');
@@ -116,6 +142,7 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json();
     if (data.status === 'confirmed' || data.status === 'waitlist') {
+      track(data.status === 'confirmed' ? 'Anmeldung' : 'Warteliste', { plaetze: String(body.seats) });
       form.hidden = true;
       $('#seat-hint').hidden = true;
       $(data.status === 'confirmed' ? '#success' : '#waitlisted').hidden = false;
@@ -127,6 +154,7 @@ form.addEventListener('submit', async (e) => {
       body.waitlist = true;
       const r2 = await (await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })).json();
       if (r2.status === 'waitlist') {
+        track('Warteliste', { plaetze: String(body.seats) });
         form.hidden = true;
         $('#waitlisted').hidden = false;
         return;
