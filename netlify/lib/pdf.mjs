@@ -1,10 +1,9 @@
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { EVENT, siteUrl } from './event.mjs';
 
-// CI-Farben Baufinanz Düren (wie AskMeSomething): Blau #223d77, Orange #f0a63a
-const BLUE = rgb(34 / 255, 61 / 255, 119 / 255);
-const ORANGE = rgb(240 / 255, 166 / 255, 58 / 255);
-const ORANGE_DARK = rgb(168 / 255, 101 / 255, 10 / 255); // für kleine Schrift auf Weiß
+// Farben wie baufinanz-dueren.de: Dunkelblau #1A3569, Blau #3C59AD
+const BLUE = rgb(26 / 255, 53 / 255, 105 / 255);
+const ACCENT = rgb(60 / 255, 89 / 255, 173 / 255);
 const GREY = rgb(0.3, 0.3, 0.3);
 
 async function image(pdf, file) {
@@ -63,7 +62,7 @@ export async function invitationPdf(reg) {
   }
   y -= 115;
 
-  text('PERSÖNLICHE EINLADUNG', { f: bold, size: 10, color: ORANGE_DARK, gap: 10 });
+  text('PERSÖNLICHE EINLADUNG', { f: bold, size: 10, color: ACCENT, gap: 10 });
   text(EVENT.title, { f: bold, size: 22, color: BLUE, gap: 6 });
   text(EVENT.subtitle, { size: 12, gap: 18 });
 
@@ -85,7 +84,7 @@ export async function invitationPdf(reg) {
   inner('Adresse', EVENT.address);
   inner('Ticket-Code', reg.ticket_code);
   y -= 10;
-  page.drawRectangle({ x: M, y, width: TW, height: boxTop - y, borderColor: ORANGE, borderWidth: 1.5 });
+  page.drawRectangle({ x: M, y, width: TW, height: boxTop - y, borderColor: ACCENT, borderWidth: 1.5 });
   y -= 24;
 
   text('Ankommen & Parken', { f: bold, size: 13, color: BLUE });

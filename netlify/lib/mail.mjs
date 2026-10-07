@@ -21,26 +21,26 @@ const from = () => process.env.MAIL_FROM || `Baufinanz Düren <${EVENT.notifyEma
 export const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-const layout = (body) => `<!doctype html><html><body style="margin:0;background:#f4f5f9;font-family:Arial,Helvetica,sans-serif;color:#333">
+const layout = (body) => `<!doctype html><html><body style="margin:0;background:#F0F2F9;font-family:Raleway,Arial,Helvetica,sans-serif;color:#191919">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px">
-<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-top:6px solid #223d77">
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-top:6px solid #3C59AD">
 <tr><td style="padding:28px 32px"><img src="${siteUrl()}/assets/logo-baufinanz.png" alt="Baufinanz Düren" width="160"></td></tr>
 <tr><td style="padding:0 32px 32px;font-size:15px;line-height:1.55">${body}</td></tr>
-<tr><td style="padding:16px 32px;background:#223d77;color:#fff;font-size:12px">${EVENT.organizer} · <a href="${EVENT.imprintUrl}" style="color:#fff">Impressum</a> · <a href="${EVENT.privacyUrl}" style="color:#fff">Datenschutz</a></td></tr>
+<tr><td style="padding:16px 32px;background:#1A3569;color:#fff;font-size:12px">${EVENT.organizer} · <a href="${EVENT.imprintUrl}" style="color:#fff">Impressum</a> · <a href="${EVENT.privacyUrl}" style="color:#fff">Datenschutz</a></td></tr>
 </table></td></tr></table></body></html>`;
 
-// accent = oranger Knopf wie auf der Website („Termin vereinbaren“)
-const btn = (href, label, accent = false) =>
-  `<a href="${href}" style="display:inline-block;background:${accent ? '#f0a63a' : '#223d77'};color:${accent ? '#1a1206' : '#fff'};text-decoration:none;padding:12px 22px;border-radius:4px;font-weight:bold;margin:4px 8px 4px 0">${label}</a>`;
+// primary = dunkelblauer Hauptknopf wie „Beraten lassen“ auf baufinanz-dueren.de
+const btn = (href, label, primary = false) =>
+  `<a href="${href}" style="display:inline-block;background:${primary ? '#1A3569' : '#3C59AD'};color:#fff;text-decoration:none;padding:12px 24px;border-radius:120px;font-weight:bold;margin:4px 8px 4px 0">${label}</a>`;
 
 export async function sendConfirmation(reg) {
   const pdf = await invitationPdf(reg);
   const html = layout(`
-    <h1 style="color:#223d77;font-size:22px;margin:0 0 12px">Sie sind angemeldet!</h1>
+    <h1 style="color:#1A3569;font-size:22px;margin:0 0 12px">Sie sind angemeldet!</h1>
     <p>Hallo ${esc(reg.name)},</p>
     <p>vielen Dank für Ihre Anmeldung zu unserem Infoabend <strong>„${EVENT.title}“</strong>.
     Wir haben <strong>${reg.seats} ${reg.seats === 1 ? 'Platz' : 'Plätze'}</strong> für Sie reserviert.</p>
-    <p style="background:#f4f5f9;padding:14px 16px;border-left:4px solid #f0a63a">
+    <p style="background:#F0F2F9;padding:14px 16px;border-left:4px solid #3C59AD">
       <strong>${EVENT.dateLabel}</strong><br>Einlass ${EVENT.admission} · Beginn ${EVENT.start}<br>
       ${EVENT.venue}<br>${EVENT.address}<br>Ticket-Code: <strong>${esc(reg.ticket_code)}</strong></p>
     <p>Ihre persönliche Einladung finden Sie <strong>als PDF im Anhang</strong> – mit allen Infos zum Abend.</p>
@@ -69,7 +69,7 @@ export async function sendWaitlist(reg) {
     replyTo: EVENT.notifyEmail,
     subject: 'Sie stehen auf der Warteliste – Infoabend Baufinanz Düren',
     html: layout(`
-      <h1 style="color:#223d77;font-size:22px;margin:0 0 12px">Sie stehen auf der Warteliste</h1>
+      <h1 style="color:#1A3569;font-size:22px;margin:0 0 12px">Sie stehen auf der Warteliste</h1>
       <p>Hallo ${esc(reg.name)},</p>
       <p>der Infoabend am <strong>${EVENT.dateLabel}</strong> ist aktuell ausgebucht. Wir haben Sie mit
       <strong>${reg.seats} ${reg.seats === 1 ? 'Platz' : 'Plätzen'}</strong> auf die Warteliste gesetzt und melden uns,

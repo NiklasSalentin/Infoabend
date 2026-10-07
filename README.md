@@ -211,9 +211,26 @@ druck/qr-codes/         fertige QR-Codes
 
 Datum, Ort und Texte für Mail/PDF stehen zentral in `netlify/lib/event.mjs`.
 
+## Design = baufinanz-dueren.de
+
+Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen (Stand Oktober 2026):
+
+| | Wert |
+|---|---|
+| Farben | Dunkelblau `#1A3569`, Blau `#3C59AD`, Text `#191919`, Grau-Blau `#7C829A`, Hellgrau-Blau `#F0F2F9` |
+| Schrift | Raleway 400/500/600/700 – **lokal** in `public/assets/fonts/` (keine Verbindung zu Google, wie auf der Hauptseite) |
+| Kopf | weißes Logo + Menü der Hauptseite, ab 50 px Scrollen blau; Tablet/Handy: runder Menü-Knopf |
+| Fuß | Logo, Claim, Menü, Facebook/Instagram, Kontaktkasten, Impressum/Datenschutz |
+| Umbruchpunkte | 1600 / 1300 / 1024 / 880 / 767 px |
+
+Ändert sich die Hauptseite (z. B. neue Menüpunkte oder Telefonnummer), Kopf und Fuß in
+`public/index.html` entsprechend anpassen.
+
 ## Noch offen
 
-- **Kopf und Fuß 1:1 wie baufinanz-dueren.de** – sobald die Domain in der Claude-Umgebung
-  freigegeben ist. Bis dahin: CI-Farben wie bei AskMeSomething (Blau `#223d77`, Orange `#f0a63a`).
+- **Plausible einrichten** (Schritt 6).
 - **Datenschutzerklärung prüfen** (Veranstaltung, Versand Themenmagazin, Plausible) – Briefing Punkt 3.
+- **E-Mail im Fuß bestätigen:** Dort steht `info@baufinanz-dueren.de`. Die Hauptseite zeigt im Fuß
+  und im Impressum derzeit eine Adresse mit `@b10x69i.myrdbx.io` (vermutlich Rest vom Umzug zum
+  Hoster) – das sollte auf der Hauptseite korrigiert werden.
 - Apple/Google Wallet – später.

@@ -10,11 +10,11 @@
 <meta property="og:image" content="https://anmeldung.baufinanz-dueren.de/assets/notariat.jpg">
 <meta property="og:url" content="https://anmeldung.baufinanz-dueren.de/">
 <meta property="og:type" content="website">
-<link rel="icon" href="/assets/favicon.png">
+<link rel="icon" href="/assets/favicon.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<meta name="theme-color" content="#223D77">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#3C59AD">
+<link rel="preload" href="/assets/fonts/raleway-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/raleway-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <!-- Plausible Analytics: cookiefrei, zählt Besucher je Quelle (utm_source) und die Ereignisse
      „Anmeldung“, „Warteliste“ und „Termin vereinbaren“ (siehe README) -->
@@ -23,92 +23,106 @@
 </head>
 <body>
 
-<!-- HEADER: wird 1:1 an baufinanz-dueren.de angeglichen -->
+<!-- KOPF: 1:1 wie baufinanz-dueren.de (Logo + Menü der Hauptseite) -->
 <header class="site-header">
-  <div class="wrap header-inner">
-    <a href="https://baufinanz-dueren.de/" class="logo"><img src="/assets/logo-baufinanz.png" alt="Baufinanz Düren GmbH &amp; Co. KG"></a>
-    <nav class="main-nav" aria-label="Hauptnavigation">
-      <a href="https://baufinanz-dueren.de/">Startseite</a>
-      <a href="https://baufinanz-dueren.de/kontakt">Kontakt</a>
+  <div class="header-inner">
+    <a class="header-logo" href="https://baufinanz-dueren.de"><img src="/assets/logo-weiss.png" width="241" height="91" alt="Baufinanz Düren GmbH &amp; Co. KG"></a>
+    <nav class="header-nav" aria-label="Hauptmenü">
+      <a href="https://baufinanz-dueren.de/#die-häufigsten-fehler">Die häufigsten Fehler</a>
+      <a href="https://baufinanz-dueren.de/#baufinanz-dueren">Baufinanz Düren</a>
+      <a href="https://baufinanz-dueren.de/#in-4-schritten-zur-finanzierung">In 4 Schritten zur Finanzierung</a>
+      <a href="https://baufinanz-dueren.de/#ueber-uns">Über uns</a>
+      <a href="https://baufinanz-dueren.de/#faq">FAQ</a>
     </nav>
-    <a class="btn btn-orange" href="https://baufinanz-dueren.de/kontakt" data-track="kopf">Termin vereinbaren</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menü öffnen">
+      <svg class="icon-open" aria-hidden="true" viewBox="0 0 1000 1000"><path d="M104 333H896C929 333 958 304 958 271S929 208 896 208H104C71 208 42 237 42 271S71 333 104 333ZM104 583H896C929 583 958 554 958 521S929 458 896 458H104C71 458 42 487 42 521S71 583 104 583ZM104 833H896C929 833 958 804 958 771S929 708 896 708H104C71 708 42 737 42 771S71 833 104 833Z"/></svg>
+      <svg class="icon-close" aria-hidden="true" viewBox="0 0 1000 1000"><path d="M742 167L500 408 258 167C246 154 233 150 217 150 196 150 179 158 167 167 154 179 150 196 150 212 150 229 154 242 171 254L408 500 167 742C138 771 138 800 167 829 196 858 225 858 254 829L496 587 738 829C750 842 767 846 783 846 800 846 817 842 829 829 842 817 846 804 846 783 846 767 842 750 829 737L588 500 833 258C863 229 863 200 833 171 804 137 775 137 742 167Z"/></svg>
+    </button>
   </div>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Hauptmenü" hidden>
+    <a href="https://baufinanz-dueren.de/#die-häufigsten-fehler">Die häufigsten Fehler</a>
+    <a href="https://baufinanz-dueren.de/#baufinanz-dueren">Baufinanz Düren</a>
+    <a href="https://baufinanz-dueren.de/#in-4-schritten-zur-finanzierung">In 4 Schritten zur Finanzierung</a>
+    <a href="https://baufinanz-dueren.de/#ueber-uns">Über uns</a>
+    <a href="https://baufinanz-dueren.de/#faq">FAQ</a>
+  </nav>
 </header>
 
 <main>
   <section class="hero">
-    <div class="wrap hero-inner">
+    <div class="container hero-inner">
       <div class="hero-text">
-        <p class="eyebrow">Kostenloser Infoabend · 9. Dezember 2026</p>
+        <p class="gradient-box">Kostenloser Infoabend · 9. Dezember 2026</p>
         <h1>Wie kaufe ich eigentlich eine Immobilie?</h1>
-        <p class="lead">Vom ersten Kontakt mit dem Makler bis zum Notartermin – der große Infoabend rund um Ihre Finanzierung</p>
+        <p class="hero-lead">Vom ersten Kontakt mit dem Makler bis zum Notartermin – der große Infoabend rund um Ihre Finanzierung</p>
         <ul class="facts">
           <li><strong>Mittwoch, 9. Dezember 2026</strong></li>
           <li>Einlass: 18:00 Uhr · Beginn: 18:30 Uhr</li>
           <li>Festhalle Birkesdorf, An der Festhalle 3, 52353 Düren-Birkesdorf</li>
         </ul>
         <div class="hero-cta">
-          <a class="btn btn-orange btn-lg" href="#anmeldung">Jetzt Platz sichern</a>
-          <a class="btn btn-outline btn-lg" href="https://baufinanz-dueren.de/kontakt" data-track="start">Termin vereinbaren</a>
+          <a class="button-main" href="#anmeldung"><span>Jetzt Platz sichern</span><span class="button-icon icon-down"><svg aria-hidden="true" viewBox="0 0 14 14" fill="none"><path d="M12.1417 1.80847L0.774902 13.1752" stroke="#fff" stroke-width="1.55" stroke-linecap="round"/><path d="M5.94165 0.910923C5.94165 0.910923 11.763 0.420196 12.6465 1.30361C13.5299 2.18703 13.0391 8.00841 13.0391 8.00841" stroke="#fff" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+          <a class="button-main button-secondary" href="https://baufinanz-dueren.de/kontakt/" data-track="start"><span>Termin vereinbaren</span><span class="button-icon"><svg aria-hidden="true" viewBox="0 0 14 14" fill="none"><path d="M12.1417 1.80847L0.774902 13.1752" stroke="#fff" stroke-width="1.55" stroke-linecap="round"/><path d="M5.94165 0.910923C5.94165 0.910923 11.763 0.420196 12.6465 1.30361C13.5299 2.18703 13.0391 8.00841 13.0391 8.00841" stroke="#fff" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         </div>
         <p class="free">Die Teilnahme am Infoabend ist kostenlos.</p>
       </div>
       <a class="badge" href="#anmeldung" aria-label="Focus Money Kundenliebling 2026">
-        <img src="/assets/kundenliebling-2026.png" alt="Deutschland Test / Focus Money: Kundenliebling 2026 – Baufinanz Düren">
+        <img src="/assets/kundenliebling-2026.png" width="250" height="424" alt="Deutschland Test / Focus Money: Kundenliebling 2026 – Baufinanz Düren">
       </a>
     </div>
   </section>
 
   <section class="stats">
-    <div class="wrap stats-inner">
+    <div class="container stats-inner">
       <div><span class="num" id="countdown">–</span><span class="lbl">Tage bis zum Infoabend</span></div>
       <div><span class="num" id="seats-free">–</span><span class="lbl" id="seats-label">freie Plätze</span></div>
       <div id="social-proof" hidden><span class="num" id="attendees">–</span><span class="lbl">Personen bereits angemeldet</span></div>
     </div>
   </section>
 
-  <section class="wrap block two-col">
-    <img class="portrait" src="/assets/portrait.jpg" alt="Ihr Baufinanzierer der Baufinanz Düren" loading="lazy">
+  <section class="container block two-col">
+    <img class="photo portrait" src="/assets/portrait.jpg" alt="Ihr Baufinanzierer der Baufinanz Düren" loading="lazy">
     <div>
       <p class="eyebrow">Teil 1 · Ihre Finanzierung</p>
-      <h2>Die entscheidenden Bausteine auf dem Weg zum Eigenheim</h2>
+      <h2>Die entscheidenden Bausteine <span class="h2-alt-text">auf dem Weg zum Eigenheim</span></h2>
       <p>Als unabhängiger Baufinanzierer erkläre ich Ihnen die entscheidenden Bausteine auf dem Weg zum Eigenheim: Wie Sie im Gespräch mit Maklern überzeugend auftreten und sich gegen andere Interessenten durchsetzen – und wie Sie Ihre Finanzierung von Anfang an richtig aufstellen, von der vollständigen Unterlagenliste bis zum Annuitätendarlehen. Praxisnah, verständlich, ohne Fachchinesisch.</p>
     </div>
   </section>
 
-  <section class="wrap block two-col reverse">
+  <section class="container block two-col reverse">
     <img class="photo" src="/assets/notariat.jpg" alt="Notariat" loading="lazy">
     <div>
       <p class="eyebrow">Teil 2 · Der Notartermin</p>
-      <h2>Bestens vorbereitet zum Notar</h2>
+      <h2>Bestens vorbereitet <span class="h2-alt-text">zum Notar</span></h2>
       <p>Zum Abschluss des Abends übernimmt ein erfahrener Notar das Wort und nimmt Sie mit auf die letzte Etappe: Was passiert beim Notartermin wirklich, welche Unterlagen brauchen Sie, und worauf sollten Sie beim Vertrag besonders achten? So gehen Sie bestens vorbereitet in diesen entscheidenden Termin.</p>
     </div>
   </section>
 
   <section class="venue">
-    <div class="wrap two-col">
-      <img class="venue-logo" src="/assets/festhalle.png" alt="Festhalle Birkesdorf – dat is heimat" loading="lazy">
+    <div class="container two-col">
+      <img class="photo venue-logo" src="/assets/festhalle.png" alt="Festhalle Birkesdorf – dat is heimat" loading="lazy">
       <div>
-        <h2>Ankommen &amp; Platz nehmen</h2>
+        <p class="gradient-box">Festhalle Birkesdorf</p>
+        <h2>Ankommen &amp; <strong>Platz nehmen</strong></h2>
         <p>Kommen Sie an und nehmen Sie bei freier Platzwahl Platz, bevor es um 18:30 Uhr losgeht. Direkt an der Festhalle stehen ausreichend kostenlose Parkplätze zur Verfügung.</p>
-        <p><strong>Festhalle Birkesdorf</strong><br>An der Festhalle 3, 52353 Düren-Birkesdorf<br>
-        <a href="https://www.google.com/maps/search/?api=1&query=Festhalle+Birkesdorf+An+der+Festhalle+3+52353+D%C3%BCren" target="_blank" rel="noopener">Route planen</a></p>
+        <p><strong>Festhalle Birkesdorf</strong><br>An der Festhalle 3, 52353 Düren-Birkesdorf</p>
+        <p><a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Festhalle+Birkesdorf+An+der+Festhalle+3+52353+D%C3%BCren" target="_blank" rel="noopener">Route planen</a></p>
       </div>
     </div>
   </section>
 
-  <section class="wrap block two-col">
-    <img class="magazine" src="/assets/themenmagazin.jpg" alt="Themenmagazin Immobilienfinanzierung" loading="lazy">
+  <section class="container block two-col">
+    <img class="photo magazine" src="/assets/themenmagazin.jpg" alt="Themenmagazin Immobilienfinanzierung" loading="lazy">
     <div>
       <p class="eyebrow">Gratis dazu</p>
-      <h2>Unser Themenmagazin vorab per Post</h2>
+      <h2>Unser Themenmagazin <span class="h2-alt-text">vorab per Post</span></h2>
       <p>Geben Sie bei der Anmeldung Ihre Adresse an, erhalten Sie unser Themenmagazin mit den wichtigsten Checklisten rund um den Immobilienkauf schon vorab bequem per Post.</p>
     </div>
   </section>
 
   <section id="anmeldung" class="signup">
-    <div class="wrap narrow">
-      <h2>Jetzt anmelden</h2>
+    <div class="container narrow">
+      <h2>Jetzt <span class="h2-alt-text">anmelden</span></h2>
       <p class="limited">Die Plätze sind begrenzt – sichern Sie sich jetzt Ihren Platz für den Abend.</p>
       <p class="seat-hint" id="seat-hint"></p>
 
@@ -146,14 +160,14 @@
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
         <p class="error" id="error" role="alert"></p>
-        <button class="btn btn-orange btn-lg btn-block" id="submit" type="submit">Platz verbindlich reservieren</button>
+        <button class="button-main button-block" id="submit" type="submit">Platz verbindlich reservieren</button>
         <p class="note center">* Pflichtfeld · Die Teilnahme ist kostenlos.</p>
       </form>
 
       <div id="success" class="result" hidden>
         <h3>Vielen Dank, Sie sind angemeldet!</h3>
         <p>Ihre persönliche Einladung (PDF) ist per E-Mail unterwegs. Tragen Sie sich den Termin direkt in Ihren Kalender ein:</p>
-        <p><a class="btn btn-outline" href="/api/ics">Apple / Outlook</a> <a class="btn btn-outline" id="gcal" target="_blank" rel="noopener">Google / Android</a></p>
+        <p class="result-buttons"><a class="btn btn-outline" href="/api/ics">Apple / Outlook</a> <a class="btn btn-outline" id="gcal" target="_blank" rel="noopener">Google / Android</a></p>
       </div>
       <div id="waitlisted" class="result" hidden>
         <h3>Sie stehen auf der Warteliste</h3>
@@ -161,21 +175,50 @@
       </div>
       <div class="result-cta">
         <p>Lieber direkt persönlich sprechen?</p>
-        <a class="btn btn-orange" href="https://baufinanz-dueren.de/kontakt" data-track="anmeldung">Termin vereinbaren</a>
+        <a class="button-main" href="https://baufinanz-dueren.de/kontakt/" data-track="anmeldung"><span>Termin vereinbaren</span><span class="button-icon"><svg aria-hidden="true" viewBox="0 0 14 14" fill="none"><path d="M12.1417 1.80847L0.774902 13.1752" stroke="#fff" stroke-width="1.55" stroke-linecap="round"/><path d="M5.94165 0.910923C5.94165 0.910923 11.763 0.420196 12.6465 1.30361C13.5299 2.18703 13.0391 8.00841 13.0391 8.00841" stroke="#fff" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
       </div>
     </div>
   </section>
 </main>
 
-<!-- FOOTER: wird 1:1 an baufinanz-dueren.de angeglichen -->
+<!-- FUSS: 1:1 wie baufinanz-dueren.de -->
 <footer class="site-footer">
-  <div class="wrap footer-inner">
-    <img src="/assets/logo-baufinanz-weiss.png" alt="Baufinanz Düren" class="footer-logo">
-    <nav>
-      <a href="https://baufinanz-dueren.de/kontakt">Kontakt</a>
-      <a href="https://baufinanz-dueren.de/impressum/">Impressum</a>
-      <a href="https://baufinanz-dueren.de/datenschutz/">Datenschutz</a>
-    </nav>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="https://baufinanz-dueren.de/"><img src="/assets/logo-baufinanz.png" width="331" height="125" alt="Baufinanz Düren GmbH &amp; Co. KG" loading="lazy"></a>
+        <p>Unabhängige Baufinanzierung in Düren, Aachen &amp; Köln.<br>Persönlich. Schnell. Auch ohne Eigenkapital.</p>
+      </div>
+      <div class="footer-links">
+        <nav class="footer-menu" aria-label="Fußmenü">
+          <a href="https://baufinanz-dueren.de/#die-häufigsten-fehler">Die häufigsten Fehler</a>
+          <a href="https://baufinanz-dueren.de/#baufinanz-dueren">Baufinanz Düren</a>
+          <a href="https://baufinanz-dueren.de/#in-4-schritten-zur-finanzierung">In 4 Schritten zur Finanzierung</a>
+          <a href="https://baufinanz-dueren.de/#ueber-uns">Über uns</a>
+          <a href="https://baufinanz-dueren.de/#faq">FAQ</a>
+        </nav>
+        <ul class="footer-social">
+          <li><a href="https://www.facebook.com/baufinanzdueren" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 512 512"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg>Facebook</a></li>
+          <li><a href="https://www.instagram.com/baufinanz_dueren/" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>Instagram</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h3>Kontakt</h3>
+        <ul>
+          <li><svg aria-hidden="true" viewBox="0 0 512 512"><path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z"/></svg><a href="mailto:info@baufinanz-dueren.de">info@baufinanz-dueren.de</a></li>
+          <li><svg aria-hidden="true" viewBox="0 0 512 512"><path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z"/></svg><a href="tel:+491726075100">0172 60 75 100</a></li>
+          <li><svg aria-hidden="true" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"/></svg><span>Bahnhofstraße 100 | 52382 Niederzier</span></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <span>© 2026 Baufinanz Düren GmbH &amp; Co. KG | Alle Rechte vorbehalten</span>
+      <span class="footer-legal">
+        <a href="https://baufinanz-dueren.de/impressum/">Impressum</a>
+        <a href="https://baufinanz-dueren.de/datenschutz/">Datenschutz</a>
+      </span>
+    </div>
   </div>
 </footer>
 

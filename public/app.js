@@ -1,4 +1,21 @@
 const $ = (s) => document.querySelector(s);
+
+// Kopf wie auf baufinanz-dueren.de: ab 50 px Scrollen blauer Hintergrund
+const header = $('.site-header');
+const onScroll = () => header.classList.toggle('is-sticky', window.scrollY > 50);
+addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+// Menü-Knopf (Tablet/Handy)
+const menuToggle = $('.menu-toggle');
+const mobileMenu = $('#mobile-menu');
+menuToggle.addEventListener('click', () => {
+  const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+  menuToggle.setAttribute('aria-expanded', String(open));
+  menuToggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+  mobileMenu.hidden = !open;
+  header.classList.toggle('menu-open', open);
+});
 const form = $('#form');
 const seatsSel = $('#seats');
 const companionBox = $('#companions');
