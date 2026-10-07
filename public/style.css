@@ -31,7 +31,7 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
 body { margin: 0; font-family: var(--font); font-size: 18px; font-weight: 400; line-height: 1.5em; color: var(--text); background: var(--white); }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--primary); }
@@ -89,23 +89,28 @@ p { margin: 0 0 1em; }
 .btn:hover { transform: scale(1.03); }
 
 /* ---------- Kopf (1:1 Hauptseite) ---------- */
-.site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 555; transition: .3s; border-bottom: 2px solid transparent; }
-.site-header.is-sticky, .site-header.menu-open { background-color: var(--secondary); border-bottom-color: var(--primary); }
-.header-inner { display: flex; align-items: center; justify-content: space-between; max-width: 1440px; margin: 0 auto; padding: 10px var(--pad-x) 0; transition: .3s; }
-.site-header.is-sticky .header-inner { padding-top: 8px; }
+/* Kopf liegt über dem blauen oberen Abschnitt und scrollt mit der Seite nach oben weg */
+.site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 555; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; max-width: 1440px; margin: 0 auto; padding: 10px var(--pad-x) 0; }
 .header-logo img { width: 241px; height: auto; }
 .header-nav { display: flex; gap: 57px; }
 .header-nav a { position: relative; color: var(--white); font-size: 18px; font-weight: 500; line-height: 1.5em; letter-spacing: -.02em; text-decoration: none; }
 /* Unterstrich schiebt sich ein (Elementor „underline / slide“) */
 .header-nav a::after { content: ''; position: absolute; bottom: 0; left: 100%; width: 10px; height: 3px; background: var(--white); opacity: 0; transition: .3s; }
 .header-nav a:hover::after, .header-nav a:focus-visible::after { left: 0; width: 100%; opacity: 1; }
-.menu-toggle { display: none; align-items: center; justify-content: center; padding: .25em; border: 1px solid var(--white); border-radius: 50px; background: transparent; color: var(--white); font-size: 22px; cursor: pointer; }
+/* Menü-Knopf: bleibt beim Scrollen oben rechts stehen (nur Tablet/Handy); blauer Grund, damit er auch über weißen Abschnitten sichtbar ist */
+.menu-toggle { display: none; position: fixed; top: 26px; right: var(--pad-x); z-index: 600; align-items: center; justify-content: center; padding: .25em; border: 1px solid var(--white); border-radius: 50px; background: var(--secondary); color: var(--white); font-size: 22px; cursor: pointer; box-shadow: 0 4px 14px rgba(28,35,80,.3); }
 .menu-toggle svg { width: 1em; height: 1em; fill: currentColor; }
 .menu-toggle .icon-close, .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
 .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
-.mobile-menu { background: var(--secondary); border-top: 1px solid var(--white); }
+/* Klappmenü: blaues Panel von oben – egal, wie weit gescrollt wurde */
+.mobile-menu { position: fixed; top: 0; left: 0; right: 0; z-index: 590; max-height: 100vh; overflow-y: auto; background: var(--secondary); border-bottom: 2px solid var(--primary); }
 .mobile-menu a { display: block; padding: 15px; border-bottom: 1px solid var(--white); color: var(--white); font-size: 16px; font-weight: 500; text-decoration: none; }
 .mobile-menu a:hover, .mobile-menu a:focus-visible { background: var(--primary); }
+.mobile-menu .mobile-menu-logo { padding: 0 var(--pad-x); }
+.mobile-menu .mobile-menu-logo:hover { background: none; }
+.mobile-menu-logo img { width: 230px; }
+@media (min-width: 1025px) { .mobile-menu { display: none !important; } }
 
 /* ---------- Oberer Abschnitt im Stil des Infoabend-Plakats (Variante A2) ---------- */
 .hero { position: relative; overflow: hidden; background: var(--poster-blue); color: var(--white); padding: 175px 0 200px; font-variant-numeric: lining-nums; }
@@ -224,7 +229,6 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
 @media (max-width: 1300px) {
   :root { --pad-x: 32px; }
   .header-inner { padding-top: 0; }
-  .site-header.is-sticky .header-inner { padding-top: 8px; }
   .header-logo img { width: 230px; }
   .header-nav { gap: 32px; }
   .header-nav a { font-size: 16px; }
@@ -264,9 +268,8 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
 }
 @media (max-width: 880px) {
   :root { --pad-x: 22px; }
-  html { scroll-padding-top: 80px; }
-  .header-logo img { width: 191px; }
-  .site-header.is-sticky .header-inner { padding-top: 0; }
+  .header-logo img, .mobile-menu-logo img { width: 191px; }
+  .menu-toggle { top: 18px; }
   .hero { padding-top: 135px; }
   .eckdaten-row { gap: 20px; }
   .two-col { grid-template-columns: 1fr; }
