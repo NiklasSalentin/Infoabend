@@ -53,8 +53,8 @@ Tipp: `MAIL_FROM` muss zum Postfach passen, sonst landen die Mails eher im Spam.
 
 ### 3. Umgebungsvariablen in Netlify setzen
 
-Das Netlify-Projekt ist angelegt: **`anmeldung-baufinanz`** →
-https://app.netlify.com/projects/anmeldung-baufinanz
+Das Netlify-Projekt ist **`baufiabend`** (live unter https://anmeldung.baufinanz-dueren.de) →
+https://app.netlify.com/projects/baufiabend
 
 Dort unter **Project configuration → Environment variables**:
 
@@ -86,7 +86,7 @@ Danach veröffentlicht **jeder Push automatisch**. Alternativ von Hand mit der N
 
 ```bash
 npx netlify-cli login
-npx netlify-cli link --id 67e0ec28-9f0d-4023-a72c-2d0f6141fd2e
+npx netlify-cli link --id 9e41c7d7-8946-4af6-a64a-9931cea7c24d
 npx netlify-cli deploy --prod
 ```
 
@@ -97,7 +97,7 @@ npx netlify-cli deploy --prod
 
    | Typ | Name / Host | Ziel / Wert |
    |---|---|---|
-   | `CNAME` | `anmeldung` | `anmeldung-baufinanz.netlify.app` |
+   | `CNAME` | `anmeldung` | `baufiabend.netlify.app` |
 
 3. Warten (meist Minuten, selten bis 24 Stunden). Das HTTPS-Zertifikat richtet Netlify
    automatisch ein.
