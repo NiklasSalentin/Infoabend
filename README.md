@@ -217,7 +217,7 @@ Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen 
 
 | | Wert |
 |---|---|
-| Farben | Dunkelblau `#1A3569`, Blau `#3C59AD`, Text `#191919`, Grau-Blau `#7C829A`, Hellgrau-Blau `#F0F2F9` |
+| Farben | Dunkelblau `#1A3569`, Blau `#3C59AD`, Text `#191919`, Grau-Blau `#7C829A`, Hellgrau-Blau `#F0F2F9` – dazu Gelb-Orange `#f0a63a` (wie AskMeSomething) für den pulsierenden Knopf „Jetzt Platz sichern“ |
 | Schrift | Raleway 400/500/600/700 – **lokal** in `public/assets/fonts/` (keine Verbindung zu Google, wie auf der Hauptseite) |
 | Kopf | weißes Logo + Menü der Hauptseite, ab 50 px Scrollen blau; Tablet/Handy: runder Menü-Knopf |
 | Fuß | Logo, Claim, Menü, Facebook/Instagram, Kontaktkasten, Impressum/Datenschutz |

@@ -14,6 +14,8 @@
   --text: #191919;
   --muted: #7C829A;       /* Grau-Blau: Linien, Kleingedrucktes */
   --light: #F0F2F9;       /* Hellblau-Grau: Kästen */
+  --orange: #f0a63a;      /* Gelb-Orange wie AskMeSomething: „Jetzt Platz sichern“ */
+  --orange-text: #1a1206; /* dunkle Schrift auf Orange (gut lesbar) */
   --white: #FFFFFF;
   --font: 'Raleway', Sans-serif;
   --pad-x: 80px;          /* seitlicher Rand wie Hauptseite */
@@ -58,6 +60,21 @@ p { margin: 0 0 1em; }
 .button-main:disabled { opacity: .6; cursor: wait; transform: none; }
 .button-secondary { background: var(--secondary); }
 .button-secondary .button-icon { background: var(--primary); }
+
+/* „Jetzt Platz sichern“: Orange mit Puls, damit man ihn auf jeden Fall sieht */
+.button-orange { background: var(--orange); color: var(--orange-text); animation: pulse 2s ease-in-out infinite; }
+.button-orange .button-icon { background: var(--primary); }
+.button-orange:hover, .button-orange:focus-visible { animation: none; }
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(240,166,58,.8); transform: scale(1); }
+  40%  { transform: scale(1.04); }
+  70%  { box-shadow: 0 0 0 18px rgba(240,166,58,0); }
+  100% { box-shadow: 0 0 0 0 rgba(240,166,58,0); transform: scale(1); }
+}
+/* Wer im Betriebssystem „Bewegung reduzieren“ eingestellt hat, bekommt keinen Puls */
+@media (prefers-reduced-motion: reduce) {
+  .button-orange { animation: none; }
+}
 .button-block { width: 100%; padding-top: 18px; padding-bottom: 18px; }
 
 .btn { display: inline-block; padding: 10px 24px; border-radius: 120px; font-family: var(--font); font-size: 16px; font-weight: 700; text-decoration: none; cursor: pointer; border: 2px solid transparent; transition: .3s; }
