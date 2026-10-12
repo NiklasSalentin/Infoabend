@@ -48,19 +48,15 @@ entsteht automatisch bei der ersten Anmeldung bzw. beim ersten Speichern in `/ad
 - ⚠️ Den Speicher **nicht** im Netlify-Dashboard löschen – sonst sind alle Anmeldungen weg.
   Vor dem Abend sicherheitshalber die CSV exportieren.
 
-### 2. Zugangsdaten des E-Mail-Postfachs (SMTP) heraussuchen
+### 2. E-Mail-Postfach (Strato)
 
-Die Mails werden über euer eigenes Postfach verschickt, z. B. `infoabend@baufinanz-dueren.de`.
-Die Daten stehen beim Mail-Anbieter, typische Werte:
+Die Mails gehen über das Strato-Postfach **`infoabend@baufinanz-dueren.de`** raus
+(Server `smtp.strato.de`, Port `465` – im Code als Standard hinterlegt). In Netlify muss dafür nur
+das **Passwort dieses Postfachs** als `SMTP_PASS` stehen. Strato signiert die Mails (DKIM), die Domain
+weist gefälschte Absender ab (DMARC) – so landen die Mails nicht im Spam.
 
-| Anbieter | `SMTP_HOST` | `SMTP_PORT` |
-|---|---|---|
-| IONOS | `smtp.ionos.de` | `587` |
-| Strato | `smtp.strato.de` | `465` |
-| Microsoft 365 | `smtp.office365.com` | `587` |
-| Google Workspace | `smtp.gmail.com` | `587` (App-Passwort nötig) |
-
-Tipp: `MAIL_FROM` muss zum Postfach passen, sonst landen die Mails eher im Spam.
+Anderes Postfach/anderer Anbieter? Dann zusätzlich `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER` und `MAIL_FROM`
+setzen (z. B. IONOS: `smtp.ionos.de` / `587`).
 
 ### 3. Umgebungsvariablen in Netlify setzen
 
@@ -71,11 +67,8 @@ Dort unter **Project configuration → Environment variables**:
 
 | Variable | Beispiel | Pflicht? |
 |---|---|---|
-| `SMTP_HOST` | `smtp.ionos.de` | ja |
-| `SMTP_PORT` | `587` | ja |
-| `SMTP_USER` | `infoabend@baufinanz-dueren.de` | ja |
-| `SMTP_PASS` | Passwort des Postfachs | ja – **Secret** |
-| `MAIL_FROM` | `Baufinanz Düren <infoabend@baufinanz-dueren.de>` | empfohlen |
+| `SMTP_PASS` | Passwort des Postfachs `infoabend@baufinanz-dueren.de` | ja – **Secret** |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `MAIL_FROM` | `smtp.strato.de`, `465`, `infoabend@…` | optional – nur bei anderem Postfach |
 | `ADMIN_PASSWORD` | mind. 12 Zeichen, z. B. drei zufällige Wörter: `Kompass-Laterne-Rübe-47` | ja – **Secret** |
 | `NOTIFY_EMAIL` | `infoabend@baufinanz-dueren.de` | optional – Empfänger der Info-Mails (Standard: diese Adresse) |
 | `SITE_URL` | `https://anmeldung.baufinanz-dueren.de` | optional – sonst gilt automatisch die Hauptadresse des Netlify-Projekts |

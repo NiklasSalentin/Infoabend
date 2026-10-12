@@ -6,12 +6,14 @@ import { icsFile, googleCalendarUrl } from './ics.mjs';
 let transport;
 function smtp() {
   if (!transport) {
-    const port = Number(process.env.SMTP_PORT || 587);
+    // Standard: Strato-Postfach infoabend@baufinanz-dueren.de – in Netlify muss nur SMTP_PASS stehen
+    const port = Number(process.env.SMTP_PORT || 465);
+    if (!process.env.SMTP_PASS) throw new Error('SMTP_PASS fehlt in Netlify – Mails können nicht verschickt werden');
     transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
+      host: process.env.SMTP_HOST || 'smtp.strato.de',
       port,
       secure: port === 465,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      auth: { user: process.env.SMTP_USER || EVENT.notifyEmail, pass: process.env.SMTP_PASS },
     });
   }
   return transport;
