@@ -9,6 +9,8 @@ const BOTS = /bot|crawl|spider|slurp|preview|facebookexternalhit|whatsapp|telegr
 export async function visitorHash(req, context) {
   const ua = req.headers.get('user-agent') || '';
   if (!ua || BOTS.test(ua)) return null;
+  // „Do Not Track“ bzw. „Global Privacy Control“ im Browser eingeschaltet → nicht zählen
+  if (req.headers.get('sec-gpc') === '1' || req.headers.get('dnt') === '1') return null;
   const ip = context?.ip || req.headers.get('x-nf-client-connection-ip') || '';
   const salt = process.env.ANALYTICS_SALT || await secretSalt();
   return createHash('sha256').update(`${salt}|${ip}|${ua}`).digest('hex').slice(0, 32);

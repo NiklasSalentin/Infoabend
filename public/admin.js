@@ -121,6 +121,12 @@ $('#reset-stats').onclick = async () => {
   try { await api('POST', { action: 'reset-stats' }); await load(); } catch (e) { alert(e.message); }
 };
 
+$('#purge').onclick = async () => {
+  const word = prompt('Wirklich ALLE Anmeldungen endgültig löschen? Das lässt sich nicht rückgängig machen.\n\nZur Bestätigung LÖSCHEN eingeben:');
+  if (word === null) return;
+  try { await api('POST', { action: 'purge', confirm: word.trim().toUpperCase() }); await load(); alert('Gelöscht'); } catch (e) { alert(e.message); }
+};
+
 $('#csv-addr').onclick = () => download('adressen-infoabend.csv',
   [['name', 'Name'], ['street', 'Straße und Nr.'], ['zip', 'PLZ'], ['city', 'Ort'], ['email', 'E-Mail'], ['phone', 'Telefon']],
   withAddress());

@@ -15,7 +15,7 @@ export async function forwardQuestion({ text, name, ticket }) {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         text: text.slice(0, ASKME_MAX),
-        name: (name || '').slice(0, 60),
+        name: (name || '').trim().split(/\s+/)[0].slice(0, 60), // nur Vorname (Datensparsamkeit)
         speaker: null, // an alle Speaker
         // eigene Geräte-ID je Anmeldung, damit die Mengenbegrenzung der App nicht greift
         clientId: 'anmeldung-' + createHash('sha256').update(String(ticket)).digest('hex').slice(0, 16),

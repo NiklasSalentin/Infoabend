@@ -24,6 +24,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Inhalt | Datei |
 |---|---|
 | Texte, Abschnitte, Kopf/Fuß der Seite | `public/index.html` |
+| Datenschutzhinweise (`/datenschutz`) | `public/datenschutz.html` – bei neuen Daten/Diensten mit anpassen |
 | Farben, Schriften, Layout | `public/style.css` (Variablen in `:root`) |
 | Countdown, Google-Kalender-Link, Formularlogik | `public/app.js` |
 | Datum/Ort/Uhrzeiten für Mail, PDF, Kalenderdatei | `netlify/lib/event.mjs` |

@@ -27,6 +27,12 @@
   to = "/admin.html"
   status = 200
 
+# Datenschutzhinweise zur Anmeldung
+[[redirects]]
+  from = "/datenschutz"
+  to = "/datenschutz.html"
+  status = 200
+
 # Kurzlinks für die QR-Codes je Werbekanal. Die Quelle landet in der Auswertung
 # und bei der Anmeldung (Spalte „Quelle“ in /admin). Neuer Kanal = neuer Block
 # hier + Eintrag in scripts/qr-codes.mjs.

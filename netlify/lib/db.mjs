@@ -213,6 +213,17 @@ export async function resetStats() {
   await s.setJSON('stats', { ...newStats(), internal });
 }
 
+/**
+ * Nach dem Abend (Speicherfrist laut /datenschutz): alle Anmeldungen und alle Besucher-Kennungen löschen.
+ * Übrig bleiben die Einstellungen und die Summen der Auswertung (ohne Personenbezug).
+ */
+export async function purgePersonalData() {
+  const s = store();
+  await mutate('event', newEvent, (ev) => ({ data: { ...ev, registrations: [] }, result: true }));
+  const { blobs } = await s.list({ prefix: 'visitors/' });
+  for (const { key } of blobs) await s.delete(key);
+}
+
 /** Geheimes „Salz“ für den Besucher-Code – einmal zufällig erzeugt und im Speicher abgelegt */
 let salt;
 export async function secretSalt() {

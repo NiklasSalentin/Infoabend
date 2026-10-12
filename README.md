@@ -176,6 +176,8 @@ In der Liste in `/admin` je Zeile:
 - **Stornieren** – die Plätze werden sofort wieder frei.
   Beispiel: A (2 Plätze) storniert → Z (Warteliste, 2 Plätze) → **Nachrücken** klicken.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
+- **Alle Anmeldungen löschen** (unten in `/admin`, nach dem Abend) – für die Speicherfrist aus den
+  Datenschutzhinweisen; zur Bestätigung `LÖSCHEN` eintippen.
 - **Löschen** (nur bei stornierten) – entfernt den Eintrag endgültig, z. B. Testanmeldungen.
 - **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder).
 
@@ -258,7 +260,18 @@ Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen 
 
 ## Noch offen
 
-- **Datenschutzerklärung prüfen** (Veranstaltung, Speicherung der Adressen, Besucherzählung – Schritt 6) – Briefing Punkt 3.
+- **Rechtliches** – eigene Datenschutzhinweise unter `/datenschutz` (`public/datenschutz.html`) sind online.
+  Noch zu tun:
+  - Text einmal vom Datenschutz-Ansprechpartner gegenlesen lassen (keine Rechtsberatung).
+  - Mit Netlify den Auftragsverarbeitungsvertrag (DPA) abschließen, ebenso mit dem E-Mail-Anbieter
+    (bei IONOS/Strato/Microsoft im Kundenkonto abrufbar).
+  - Speicherfristen einhalten: spätestens **9. März 2027** in `/admin` → *Alle Anmeldungen löschen*
+    (vorher **Adressen als CSV** sichern), Fragen in der Fragen-App ebenfalls löschen.
+  - Widersprüche (z. B. „keine Post mehr“) notieren und die Adresse aus euren Listen entfernen.
+  - Hauptseite baufinanz-dueren.de: Impressum ergänzen um die Pflichtangaben als
+    Immobiliardarlehensvermittler (§ 34i GewO: Registernummer, IHK/Erlaubnisbehörde), „§ 5 TMG“ → „§ 5 DDG“,
+    Link zur EU-Streitschlichtungsplattform entfernen (abgeschaltet), Vertretung der KG durch die
+    Komplementär-GmbH richtig angeben.
 - **E-Mail im Fuß bestätigen:** Dort steht `info@baufinanz-dueren.de`. Die Hauptseite zeigt im Fuß
   und im Impressum derzeit eine Adresse mit `@b10x69i.myrdbx.io` (vermutlich Rest vom Umzug zum
   Hoster) – das sollte auf der Hauptseite korrigiert werden.

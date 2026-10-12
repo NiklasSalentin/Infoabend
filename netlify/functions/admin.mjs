@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, resetStats, markInternal, visitStats, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, resetStats, purgePersonalData, markInternal, visitStats, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { visitorHash } from '../lib/visitor.mjs';
@@ -63,6 +63,11 @@ async function handle(req, context) {
     }
     case 'reset-stats': {
       await resetStats();
+      return json({ ok: true });
+    }
+    case 'purge': {
+      if (b.confirm !== 'LÖSCHEN') return json({ error: 'Bitte zur Bestätigung LÖSCHEN eingeben' }, 400);
+      await purgePersonalData();
       return json({ ok: true });
     }
     case 'resend': {

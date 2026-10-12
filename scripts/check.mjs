@@ -37,7 +37,7 @@ for (const n of names) if (!html.includes(`name="${n}"`)) fail(`public/index.htm
 
 // 4. Gedruckte QR-Codes müssen weiter funktionieren
 const toml = read('netlify.toml');
-for (const p of ['/zeitung', '/flyer', '/plakat', '/admin']) {
+for (const p of ['/zeitung', '/flyer', '/plakat', '/admin', '/datenschutz']) {
   if (!toml.includes(`from = "${p}"`)) fail(`netlify.toml: Weiterleitung ${p} fehlt – gedruckte QR-Codes/Verwaltung wären kaputt.`);
 }
 
