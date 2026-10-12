@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, markInternal, visitStats, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, resetStats, markInternal, visitStats, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { visitorHash } from '../lib/visitor.mjs';
@@ -59,6 +59,10 @@ async function handle(req, context) {
     }
     case 'delete': {
       if (!(await deleteRegistration(b.id))) return json({ error: 'Nur stornierte Anmeldungen können gelöscht werden' }, 400);
+      return json({ ok: true });
+    }
+    case 'reset-stats': {
+      await resetStats();
       return json({ ok: true });
     }
     case 'resend': {

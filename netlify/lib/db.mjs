@@ -200,6 +200,19 @@ export const markInternal = (hash) => updateVisitor(hash, null, (v, isNew) => {
   };
 });
 
+/** Auswertung auf null setzen (z. B. nach Tests vor dem Start). Eigene Geräte bleiben als „eigenes Gerät“ markiert. */
+export async function resetStats() {
+  const s = store();
+  const { blobs } = await s.list({ prefix: 'visitors/' });
+  let internal = 0;
+  for (const { key } of blobs) {
+    const v = await s.get(key, { type: 'json' });
+    if (v?.internal) { internal++; await s.setJSON(key, { ...v, views: 0, engaged: false, registered: false }); }
+    else await s.delete(key);
+  }
+  await s.setJSON('stats', { ...newStats(), internal });
+}
+
 /** Geheimes „Salz“ für den Besucher-Code – einmal zufällig erzeugt und im Speicher abgelegt */
 let salt;
 export async function secretSalt() {

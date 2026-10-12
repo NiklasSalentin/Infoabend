@@ -284,6 +284,7 @@ Die Festhalle hat mehr Stühle als gedacht → statt 120 sollen 150 Plätze buch
 | **CSV exportieren** | Liste für Excel: Stuhlplanung, Namensschilder |
 | **Nach Quelle** | Wie viele Anmeldungen über Zeitung, Flyer, Plakat oder direkt kamen |
 | **Auswertung** | Neue Besucher (jede Person nur einmal), wie viele länger als 30 Sekunden blieben, Anmeldungen, Anmeldequote – je Tag und je Quelle. Eigene Geräte zählen nicht mit, sobald man sich einmal in `/admin` angemeldet hat |
+| **Zahlen zurücksetzen** | Setzt die Auswertung auf null (z. B. nach eigenen Tests vor dem Start); Anmeldungen bleiben |
 | **Adressliste** | Alle, die Straße, PLZ und Ort angegeben haben (ohne Stornierte) – mit Knopf **Adressen als CSV** für Excel/Serienbrief |
 
 Regeln der Anmeldung: **eine Anmeldung pro E-Mail-Adresse**, höchstens so viele Plätze wie
@@ -346,7 +347,7 @@ Mindestgröße 2 × 2 cm. Die Adressen `/zeitung`, `/flyer`, `/plakat` bitte **n
 - [ ] Testanmeldung mit eigener E-Mail: Mail da? PDF öffnet? Kalendereintrag klappt?
 - [ ] Info-Mail an `infoabend@baufinanz-dueren.de` angekommen?
 - [ ] Gleiche E-Mail zweimal → wird abgelehnt
-- [ ] In `/admin`: Testanmeldung sichtbar → **Stornieren** → **Löschen**
+- [ ] In `/admin`: Testanmeldung sichtbar → **Stornieren** → **Löschen**, danach in der Auswertung **Zahlen zurücksetzen**
 - [ ] Alle vier QR-Codes mit dem Handy scannen
 - [ ] Auf iPhone und Android einmal komplett durchklicken
 - [ ] Plätze und Maximum pro Person in `/admin` final einstellen

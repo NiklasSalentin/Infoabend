@@ -116,6 +116,11 @@ function download(name, cols, rows) {
   a.click();
 }
 
+$('#reset-stats').onclick = async () => {
+  if (!confirm('Besucherzahlen auf null setzen? Sinnvoll z. B. nach eigenen Tests vor dem Start. Anmeldungen bleiben erhalten.')) return;
+  try { await api('POST', { action: 'reset-stats' }); await load(); } catch (e) { alert(e.message); }
+};
+
 $('#csv-addr').onclick = () => download('adressen-infoabend.csv',
   [['name', 'Name'], ['street', 'Straße und Nr.'], ['zip', 'PLZ'], ['city', 'Ort'], ['email', 'E-Mail'], ['phone', 'Telefon']],
   withAddress());
