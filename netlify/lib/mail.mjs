@@ -136,7 +136,7 @@ export async function sendConfirmation(reg) {
     from: from(),
     to: reg.email,
     replyTo: EVENT.notifyEmail,
-    subject: `Bestätigt: Ihr Platz beim Infoabend am ${EVENT.dateLabel}`,
+    subject: 'Ihr Sitzplatz ist gesichert!',
     html: confirmationHtml(reg),
   });
 }
