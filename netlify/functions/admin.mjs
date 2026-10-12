@@ -2,6 +2,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { db, seatStatus, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
+import { visitorHash } from '../lib/visitor.mjs';
 
 function authorized(req) {
   const expected = process.env.ADMIN_PASSWORD || '';
@@ -15,23 +16,27 @@ export default async (req, context) => {
   useSite(context);
   if (!authorized(req)) return json({ error: 'Nicht berechtigt' }, 401);
   try {
-    return await handle(req);
+    return await handle(req, context);
   } catch (e) {
     console.error(e);
     return json({ error: 'Datenbank nicht erreichbar – sind Supabase-Zugang (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) in Netlify eingetragen?' }, 500);
   }
 };
 
-async function handle(req) {
+async function handle(req, context) {
   const client = db(); // wirft sofort, wenn die Datenbank nicht eingerichtet ist
 
   if (req.method === 'GET') {
-    const [status, list] = await Promise.all([
+    // Wer sich hier anmeldet, ist „eigenes Gerät“ und zählt in der Auswertung nicht mit
+    const hash = visitorHash(req, context);
+    if (hash) await client.rpc('mark_internal', { p_hash: hash });
+    const [status, list, stats] = await Promise.all([
       seatStatus(),
       client.from('registrations').select('*').order('created_at', { ascending: true }),
+      client.rpc('visit_stats'),
     ]);
     if (list.error) return json({ error: list.error.message }, 500);
-    return json({ status, registrations: list.data });
+    return json({ status, registrations: list.data, stats: stats.error ? null : stats.data });
   }
 
   if (req.method !== 'POST') return json({ error: 'Methode nicht erlaubt' }, 405);

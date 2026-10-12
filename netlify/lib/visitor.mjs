@@ -1,0 +1,14 @@
+// Unumkehrbarer Besucher-Code für die Auswertung in /admin – ohne Cookies, ohne Speicher auf dem Gerät.
+// Aus IP + Browser + geheimem Salz wird ein Hash gebildet; die IP-Adresse wird nie gespeichert.
+// Bots/Vorschau-Dienste (z. B. WhatsApp-Linkvorschau, Suchmaschinen) werden nicht gezählt.
+import { createHash } from 'node:crypto';
+
+const BOTS = /bot|crawl|spider|slurp|preview|facebookexternalhit|whatsapp|telegram|slack|discord|curl|wget|python|headless|lighthouse|pingdom|uptime|monitor/i;
+
+export function visitorHash(req, context) {
+  const ua = req.headers.get('user-agent') || '';
+  if (!ua || BOTS.test(ua)) return null;
+  const ip = context?.ip || req.headers.get('x-nf-client-connection-ip') || '';
+  const salt = process.env.ANALYTICS_SALT || process.env.SUPABASE_SERVICE_ROLE_KEY || 'infoabend';
+  return createHash('sha256').update(`${salt}|${ip}|${ua}`).digest('hex').slice(0, 32);
+}

@@ -2,6 +2,7 @@ import { db, json } from '../lib/db.mjs';
 import { sendConfirmation, sendWaitlist, notifyTeam } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { forwardQuestion, ASKME_MAX } from '../lib/askme.mjs';
+import { visitorHash } from '../lib/visitor.mjs';
 
 const str = (v, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -67,6 +68,9 @@ export default async (req, context) => {
   if (messages[r.status]) return json({ status: r.status, free: r.free, error: messages[r.status] }, 409);
 
   const full = { ...reg, status: r.status, ticket_code: r.ticket_code };
+  // Auswertung: diesen Besucher als „angemeldet“ markieren
+  const hash = visitorHash(req, context);
+  if (hash) await db().rpc('mark_registered', { p_hash: hash }).then(({ error }) => error && console.error(error), (e) => console.error(e));
   // Frage vorab gleich an die AskMeSomething-App weitergeben (Fehler dort stoppen die Anmeldung nicht)
   const asked = reg.questions ? forwardQuestion({ text: reg.questions, name: reg.name, ticket: r.ticket_code }) : null;
   try {

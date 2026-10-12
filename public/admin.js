@@ -49,6 +49,9 @@ async function load() {
         .map(([k, v]) => `${k}: ${v.n} Anmeldungen / ${v.seats} Plätze`).join(' · ')
     : '';
 
+  renderStats();
+  renderAddresses();
+
   $('#rows').innerHTML = data.registrations.map((r) => `
     <tr>
       <td><span class="tag ${r.status}">${LABEL[r.status]}</span></td>
@@ -68,6 +71,54 @@ async function load() {
       </td>
     </tr>`).join('');
 }
+
+// Auswertung: Besucher (jede Person einmal), länger auf der Seite, angemeldet
+function renderStats() {
+  const st = data.stats;
+  const regs = data.registrations.filter((r) => r.status !== 'cancelled').length;
+  const pct = (a, b) => (b ? Math.round((a / b) * 100) + ' %' : '–');
+  const empty = '<tr><td colspan="4" class="note">Noch keine Daten</td></tr>';
+  $('#st-registered').textContent = regs;
+  if (!st) {
+    for (const id of ['#st-visitors', '#st-engaged', '#st-rate']) $(id).textContent = '–';
+    $('#st-days').innerHTML = $('#st-sources').innerHTML = empty;
+    return;
+  }
+  $('#st-visitors').textContent = st.visitors;
+  $('#st-engaged').textContent = `${st.engaged} (${pct(st.engaged, st.visitors)})`;
+  $('#st-rate').textContent = pct(regs, st.visitors);
+  $('#st-note').textContent = `Jede Person zählt nur einmal – öffnet jemand die Seite mehrmals, bleibt es ein Besucher (insgesamt ${st.views} Seitenaufrufe). Eigene Geräte (nach dem Anmelden hier in der Verwaltung) und Suchmaschinen-Roboter werden nicht mitgezählt.`;
+  const row = (label, r) => `<tr><td>${esc(label)}</td><td class="r">${r.visitors}</td><td class="r">${r.engaged}</td><td class="r">${r.registered}</td></tr>`;
+  const days = st.by_day || [];
+  $('#st-days').innerHTML = days.length
+    ? days.map((d) => row(new Date(d.day + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }), d)).join('')
+    : empty;
+  const sources = st.by_source || [];
+  $('#st-sources').innerHTML = sources.length ? sources.map((s) => row(s.source || 'direkt', s)).join('') : empty;
+}
+
+// Adressliste: nur vollständige Adressen, ohne stornierte
+const withAddress = () => data.registrations.filter((r) => r.status !== 'cancelled' && r.street && r.zip && r.city);
+
+function renderAddresses() {
+  const list = withAddress();
+  $('#addr-rows').innerHTML = list.length
+    ? list.map((r) => `<tr><td>${esc(r.name)}</td><td>${esc(r.street)}</td><td>${esc(r.zip)}</td><td>${esc(r.city)}</td><td>${esc(r.email)}</td><td>${esc(r.phone)}</td><td>${new Date(r.created_at).toLocaleDateString('de-DE')}</td></tr>`).join('')
+    : '<tr><td colspan="7" class="note">Noch keine vollständigen Adressen</td></tr>';
+}
+
+function download(name, cols, rows) {
+  const cell = (v) => '"' + String(Array.isArray(v) ? v.join(', ') : v ?? '').replace(/"/g, '""') + '"';
+  const csv = '\ufeff' + [cols.map(([, h]) => h).join(';'), ...rows.map((r) => cols.map(([c]) => cell(r[c])).join(';'))].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = name;
+  a.click();
+}
+
+$('#csv-addr').onclick = () => download('adressen-infoabend.csv',
+  [['name', 'Name'], ['street', 'Straße und Nr.'], ['zip', 'PLZ'], ['city', 'Ort'], ['email', 'E-Mail'], ['phone', 'Telefon']],
+  withAddress());
 
 $('#login-btn').onclick = () => { pw = $('#pw').value; load(); };
 $('#pw').onkeydown = (e) => { if (e.key === 'Enter') $('#login-btn').click(); };

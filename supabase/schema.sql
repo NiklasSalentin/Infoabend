@@ -131,3 +131,69 @@ begin
   return 'confirmed';
 end;
 $$;
+
+-- ============================================================================
+-- Besucher-Auswertung (für /admin) – ohne Cookies, ohne Speicher auf dem Gerät.
+-- Pro Besucher nur ein unumkehrbarer Code (Hash aus IP + Browser + geheimem Salz);
+-- die IP-Adresse selbst wird nie gespeichert. Jede Person zählt nur einmal,
+-- egal wie oft sie die Seite öffnet. Eigene Geräte (Login in /admin) zählen nicht.
+-- ============================================================================
+create table if not exists visitors (
+  visitor_hash text primary key,
+  first_seen   timestamptz not null default now(),
+  last_seen    timestamptz not null default now(),
+  views        int not null default 1,          -- Seitenaufrufe dieser Person
+  engaged      boolean not null default false,  -- mind. 30 s aktiv auf der Seite
+  registered   boolean not null default false,  -- hat sich angemeldet
+  internal     boolean not null default false,  -- eigenes Gerät (Login in /admin)
+  source       text                             -- Werbekanal beim ersten Besuch
+);
+alter table visitors enable row level security;
+
+create or replace function track_visit(p_hash text, p_source text default null)
+returns void language sql as $$
+  insert into visitors (visitor_hash, source) values (p_hash, nullif(p_source, ''))
+  on conflict (visitor_hash) do update set views = visitors.views + 1, last_seen = now();
+$$;
+
+create or replace function mark_engaged(p_hash text)
+returns void language sql as $$
+  update visitors set engaged = true where visitor_hash = p_hash;
+$$;
+
+create or replace function mark_registered(p_hash text)
+returns void language sql as $$
+  insert into visitors (visitor_hash, registered) values (p_hash, true)
+  on conflict (visitor_hash) do update set registered = true;
+$$;
+
+create or replace function mark_internal(p_hash text)
+returns void language sql as $$
+  insert into visitors (visitor_hash, internal, views) values (p_hash, true, 0)
+  on conflict (visitor_hash) do update set internal = true;
+$$;
+
+-- Kennzahlen für /admin (eigene Geräte ausgenommen)
+create or replace function visit_stats()
+returns json language sql stable as $$
+  select json_build_object(
+    'visitors',   count(*) filter (where not internal),
+    'views',      coalesce(sum(views) filter (where not internal), 0),
+    'engaged',    count(*) filter (where engaged and not internal),
+    'registered', count(*) filter (where registered and not internal),
+    'internal',   count(*) filter (where internal),
+    'by_day', (select coalesce(json_agg(d order by d.day desc), '[]'::json) from (
+        select to_char(first_seen at time zone 'Europe/Berlin', 'YYYY-MM-DD') as day,
+               count(*) as visitors,
+               count(*) filter (where engaged) as engaged,
+               count(*) filter (where registered) as registered
+        from visitors where not internal and first_seen > now() - interval '60 days'
+        group by 1) d),
+    'by_source', (select coalesce(json_agg(s order by s.visitors desc), '[]'::json) from (
+        select coalesce(source, 'direkt') as source,
+               count(*) as visitors,
+               count(*) filter (where engaged) as engaged,
+               count(*) filter (where registered) as registered
+        from visitors where not internal group by 1) s)
+  ) from visitors;
+$$;

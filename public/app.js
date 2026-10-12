@@ -13,23 +13,23 @@ try {
   else source = sessionStorage.getItem('quelle') || '';
 } catch {}
 
-// Plausible-Ereignis senden (ohne Plausible, z. B. bei Werbeblockern, passiert nichts)
-const track = (name, props, callback) => {
-  try { window.plausible(name, { props, callback }); } catch { callback?.(); }
+// Besuchszählung für die Auswertung in /admin – ohne Cookies, nichts wird auf dem Gerät gespeichert:
+// einmal „Aufruf“ beim Öffnen, einmal „aktiv“ nach 30 Sekunden sichtbarer Zeit auf der Seite
+const sendVisit = (type) => {
+  const body = JSON.stringify({ type, source });
+  if (!(navigator.sendBeacon && navigator.sendBeacon('/api/visit', new Blob([body], { type: 'application/json' })))) {
+    fetch('/api/visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {});
+  }
 };
-
-// Klicks auf „Termin vereinbaren“ zählen, danach zur Kontaktseite der Website
-document.querySelectorAll('a[data-track]').forEach((a) => {
-  a.addEventListener('click', (e) => {
-    const props = { position: a.dataset.track };
-    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return track('Termin vereinbaren', props);
-    e.preventDefault();
-    let done = false;
-    const go = () => { if (!done) { done = true; location.href = a.href; } };
-    track('Termin vereinbaren', props, go);
-    setTimeout(go, 500);
-  });
-});
+sendVisit('view');
+let visibleMs = 0;
+let lastTick = Date.now();
+const engagedTimer = setInterval(() => {
+  const now = Date.now();
+  if (document.visibilityState === 'visible') visibleMs += now - lastTick;
+  lastTick = now;
+  if (visibleMs >= 30000) { clearInterval(engagedTimer); sendVisit('engaged'); }
+}, 1000);
 
 // Countdown bis 9. Dezember 2026
 const eventDate = new Date('2026-12-09T18:00:00+01:00');
@@ -86,14 +86,11 @@ const syncSeal = () => {
 new ResizeObserver(syncSeal).observe(dateBox);
 syncSeal();
 
-// Navigations-Auswahl (Google Maps / Apple Karten): schließen bei Klick daneben oder Escape; Klicks zählen
+// Navigations-Auswahl (Google Maps / Apple Karten): schließen bei Klick daneben oder Escape
 const navChoice = $('.nav-choice');
 document.addEventListener('click', (e) => { if (navChoice.open && !navChoice.contains(e.target)) navChoice.open = false; });
 addEventListener('keydown', (e) => { if (e.key === 'Escape') navChoice.open = false; });
-navChoice.querySelectorAll('a[data-nav]').forEach((a) => a.addEventListener('click', () => {
-  track('Route', { app: a.dataset.nav });
-  navChoice.open = false;
-}));
+navChoice.querySelectorAll('a[data-nav]').forEach((a) => a.addEventListener('click', () => { navChoice.open = false; }));
 
 // Zeichenzähler für „Ihre Fragen vorab“ (max. 300 – so viel nimmt die Fragen-App an)
 const questionsField = form.elements.questions;
@@ -157,7 +154,6 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json();
     if (data.status === 'confirmed' || data.status === 'waitlist') {
-      track(data.status === 'confirmed' ? 'Anmeldung' : 'Warteliste', { plaetze: String(body.seats) });
       form.hidden = true;
       $('#seat-hint').hidden = true;
       $(data.status === 'confirmed' ? '#success' : '#waitlisted').hidden = false;
@@ -169,7 +165,6 @@ form.addEventListener('submit', async (e) => {
       body.waitlist = true;
       const r2 = await (await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })).json();
       if (r2.status === 'waitlist') {
-        track('Warteliste', { plaetze: String(body.seats) });
         form.hidden = true;
         $('#waitlisted').hidden = false;
         return;

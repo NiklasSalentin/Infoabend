@@ -39,6 +39,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | PDF-Einladung (Texte doppelt zur Seite!) | `netlify/lib/pdf.mjs` |
 | Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
 | QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
+| Besucher-Auswertung & Adressliste in `/admin` | `public/admin.html`/`admin.js`, `netlify/functions/visit.mjs`, `netlify/lib/visitor.mjs` |
 | Datenbank (Supabase) | `supabase/schema.sql` – nur mit Niklas ändern |
 | Plätze, Max. pro Person, Warteliste | keine Datei – Verwaltung unter `/admin` |
 

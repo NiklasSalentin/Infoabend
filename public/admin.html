@@ -19,6 +19,13 @@
   .row label { flex: 1; min-width: 160px; }
   .scroll { overflow-x: auto; }
   td button { font-size: .8rem; padding: 3px 8px; margin: 2px 0; cursor: pointer; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 12px 0; }
+  .tile { background: var(--light); border-radius: var(--radius); padding: 14px 16px; }
+  .tile b { display: block; font-size: 2rem; color: var(--primary); line-height: 1.1; }
+  .tile span { font-size: .85rem; color: var(--gray, #7C829A); }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .two h3 { font-size: 1rem; margin: 12px 0 6px; }
+  td.r, th.r { text-align: right; }
 </style>
 </head>
 <body>
@@ -42,6 +49,37 @@
       </div>
       <p id="summary" class="seat-hint"></p>
       <p id="sources" class="note"></p>
+    </div>
+
+    <div class="box">
+      <h2>Auswertung</h2>
+      <div class="tiles">
+        <div class="tile"><b id="st-visitors">–</b><span>neue Besucher</span></div>
+        <div class="tile"><b id="st-engaged">–</b><span>länger als 30 Sek. auf der Seite</span></div>
+        <div class="tile"><b id="st-registered">–</b><span>Anmeldungen</span></div>
+        <div class="tile"><b id="st-rate">–</b><span>Anmeldequote (Anmeldungen je Besucher)</span></div>
+      </div>
+      <p class="note" id="st-note">Jede Person zählt nur einmal – öffnet jemand die Seite mehrmals, bleibt es ein Besucher. Eigene Geräte (nach dem Anmelden hier in der Verwaltung) und Suchmaschinen-Roboter werden nicht mitgezählt.</p>
+      <div class="two">
+        <div><h3>Nach Tag</h3><div class="scroll"><table>
+          <thead><tr><th>Tag</th><th class="r">Besucher</th><th class="r">&gt; 30 Sek.</th><th class="r">angemeldet</th></tr></thead>
+          <tbody id="st-days"></tbody></table></div></div>
+        <div><h3>Nach Quelle (QR-Code)</h3><div class="scroll"><table>
+          <thead><tr><th>Quelle</th><th class="r">Besucher</th><th class="r">&gt; 30 Sek.</th><th class="r">angemeldet</th></tr></thead>
+          <tbody id="st-sources"></tbody></table></div></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Adressliste</h2>
+        <button class="btn btn-outline" id="csv-addr">Adressen als CSV</button>
+      </div>
+      <p class="note">Alle Anmeldungen mit vollständiger Adresse (Straße, PLZ und Ort ausgefüllt) – ohne stornierte.</p>
+      <div class="scroll"><table>
+        <thead><tr><th>Name</th><th>Straße &amp; Nr.</th><th>PLZ</th><th>Ort</th><th>E-Mail</th><th>Telefon</th><th>Angemeldet am</th></tr></thead>
+        <tbody id="addr-rows"></tbody>
+      </table></div>
     </div>
 
     <div class="box">

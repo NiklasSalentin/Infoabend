@@ -104,25 +104,38 @@ npx netlify-cli deploy --prod
 3. Warten (meist Minuten, selten bis 24 Stunden). Das HTTPS-Zertifikat richtet Netlify
    automatisch ein.
 
-### 6. Plausible (Besucherzahlen, cookiefrei)
+### 6. Besucher-Auswertung (eingebaut, ohne Cookies)
 
-1. Konto auf [plausible.io](https://plausible.io) → **Add website** → `anmeldung.baufinanz-dueren.de`.
-2. Der Code-Schnipsel ist schon in `public/index.html` eingebaut. Zeigt Plausible beim Anlegen
-   einen anderen Schnipsel an (neue Konten bekommen teils ein persönliches Skript `pa-….js`),
-   die beiden Plausible-Zeilen im `<head>` von `public/index.html` damit ersetzen.
-3. **Settings → Goals → Add goal → Custom event** – drei Ziele anlegen:
-   `Anmeldung`, `Warteliste`, `Termin vereinbaren`.
-4. Die **Datenschutzerklärung** um Plausible ergänzen (siehe Briefing, Punkt 3 „Rechtliches“).
+Nichts einzurichten – sobald Supabase läuft (Schritt 1), zählt die Seite selbst mit. Die Zahlen
+stehen in `/admin` im Kasten **Auswertung**.
+
+So funktioniert es:
+- Beim Öffnen der Seite schickt sie einen „Aufruf“ an `/api/visit`, nach 30 Sekunden sichtbarer
+  Zeit einmal „aktiv“.
+- Der Server bildet aus IP-Adresse + Browserkennung einen **unumkehrbaren Code** (Hash). Nur
+  dieser Code wird gespeichert, keine IP und kein Cookie auf dem Gerät – deshalb kein
+  Cookie-Banner.
+- Gleicher Code = gleiche Person → zählt nur **einmal** („neue Besucher“). Mehrfachöffnungen
+  erhöhen nur die Zahl „Seitenaufrufe“.
+- Wer sich in `/admin` anmeldet, wird als **eigenes Gerät** markiert und nicht mitgezählt.
+  Bots/Link-Vorschauen (WhatsApp, Google …) werden ebenfalls ausgefiltert.
+- Optional: Umgebungsvariable `ANALYTICS_SALT` (beliebiger zufälliger Text) – sonst wird ein
+  vorhandener Schlüssel als „Salz“ für den Hash verwendet.
+
+Grenzen: Wechselt jemand das Netz (WLAN → Mobilfunk) oder das Gerät, kann er doppelt zählen;
+mehrere Personen im selben WLAN mit gleichem Browser können als eine zählen. Für einen
+Infoabend ist das genau genug.
 
 **Was ihr dann seht – Beispiel:**
 
-| Quelle | Besucher | Anmeldungen | Quote |
+| Quelle | Besucher | > 30 Sek. | angemeldet |
 |---|---|---|---|
-| zeitung | 320 | 40 | 12,5 % |
-| flyer | 90 | 15 | 16,7 % |
-| direkt | 60 | 5 | 8,3 % |
+| zeitung | 320 | 150 | 40 |
+| flyer | 90 | 50 | 15 |
+| direkt | 60 | 20 | 5 |
 
-Die Spalte „Anmeldungen je Quelle“ seht ihr auch **ohne** Plausible in `/admin`.
+Die **Datenschutzerklärung** sollte diese Zählung erwähnen (gekürzte, unumkehrbare
+Kennung aus IP und Browser, kein Cookie, Zweck: Besucherstatistik).
 
 ## Bedienung im Alltag
 
@@ -229,8 +242,7 @@ Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen 
 
 ## Noch offen
 
-- **Plausible einrichten** (Schritt 6).
-- **Datenschutzerklärung prüfen** (Veranstaltung, Speicherung der Adressen, Plausible) – Briefing Punkt 3.
+- **Datenschutzerklärung prüfen** (Veranstaltung, Speicherung der Adressen, Besucherzählung – Schritt 6) – Briefing Punkt 3.
 - **E-Mail im Fuß bestätigen:** Dort steht `info@baufinanz-dueren.de`. Die Hauptseite zeigt im Fuß
   und im Impressum derzeit eine Adresse mit `@b10x69i.myrdbx.io` (vermutlich Rest vom Umzug zum
   Hoster) – das sollte auf der Hauptseite korrigiert werden.

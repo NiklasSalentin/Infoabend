@@ -104,7 +104,7 @@ Die Details zu allem findest du in den folgenden Abschnitten.
 | Verwaltung (Plätze, Anmeldeliste) | https://anmeldung.baufinanz-dueren.de/admin – Passwort bekommst du von Niklas |
 | Code (GitHub) | https://github.com/NiklasSalentin/Infoabend |
 | Veröffentlichung (Netlify) | https://app.netlify.com/projects/baufiabend |
-| Technische Einrichtung (Supabase, E-Mail, Domain, Plausible) | [`README.md`](README.md) |
+| Technische Einrichtung (Supabase, E-Mail, Domain, Besucherzählung) | [`README.md`](README.md) |
 
 **Live-Branch:** `claude/relaxed-cannon-2kqiie` – nur was auf diesem Branch landet, geht online.
 
@@ -280,8 +280,10 @@ Die Festhalle hat mehr Stühle als gedacht → statt 120 sollen 150 Plätze buch
 | **Nachrücken** (Warteliste) | Nur wenn genug Plätze frei sind; Person bekommt automatisch die Einladung mit PDF |
 | **Stornieren** | Plätze werden sofort wieder frei |
 | **Mail erneut** | Schickt die Einladung noch einmal |
-| **CSV exportieren** | Liste für Excel: Stuhlplanung, Namensschilder, Adressliste |
+| **CSV exportieren** | Liste für Excel: Stuhlplanung, Namensschilder |
 | **Nach Quelle** | Wie viele Anmeldungen über Zeitung, Flyer, Plakat oder direkt kamen |
+| **Auswertung** | Neue Besucher (jede Person nur einmal), wie viele länger als 30 Sekunden blieben, Anmeldungen, Anmeldequote – je Tag und je Quelle. Eigene Geräte zählen nicht mit, sobald man sich einmal in `/admin` angemeldet hat |
+| **Adressliste** | Alle, die Straße, PLZ und Ort angegeben haben (ohne Stornierte) – mit Knopf **Adressen als CSV** für Excel/Serienbrief |
 
 Regeln der Anmeldung: **eine Anmeldung pro E-Mail-Adresse**, höchstens so viele Plätze wie
 eingestellt. Ist der Abend voll, können sich Besucher auf die Warteliste setzen.
@@ -326,13 +328,12 @@ Mindestgröße 2 × 2 cm. Die Adressen `/zeitung`, `/flyer`, `/plakat` bitte **n
    `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `ADMIN_PASSWORD` eintragen →
    *Deploys → Trigger deploy* → **Testanmeldung** machen.
    **Erst danach die QR-Codes drucken bzw. die Annonce schalten.**
-2. **Plausible** (Besucherzahlen, cookiefrei) einrichten – README Schritt 6.
-3. **Datenschutzerklärung prüfen**: Veranstaltung, Speicherung der Adressen, Plausible
-   (Briefing Punkt 3 „Rechtliches“).
-4. **E-Mail im Fuß bestätigen**: Dort steht `info@baufinanz-dueren.de` – gibt es das Postfach?
-5. **Fehler auf der Hauptseite**: Im Fuß und im **Impressum** von baufinanz-dueren.de stehen
+2. **Datenschutzerklärung prüfen**: Veranstaltung, Speicherung der Adressen, Besucherzählung
+   ohne Cookies (README Schritt 6; Briefing Punkt 3 „Rechtliches“).
+3. **E-Mail im Fuß bestätigen**: Dort steht `info@baufinanz-dueren.de` – gibt es das Postfach?
+4. **Fehler auf der Hauptseite**: Im Fuß und im **Impressum** von baufinanz-dueren.de stehen
    E-Mail-Adressen mit `@b10x69i.myrdbx.io` (Rest vom Hoster-Umzug) – in WordPress korrigieren.
-6. **Plakat**: Tippfehler „Rednerbeitrag durch eien Ntar“ → „einen Notar“.
+5. **Plakat**: Tippfehler „Rednerbeitrag durch eien Ntar“ → „einen Notar“.
 7. Offene Entscheidung: Soll der Absende-Knopf im Formular („Platz verbindlich reservieren“)
    auch orange werden wie „Jetzt Platz sichern“?
 8. Netlify: Das leere Projekt **anmeldung-baufinanz** wird nicht gebraucht und kann gelöscht werden.

@@ -27,7 +27,7 @@
   to = "/admin.html"
   status = 200
 
-# Kurzlinks für die QR-Codes je Werbekanal. Die Quelle landet in Plausible
+# Kurzlinks für die QR-Codes je Werbekanal. Die Quelle landet in der Auswertung
 # und bei der Anmeldung (Spalte „Quelle“ in /admin). Neuer Kanal = neuer Block
 # hier + Eintrag in scripts/qr-codes.mjs.
 [[redirects]]
