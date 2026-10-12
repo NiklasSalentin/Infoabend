@@ -24,48 +24,65 @@ selbst zu pflegen – Texte, Bilder, Uhrzeiten, Plätze. Für die meisten Änder
 
 ---
 
-## 2. So kommt eine Änderung online
+## 2. So kommt eine Änderung online – automatisch
 
 ```
-Du änderst eine Datei auf GitHub  →  Netlify merkt das automatisch  →  nach ca. 1 Minute ist sie live
+Du beschreibst die Änderung in Claude Code
+   → Claude ändert die Dateien und speichert sie auf GitHub
+   → automatische Prüfung (Formular intakt? Uhrzeiten überall gleich? keine Passwörter?)
+   → automatisch übernommen und veröffentlicht – nach ca. 2 Minuten live
 ```
 
-Geht dabei etwas schief, bleibt einfach die alte Version online – kaputt machen kannst du nichts.
-Jede Änderung ist auf GitHub gespeichert und lässt sich zurückholen.
+Du musst nichts zusammenführen, freigeben oder hochladen. Findet die Prüfung ein Problem,
+geht **nichts** online – die Seite bleibt einfach, wie sie war. Kaputt machen kannst du also
+nichts, und jede Änderung lässt sich zurückholen.
 
-### Weg A: Direkt im Browser auf GitHub (ohne Installation)
+### Empfohlen: Weg A – Änderungen in Claude Code eingeben
 
-Voraussetzung: Niklas lädt dich einmalig ins Repo ein
-(GitHub → Repo → *Settings → Collaborators → Add people*).
+Voraussetzung (einmalig): Niklas lädt dich ins GitHub-Repo ein
+(*Settings → Collaborators → Add people*), und dein GitHub-Konto ist in Claude verbunden.
+
+1. https://claude.ai/code öffnen, das Repo **`NiklasSalentin/Infoabend`** auswählen.
+2. Die Änderung in normalen Worten beschreiben, z. B.:
+
+   > „Ändere den Einlass von 18:00 auf 17:30 Uhr – überall, auch in Mail, PDF und Kalender.“
+
+   > „Tausche das Porträtfoto gegen das angehängte Bild aus.“
+
+   > „Ersetze im Abschnitt zum Notartermin den letzten Satz durch: …“
+
+   > „Füge einen QR-Code für den Werbekanal ‚Radio‘ hinzu.“
+
+3. Claude kennt das Projekt (Anleitung in `CLAUDE.md`), zeigt bei Gestaltungsfragen vorher/nachher
+   und meldet sich, wenn die Änderung gespeichert ist.
+4. Nach ca. 2 Minuten https://anmeldung.baufinanz-dueren.de neu laden
+   (Mac: **⌘ + Shift + R**, Windows: **Strg + F5**).
+
+### Weg B – kleine Textänderung direkt im Browser auf GitHub
+
+Voraussetzung: dieselbe GitHub-Einladung wie bei Weg A.
 
 1. https://github.com/NiklasSalentin/Infoabend öffnen, oben links muss der Branch
    **`claude/relaxed-cannon-2kqiie`** ausgewählt sein.
 2. Datei anklicken, z. B. `public/index.html`.
 3. Oben rechts auf den **Stift** (*Edit this file*) klicken.
 4. Text ändern. Tipp: Mit **Strg + F** (Mac: **⌘ + F**) findest du die Stelle schnell.
-5. Oben rechts **Commit changes…** → kurze Beschreibung eintragen (z. B. „Einlass auf 17:30 Uhr“)
-   → **Commit changes**.
-6. Nach ca. 1 Minute https://anmeldung.baufinanz-dueren.de neu laden
-   (Mac: **⌘ + Shift + R**, Windows: **Strg + F5**).
+5. Oben rechts **Commit changes…** → kurze Beschreibung (z. B. „Tippfehler korrigiert“)
+   → **Commit changes**. Nach ca. 1 Minute ist die Änderung live.
 
-Ob die Veröffentlichung geklappt hat, siehst du in Netlify unter **Deploys**
-(grün „Published“ = online).
+Achtung: Auf diesem Weg geht die Änderung **sofort** live; die Prüfung läuft erst danach und
+meldet Probleme nur per E-Mail. Für mehr als einen Tippfehler deshalb lieber Weg A.
 
-### Weg B: Claude Code die Änderung machen lassen
+### Wo sehe ich, ob alles geklappt hat?
 
-Auf https://claude.ai/code das Repo `NiklasSalentin/Infoabend` öffnen und die Änderung einfach
-beschreiben. Beispiele:
+| Wo | Was du siehst |
+|---|---|
+| GitHub → Reiter **Actions** | „Änderungen automatisch übernehmen“: grüner Haken = übernommen, rotes ✗ = nicht übernommen |
+| Netlify → **Deploys** | „Published“ = online |
+| E-Mail von GitHub | kommt nur, wenn etwas schiefging – mit Begründung |
 
-> „Ändere auf der Anmeldeseite den Einlass von 18:00 auf 17:30 Uhr – überall, auch in der
-> Bestätigungsmail, im PDF und im Kalendereintrag. Committe und pushe auf den Live-Branch
-> `claude/relaxed-cannon-2kqiie`.“
-
-> „Tausche das Porträtfoto gegen die angehängte Datei aus.“
-
-> „Füge einen QR-Code für den Werbekanal ‚radio‘ hinzu.“
-
-Wichtig: Arbeitet Claude auf einem **anderen Branch**, geht die Änderung erst online, wenn sie in
-`claude/relaxed-cannon-2kqiie` übernommen wurde (Pull Request mergen).
+**Rotes ✗?** In Claude Code einfach schreiben: „Die automatische Übernahme ist fehlgeschlagen –
+bitte prüfen und beheben.“ Die Seite war in der Zwischenzeit nie kaputt.
 
 ---
 
@@ -94,6 +111,11 @@ Wichtig: Arbeitet Claude auf einem **anderen Branch**, geht die Änderung erst o
 Du möchtest „Praxisnah, verständlich, ohne Fachchinesisch.“ durch „Praxisnah und verständlich.“
 ersetzen.
 
+**Mit Claude Code (Weg A):** „Ersetze ‚Praxisnah, verständlich, ohne Fachchinesisch.‘ durch
+‚Praxisnah und verständlich.‘ – auch im PDF.“ Fertig.
+
+**Von Hand auf GitHub (Weg B):**
+
 1. `public/index.html` öffnen → Stift → **Strg + F** → „Fachchinesisch“ suchen.
 2. Nur den Text ändern, die Zeichen drumherum stehen lassen:
 
@@ -109,7 +131,11 @@ ersetzen.
 
 ### Beispiel 2: Einlass von 18:00 auf 17:30 Uhr ändern
 
-Uhrzeiten stehen an mehreren Stellen, weil Seite, Mail, PDF und Kalender sie jeweils brauchen:
+**Mit Claude Code (Weg A):** „Ändere den Einlass von 18:00 auf 17:30 Uhr – überall.“ Claude kennt
+alle Stellen; die automatische Prüfung stellt sicher, dass keine vergessen wurde.
+
+**Zum Nachvollziehen** – Uhrzeiten stehen an mehreren Stellen, weil Seite, Mail, PDF und Kalender
+sie jeweils brauchen:
 
 | Datei | Suchen nach | Ändern in |
 |---|---|---|
@@ -141,7 +167,10 @@ Das neue Bild muss **genau so heißen** wie das alte, dann ist keine weitere Än
 | FOCUS-MONEY-Siegel | `kundenliebling-2026.png` |
 | Hausfoto oben | `hero-haus.webp` |
 
-So geht's: Ordner `public/assets` öffnen → **Add file → Upload files** → Bild mit demselben
+**Mit Claude Code (Weg A):** Bild in den Chat ziehen und schreiben „Tausche das Porträtfoto
+gegen dieses Bild aus.“ Claude verkleinert es passend.
+
+**Von Hand auf GitHub (Weg B):** Ordner `public/assets` öffnen → **Add file → Upload files** → Bild mit demselben
 Namen hochladen → **Commit changes**.
 Tipp: Bilder vorher verkleinern (max. ca. 1600 px breit, unter 300 KB), sonst lädt die Seite
 langsam – z. B. mit https://squoosh.app.

@@ -5,7 +5,8 @@
   "description": "Anmeldeseite Infoabend Baufinanz Düren (anmeldung.baufinanz-dueren.de)",
   "scripts": {
     "dev": "netlify dev",
-    "qr": "node scripts/qr-codes.mjs"
+    "qr": "node scripts/qr-codes.mjs",
+    "check": "node scripts/check.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

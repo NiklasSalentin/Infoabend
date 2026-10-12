@@ -1,0 +1,62 @@
+# Anmeldeseite Infoabend – Arbeitsanweisungen für Claude
+
+Anmeldeseite für den Infoabend der Baufinanz Düren am 9. Dezember 2026, live unter
+https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
+Änderungen kommen meist von **Alex** (Inhaber, kein Entwickler) oder **Niklas**.
+
+## Wie Änderungen live gehen – automatisch
+
+- Live-Branch: **`claude/relaxed-cannon-2kqiie`**. Netlify veröffentlicht jeden Push darauf.
+- Du arbeitest auf deinem Sitzungs-Branch. Nach dem Push übernimmt die GitHub Action
+  `.github/workflows/auto-merge.yml` die Änderung **automatisch**: zusammenführen → `npm run check`
+  → Push auf den Live-Branch → Netlify veröffentlicht (ca. 1–2 Minuten).
+  **Kein Pull Request nötig, nicht selbst in den Live-Branch mergen.**
+- Vor jedem Push: `npm ci` (falls nötig) und **`npm run check`** – nur bei „✓ Alles in Ordnung“ pushen.
+- Nach dem Push dem Nutzer sagen: „Die Änderung wird geprüft und ist in ca. 2 Minuten live auf
+  https://anmeldung.baufinanz-dueren.de (Seite neu laden).“ Wenn möglich den Lauf der Action
+  bzw. den Netlify-Deploy prüfen und das Ergebnis melden.
+- Schlägt die Action fehl (Konflikt oder Prüfung rot), ist nichts live gegangen: Ursache beheben,
+  bei Konflikt den Live-Branch in den Sitzungs-Branch mergen, erneut pushen.
+
+## Umgang mit Alex
+
+- Deutsch, einfache Worte, keine Fachbegriffe ohne Erklärung; mit Beispielen erklären.
+- Rückfragen als Auswahl (Multiple Choice), eine pro Nachricht.
+- Bei Design-/Farbfragen vorher/nachher als Screenshot zeigen (Playwright, Chromium unter
+  `/opt/pw-browsers/chromium`, lokal z. B. `python3 -m http.server` im Ordner `public`).
+- Texte stammen aus der finalen Inhalts-Checkliste: nur ändern, wenn darum gebeten wird;
+  Tippfehler dürfen korrigiert werden. Notar auf der Seite **ohne Namen** (Vorgabe Checkliste).
+
+## Wo steht was
+
+| Inhalt | Datei |
+|---|---|
+| Texte, Abschnitte, Kopf/Fuß der Seite | `public/index.html` |
+| Farben, Schriften, Layout | `public/style.css` (Variablen in `:root`) |
+| Countdown, Google-Kalender-Link, Formularlogik | `public/app.js` |
+| Datum/Ort/Uhrzeiten für Mail, PDF, Kalenderdatei | `netlify/lib/event.mjs` |
+| Bestätigungs-/Wartelisten-/Team-Mail | `netlify/lib/mail.mjs` |
+| PDF-Einladung (Texte doppelt zur Seite!) | `netlify/lib/pdf.mjs` |
+| Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
+| QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
+| Datenbank (Supabase) | `supabase/schema.sql` – nur mit Niklas ändern |
+| Plätze, Max. pro Person, Warteliste | keine Datei – Verwaltung unter `/admin` |
+
+## Regeln
+
+- **Datum und Uhrzeiten** stehen an mehreren Stellen und müssen gleich bleiben
+  (`npm run check` prüft das): `netlify/lib/event.mjs` (`dateLabel`, `admission`, `start`,
+  `startUtc`, `endUtc`), `public/index.html` (Datumsfeld, „Einlass …“, „… um 18:30 Uhr losgeht“,
+  Meta-Beschreibung), `public/app.js` (`eventDate`, Kalender-`dates`, `details`),
+  `netlify/lib/pdf.mjs` („… um 18:30 Uhr losgeht“). Kalenderzeiten in UTC: im Dezember
+  deutsche Zeit minus 1 Stunde (18:00 → `170000Z`).
+- `id="…"`/`name="…"` im Formular nicht ändern – `public/app.js` hängt daran.
+- Kopf und Fuß sind 1:1 von baufinanz-dueren.de; der obere Abschnitt folgt dem Infoabend-Plakat
+  (Logo-Blau `#323D8D`, Navy `#1C2350`, Gold `#D9B56C`); „Jetzt Platz sichern“ ist Gelb-Orange
+  `#f0a63a` und pulsiert.
+- Das Repo ist **öffentlich**: keine Passwörter/Schlüssel (nur Netlify-Umgebungsvariablen),
+  keine Anmeldelisten oder andere personenbezogenen Daten, keine Bilder mit ungeklärten Rechten
+  (z. B. Canva-Stockfotos).
+- Bilder vor dem Einchecken verkleinern (max. ca. 1600 px, möglichst < 300 KB; WebP/JPG).
+- Die Weiterleitungen `/zeitung`, `/flyer`, `/plakat` nie entfernen – gedruckte QR-Codes zeigen darauf.
+- Bedienungsanleitung für Menschen: `UEBERGABE.md`; technische Einrichtung: `README.md`.
