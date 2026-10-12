@@ -33,7 +33,7 @@ const html = read('public/index.html');
 const ids = ['form', 'seats', 'companions', 'has-companion', 'error', 'submit', 'success', 'waitlisted', 'gcal',
   'seat-hint', 'countdown', 'seats-free', 'seats-label', 'social-proof', 'attendees', 'anmeldung', 'mobile-menu'];
 for (const id of ids) if (!html.includes(`id="${id}"`)) fail(`public/index.html: id="${id}" fehlt – bitte wiederherstellen (wird von app.js gebraucht).`);
-const names = ['name', 'email', 'phone', 'street', 'zip', 'city', 'addressConsent', 'privacyConsent', 'questions', 'website'];
+const names = ['name', 'email', 'phone', 'street', 'houseNumber', 'zip', 'city', 'privacyConsent', 'questions', 'website'];
 for (const n of names) if (!html.includes(`name="${n}"`)) fail(`public/index.html: Formularfeld name="${n}" fehlt.`);
 if (!html.includes('class="menu-toggle"')) fail('public/index.html: Menü-Knopf (class="menu-toggle") fehlt.');
 

@@ -170,6 +170,10 @@ p { margin: 0 0 1em; }
 form { margin-top: 24px; padding: 36px; border-radius: var(--radius-lg); background: var(--white); box-shadow: 0 10px 30px rgba(26,53,105,.08); }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; margin-bottom: 16px; }
 .span2 { grid-column: span 2; }
+.grid-street { grid-template-columns: 3fr 1fr; }
+.grid-city { grid-template-columns: 1fr 2fr; }
+/* dezenter Hinweis „optional“ hinter dem Feldnamen */
+.optional { margin-left: 4px; color: #9aa0b4; font-size: 12px; font-weight: 400; }
 label { display: block; font-size: 16px; font-weight: 600; }
 input, select, textarea { display: block; width: 100%; margin-top: 6px; padding: 13px 16px; border: 1px solid #d5daea; border-radius: var(--radius); background: var(--white); color: var(--text); font: inherit; font-size: 16px; font-weight: 400; }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(60,89,173,.2); }
@@ -306,5 +310,7 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   form { padding: 22px; }
   .grid { grid-template-columns: 1fr; }
   .span2 { grid-column: auto; }
+  .grid.grid-street { grid-template-columns: 2fr 1fr; }
+  .grid.grid-city { grid-template-columns: 1fr 2fr; }
   .button-main { padding: 12px 22px; }
 }

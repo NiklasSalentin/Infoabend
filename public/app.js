@@ -90,15 +90,6 @@ hasCompanion.addEventListener('change', () => {
   renderCompanions();
 });
 
-// Adress-Einverständnis nur Pflicht, wenn Adresse ausgefüllt
-const addressFields = ['street', 'zip', 'city'].map((n) => form.elements[n]);
-const addressConsent = form.elements.addressConsent;
-const syncAddress = () => {
-  const filled = addressFields.some((f) => f.value.trim());
-  addressConsent.required = filled;
-  $('#address-consent-wrap .req').hidden = !filled;
-};
-addressFields.forEach((f) => f.addEventListener('input', syncAddress));
 
 async function loadStatus() {
   try {
@@ -131,7 +122,6 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const err = $('#error');
   err.textContent = '';
-  syncAddress();
   if (!form.reportValidity()) return;
 
   const f = form.elements;
@@ -139,8 +129,7 @@ form.addEventListener('submit', async (e) => {
     name: f.name.value, email: f.email.value, phone: f.phone.value,
     seats: Number(seatsSel.value),
     companions: [...companionBox.querySelectorAll('input')].map((i) => i.value),
-    street: f.street.value, zip: f.zip.value, city: f.city.value,
-    addressConsent: addressConsent.checked,
+    street: f.street.value, houseNumber: f.houseNumber.value, zip: f.zip.value, city: f.city.value,
     privacyConsent: f.privacyConsent.checked,
     questions: f.questions.value,
     website: f.website.value,
@@ -173,7 +162,7 @@ form.addEventListener('submit', async (e) => {
       }
       err.textContent = r2.error || 'Fehler';
     } else {
-      err.textContent = data.errors ? Object.values(data.errors).join(' ') : data.error || 'Unbekannter Fehler';
+      err.textContent = data.errors ? Object.values(data.errors).join(' ') : data.error || 'Die Anmeldung ist gerade nicht möglich. Bitte versuchen Sie es später erneut oder rufen Sie uns an: 0172 60 75 100.';
     }
     loadStatus();
   } catch {

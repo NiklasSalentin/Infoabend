@@ -22,31 +22,35 @@ export default async (req, context) => {
     phone: str(b.phone, 40),
     seats: Number.parseInt(b.seats, 10) || 1,
     companions: Array.isArray(b.companions) ? b.companions.map((c) => str(c, 120)).filter(Boolean).slice(0, 10) : [],
-    street: str(b.street, 150) || null,
+    // Straße und Hausnummer werden zusammen gespeichert (Spalte street)
+    street: [str(b.street, 150), str(b.houseNumber, 20)].filter(Boolean).join(' ') || null,
     zip: str(b.zip, 10) || null,
     city: str(b.city, 100) || null,
-    address_consent: b.addressConsent === true,
+    address_consent: false,
     questions: str(b.questions, 2000) || null,
     // Werbekanal aus dem QR-Code, z. B. 'zeitung' (leer = direkt aufgerufen)
     source: str(b.source, 40).toLowerCase().replace(/[^a-z0-9-]/g, '') || null,
   };
-  const hasAddress = Boolean(reg.street || reg.zip || reg.city);
 
   const errors = {};
   if (!reg.name) errors.name = 'Bitte geben Sie Ihren Namen an.';
   if (!EMAIL_RE.test(reg.email)) errors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse an.';
   if (reg.phone.replace(/\D/g, '').length < 6) errors.phone = 'Bitte geben Sie Ihre Telefonnummer an.';
   if (b.privacyConsent !== true) errors.privacyConsent = 'Bitte bestätigen Sie die Datenschutzerklärung.';
-  if (hasAddress && !reg.address_consent) errors.addressConsent = 'Bitte bestätigen Sie den Versand per Post.';
   if (Object.keys(errors).length) return json({ error: 'Bitte prüfen Sie Ihre Angaben.', errors }, 422);
-  if (!hasAddress) reg.address_consent = false;
 
-  const { data, error } = await db().rpc('book_seats', {
-    p_name: reg.name, p_email: reg.email, p_phone: reg.phone, p_seats: reg.seats,
-    p_companions: reg.companions, p_street: reg.street, p_zip: reg.zip, p_city: reg.city,
-    p_address_consent: reg.address_consent, p_questions: reg.questions,
-    p_waitlist_ok: b.waitlist === true, p_source: reg.source,
-  });
+  let data, error;
+  try {
+    ({ data, error } = await db().rpc('book_seats', {
+      p_name: reg.name, p_email: reg.email, p_phone: reg.phone, p_seats: reg.seats,
+      p_companions: reg.companions, p_street: reg.street, p_zip: reg.zip, p_city: reg.city,
+      p_address_consent: reg.address_consent, p_questions: reg.questions,
+      p_waitlist_ok: b.waitlist === true, p_source: reg.source,
+    }));
+  } catch (e) {
+    // z. B. Datenbank nicht eingerichtet (SUPABASE_URL fehlt) oder nicht erreichbar
+    error = e;
+  }
   if (error) {
     console.error(error);
     return json({ error: 'Die Anmeldung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.' }, 500);

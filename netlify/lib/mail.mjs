@@ -86,7 +86,6 @@ export async function notifyTeam(reg) {
     ['Name', reg.name], ['E-Mail', reg.email], ['Telefon', reg.phone],
     ['Plätze', reg.seats], ['Begleitung', (reg.companions || []).join(', ') || '–'],
     ['Adresse', [reg.street, reg.zip, reg.city].filter(Boolean).join(', ') || '–'],
-    ['Magazin per Post', reg.address_consent ? 'Ja' : 'Nein'],
     ['Fragen vorab', reg.questions || '–'], ['Quelle', reg.source || 'direkt'], ['Ticket', reg.ticket_code],
   ];
   await smtp().sendMail({

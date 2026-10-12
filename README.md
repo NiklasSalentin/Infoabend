@@ -193,7 +193,6 @@ Google-Wallet-Ausstellerkonto nötig).
 - [ ] Testanmeldung mit eigener E-Mail: Mail da? PDF öffnet? Kalendereintrag klappt?
 - [ ] Info-Mail an `infoabend@baufinanz-dueren.de` angekommen?
 - [ ] Ohne Datenschutz-Häkchen lässt sich nicht absenden
-- [ ] Adresse ausgefüllt → Häkchen „Themenmagazin per Post“ wird Pflicht
 - [ ] Gleiche E-Mail zweimal → wird abgelehnt
 - [ ] `/admin`: Testanmeldung sichtbar → **Stornieren** (damit sie nicht mitzählt)
 - [ ] QR-Codes mit dem Handy scannen (alle vier)

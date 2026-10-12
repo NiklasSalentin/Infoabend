@@ -151,21 +151,18 @@
             <select name="seats" id="seats"><option value="1">1 Platz</option></select>
           </label>
         </div>
+        <div class="grid grid-street">
+          <label>Straße <span class="optional">optional</span><input name="street" autocomplete="address-line1"></label>
+          <label>Hausnummer <span class="optional">optional</span><input name="houseNumber" autocomplete="off"></label>
+        </div>
+        <div class="grid grid-city">
+          <label>PLZ <span class="optional">optional</span><input name="zip" autocomplete="postal-code" inputmode="numeric"></label>
+          <label>Ort <span class="optional">optional</span><input name="city" autocomplete="address-level2"></label>
+        </div>
 
         <p class="note">Begleitperson willkommen – bitte bei der Anmeldung angeben, damit genug Plätze reserviert werden können.</p>
         <label class="check"><input type="checkbox" id="has-companion"> Ich komme mit Begleitung</label>
         <div id="companions" class="grid" hidden></div>
-
-        <fieldset>
-          <legend>Adresse (freiwillig – für den Versand des Themenmagazins)</legend>
-          <div class="grid">
-            <label class="span2">Straße &amp; Hausnummer<input name="street" autocomplete="street-address"></label>
-            <label>PLZ<input name="zip" autocomplete="postal-code" inputmode="numeric"></label>
-            <label>Ort<input name="city" autocomplete="address-level2"></label>
-          </div>
-          <label class="check small" id="address-consent-wrap"><input type="checkbox" name="addressConsent">
-            <span>Mit Angabe meiner Adresse erkläre ich mich damit einverstanden, das Themenmagazin sowie weitere Informationen und Werbemaßnahmen kostenlos von Baufinanz Düren per Post zu erhalten.<span class="req" hidden>*</span></span></label>
-        </fieldset>
 
         <label>Ihre Fragen vorab (optional)
           <textarea name="questions" rows="3" placeholder="Was möchten Sie an dem Abend unbedingt erfahren?"></textarea></label>
