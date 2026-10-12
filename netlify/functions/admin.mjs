@@ -73,7 +73,12 @@ async function handle(req, context) {
     case 'resend': {
       const reg = await getRegistration(b.id);
       if (!reg || reg.status !== 'confirmed') return json({ error: 'Nur für bestätigte Anmeldungen' }, 400);
-      await sendConfirmation(reg);
+      try {
+        await sendConfirmation(reg);
+      } catch (e) {
+        console.error(e);
+        return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502);
+      }
       return json({ ok: true });
     }
     default:
