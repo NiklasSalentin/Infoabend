@@ -224,6 +224,10 @@ export async function purgePersonalData() {
   for (const { key } of blobs) await s.delete(key);
 }
 
+/** Kleiner Merkzettel im Speicher (z. B. wann die Abend-Zusammenfassung zuletzt verschickt wurde) */
+export const readNote = async (key) => (await store().get(`notes/${key}`, { type: 'json' })) || {};
+export const writeNote = (key, value) => store().setJSON(`notes/${key}`, value);
+
 /** Geheimes „Salz“ für den Besucher-Code – einmal zufällig erzeugt und im Speicher abgelegt */
 let salt;
 export async function secretSalt() {

@@ -3,6 +3,7 @@ import { seatStatus, listRegistrations, getRegistration, promoteRegistration, ca
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { visitorHash } from '../lib/visitor.mjs';
+import { runDigest } from '../lib/digest.mjs';
 
 function authorized(req) {
   const expected = process.env.ADMIN_PASSWORD || '';
@@ -68,6 +69,11 @@ async function handle(req, context) {
     case 'purge': {
       if (b.confirm !== 'LÖSCHEN') return json({ error: 'Bitte zur Bestätigung LÖSCHEN eingeben' }, 400);
       await purgePersonalData();
+      return json({ ok: true });
+    }
+    case 'digest': {
+      // Abend-Zusammenfassung sofort an info@ schicken (zum Testen) – ändert nichts am Abend-Versand
+      try { await runDigest({ force: true }); } catch (e) { return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502); }
       return json({ ok: true });
     }
     case 'resend': {

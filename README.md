@@ -9,7 +9,8 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 2. Sie landet auf der Anmeldeseite (im Hintergrund wird „Quelle: flyer“ gemerkt).
 3. Sie bucht **2 Plätze** (sich + Begleitung „Herr Müller“).
 4. Sofort danach bekommt sie eine **Bestätigungs-Mail** im Plakat-Design mit allen Infos und Kalendereintrag.
-5. In der Verwaltung (`/admin`) steht sie mit 2 Plätzen und der Quelle „flyer“.
+5. In der Verwaltung (`/admin`) steht sie mit 2 Plätzen und der Quelle „flyer“. Abends um 20 Uhr
+   bekommt info@ eine **Zusammenfassung** aller neuen Anmeldungen des Tages (nur an Tagen mit neuen Anmeldungen).
 6. Will sie sich mit derselben E-Mail-Adresse noch einmal anmelden, kommt:
    *„Mit dieser E-Mail-Adresse wurde bereits eine Anmeldung vorgenommen.“*
 
@@ -229,7 +230,7 @@ Google-Wallet-Ausstellerkonto nötig).
 
 ```
 public/                 Seite (HTML/CSS/JS), Verwaltung /admin, Bilder
-netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics + kalender (Kalender), visit (Besucherzählung)
+netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics + kalender (Kalender), visit (Besucherzählung), digest (Abend-Zusammenfassung um 20 Uhr)
 netlify/lib/            Veranstaltungsdaten (event.mjs), Mail, Kalender
 netlify/lib/db.mjs      Datenspeicher (Netlify Blobs) + Buchungslogik (verhindert Überbuchung, auch bei gleichzeitigen Anmeldungen)
 scripts/qr-codes.mjs    erzeugt die QR-Codes (npm run qr)
