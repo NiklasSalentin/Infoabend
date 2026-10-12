@@ -46,7 +46,7 @@ h3 { color: var(--primary); font-size: 24px; font-weight: 700; line-height: 1.4e
 p { margin: 0 0 1em; }
 
 .container { width: 100%; max-width: 1440px; margin: 0 auto; padding-left: var(--pad-x); padding-right: var(--pad-x); }
-.narrow { max-width: 900px; }
+.narrow { max-width: 1200px; }
 
 /* Überschrift mit Farbverlauf (wie „.h2-alt-text“ der Hauptseite) */
 .h2-alt-text { background: linear-gradient(90deg, #1a3569 0, #6c82c1 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
