@@ -193,20 +193,20 @@ bitte prüfen und beheben.“ Die Seite war in der Zwischenzeit nie kaputt.
 
 ### Beispiel 1: Einen Text ändern
 
-Du möchtest „Praxisnah, verständlich, ohne Fachchinesisch.“ durch „Praxisnah und verständlich.“
+Du möchtest „Praxisnah, verständlich, auf Augenhöhe.“ durch „Praxisnah und verständlich.“
 ersetzen.
 
-**Mit Claude Code (Weg A):** „Ersetze ‚Praxisnah, verständlich, ohne Fachchinesisch.‘ durch
+**Mit Claude Code (Weg A):** „Ersetze ‚Praxisnah, verständlich, auf Augenhöhe.‘ durch
 ‚Praxisnah und verständlich.‘ – auch im PDF.“ Fertig.
 
 **Von Hand auf GitHub (Weg B):**
 
-1. `public/index.html` öffnen → Stift → **Strg + F** → „Fachchinesisch“ suchen.
+1. `public/index.html` öffnen → Stift → **Strg + F** → „Augenhöhe“ suchen.
 2. Nur den Text ändern, die Zeichen drumherum stehen lassen:
 
    ```html
    <!-- vorher -->
-   … bis zum Annuitätendarlehen. Praxisnah, verständlich, ohne Fachchinesisch.</p>
+   … bis zum Annuitätendarlehen. Praxisnah, verständlich, auf Augenhöhe.</p>
    <!-- nachher -->
    … bis zum Annuitätendarlehen. Praxisnah und verständlich.</p>
    ```

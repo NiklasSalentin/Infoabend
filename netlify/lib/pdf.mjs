@@ -91,7 +91,7 @@ export async function invitationPdf(reg) {
   text('Kommen Sie an und nehmen Sie bei freier Platzwahl Platz, bevor es um 18:30 Uhr losgeht. Direkt an der Festhalle stehen ausreichend kostenlose Parkplätze zur Verfügung.', { gap: 12 });
 
   text('Teil 1 – Ihre Finanzierung', { f: bold, size: 13, color: BLUE });
-  text('Als unabhängiger Baufinanzierer erkläre ich Ihnen die entscheidenden Bausteine auf dem Weg zum Eigenheim: Wie Sie im Gespräch mit Maklern überzeugend auftreten und sich gegen andere Interessenten durchsetzen – und wie Sie Ihre Finanzierung von Anfang an richtig aufstellen, von der vollständigen Unterlagenliste bis zum Annuitätendarlehen. Praxisnah, verständlich, ohne Fachchinesisch.', { gap: 12 });
+  text('Als unabhängiger Baufinanzierer erkläre ich Ihnen die entscheidenden Bausteine auf dem Weg zum Eigenheim: Wie Sie im Gespräch mit Maklern überzeugend auftreten und sich gegen andere Interessenten durchsetzen – und wie Sie Ihre Finanzierung von Anfang an richtig aufstellen, von der vollständigen Unterlagenliste bis zum Annuitätendarlehen. Praxisnah, verständlich, auf Augenhöhe.', { gap: 12 });
 
   text('Teil 2 – Der Notartermin', { f: bold, size: 13, color: BLUE });
   text('Zum Abschluss des Abends übernimmt ein erfahrener Notar das Wort und nimmt Sie mit auf die letzte Etappe: Was passiert beim Notartermin wirklich, welche Unterlagen brauchen Sie, und worauf sollten Sie beim Vertrag besonders achten? So gehen Sie bestens vorbereitet in diesen entscheidenden Termin.', { gap: 12 });
