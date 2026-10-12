@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import { EVENT, siteUrl } from './event.mjs';
-import { googleCalendarUrl } from './ics.mjs';
 
 let transport;
 function smtp() {
@@ -111,9 +110,8 @@ export function confirmationHtml(reg) {
       <p style="margin:0 0 22px">vielen Dank für Ihre Anmeldung! Wir haben <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
       Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
 
-      <p style="margin:0 0 10px;color:${C.blue};font-size:18px;font-weight:700">Termin speichern</p>
-      <p style="margin:0">${btn(siteUrl() + '/api/ics', 'iPhone / Outlook')}${btn(googleCalendarUrl(), 'Google Kalender')}</p>
-      <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Mit Adresse und Erinnerung am Vortag.</p>
+      <p style="margin:0">${btn(siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
+      <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>
 
       <p style="margin:0 0 12px;color:${C.blue};font-size:18px;font-weight:700">Gut zu wissen</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">

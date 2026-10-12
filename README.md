@@ -182,7 +182,7 @@ Außerdem in `/admin`:
   je Tag und je Quelle (siehe Schritt 6). **Zahlen zurücksetzen** setzt sie auf null, z. B. nach
   eigenen Tests vor dem Start; Anmeldungen bleiben.
 - **Adressliste** – alle mit vollständiger Adresse (Straße, PLZ, Ort), ohne stornierte;
-  **Adressen als CSV** für Excel/Serienbrief.
+  **CSV exportieren** für Excel/Serienbrief.
 
 ### QR-Codes für den Druck
 
@@ -209,8 +209,9 @@ in `scripts/qr-codes.mjs` eine Zeile hinzufügen und `npm install && npm run qr`
 - **Eine Bestätigungs-Mail ohne Anhang** im Design von Plakat und Seite: Name, Plätze, Begleitung, Datum,
   Uhrzeit, Ort mit Route (Google Maps/Apple Karten), Ablauf (Teil 1 Finanzierung, Teil 2 Notar), Ankommen & Parken.
   Keine Ticketnummer – Gäste stehen mit Namen auf der Liste in `/admin`.
-- **Kalendereintrag** per Knopf: „iPhone / Outlook“ lädt die Kalenderdatei (mit Ort + Adresse und
-  Erinnerung am Vortag), „Google Kalender“ öffnet Google
+- **Ein Knopf „Termin in den Kalender eintragen“** (`/kalender`): erkennt das Gerät – iPhone, Mac,
+  Outlook, Windows bekommen die Kalenderdatei (Ort + Adresse, Erinnerung am Vortag), Android und Gmail
+  im Browser landen im Google Kalender mit fertig ausgefülltem Termin
 - Knopf **Persönliche Beratung buchen**
 
 Apple Wallet und Google Wallet sind für später vorgesehen (Apple-Developer-Konto bzw.
@@ -231,7 +232,7 @@ Google-Wallet-Ausstellerkonto nötig).
 
 ```
 public/                 Seite (HTML/CSS/JS), Verwaltung /admin, Bilder
-netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics (Kalender), visit (Besucherzählung)
+netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics + kalender (Kalender), visit (Besucherzählung)
 netlify/lib/            Veranstaltungsdaten (event.mjs), Mail, Kalender
 netlify/lib/db.mjs      Datenspeicher (Netlify Blobs) + Buchungslogik (verhindert Überbuchung, auch bei gleichzeitigen Anmeldungen)
 scripts/qr-codes.mjs    erzeugt die QR-Codes (npm run qr)
@@ -263,7 +264,7 @@ Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen 
   - Mit Netlify den Auftragsverarbeitungsvertrag (DPA) abschließen, ebenso mit dem E-Mail-Anbieter
     (bei IONOS/Strato/Microsoft im Kundenkonto abrufbar).
   - Speicherfristen einhalten: spätestens **9. März 2027** in `/admin` → *Alle Anmeldungen löschen*
-    (vorher **Adressen als CSV** sichern), Fragen in der Fragen-App ebenfalls löschen.
+    (vorher die Adressliste per **CSV exportieren** sichern), Fragen in der Fragen-App ebenfalls löschen.
   - Widersprüche (z. B. „keine Post mehr“) notieren und die Adresse aus euren Listen entfernen.
   - Hauptseite baufinanz-dueren.de: Impressum ergänzen um die Pflichtangaben als
     Immobiliardarlehensvermittler (§ 34i GewO: Registernummer, IHK/Erlaubnisbehörde), „§ 5 TMG“ → „§ 5 DDG“,
