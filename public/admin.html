@@ -48,29 +48,24 @@
         <button class="btn btn-primary" id="save">Speichern</button>
       </div>
       <p id="summary" class="seat-hint"></p>
-      <p id="sources" class="note"></p>
     </div>
 
     <div class="box">
       <div class="row" style="justify-content:space-between">
-        <h2 style="margin:0">Auswertung</h2>
+        <h2 style="margin:0">Aufrufe</h2>
         <button class="btn btn-outline" id="reset-stats">Zahlen zurücksetzen</button>
       </div>
       <div class="tiles">
-        <div class="tile"><b id="st-visitors">–</b><span>neue Besucher</span></div>
-        <div class="tile"><b id="st-engaged">–</b><span>länger als 30 Sek. auf der Seite</span></div>
+        <div class="tile"><b id="st-views">–</b><span>Seitenaufrufe gesamt</span></div>
+        <div class="tile"><b id="st-visitors">–</b><span>Besucher (verschiedene IP-Adressen)</span></div>
+        <div class="tile"><b id="st-today">–</b><span>Aufrufe heute</span></div>
         <div class="tile"><b id="st-registered">–</b><span>Anmeldungen</span></div>
-        <div class="tile"><b id="st-rate">–</b><span>Anmeldequote (Anmeldungen je Besucher)</span></div>
       </div>
-      <p class="note" id="st-note">Jede Person zählt nur einmal – öffnet jemand die Seite mehrmals, bleibt es ein Besucher. Eigene Geräte (nach dem Anmelden hier in der Verwaltung) und Suchmaschinen-Roboter werden nicht mitgezählt.</p>
-      <div class="two">
-        <div><h3>Nach Tag</h3><div class="scroll"><table>
-          <thead><tr><th>Tag</th><th class="r">Besucher</th><th class="r">&gt; 30 Sek.</th><th class="r">angemeldet</th></tr></thead>
-          <tbody id="st-days"></tbody></table></div></div>
-        <div><h3>Nach Quelle (QR-Code)</h3><div class="scroll"><table>
-          <thead><tr><th>Quelle</th><th class="r">Besucher</th><th class="r">&gt; 30 Sek.</th><th class="r">angemeldet</th></tr></thead>
-          <tbody id="st-sources"></tbody></table></div></div>
-      </div>
+      <p class="note">Jedes Öffnen der Seite zählt als Aufruf. Jede IP-Adresse zählt einmal als Besucher. Suchmaschinen-Roboter zählen nicht mit.</p>
+      <h3>Nach Tag</h3>
+      <div class="scroll"><table style="max-width:520px">
+        <thead><tr><th>Tag</th><th class="r">Aufrufe</th><th class="r">neue Besucher</th></tr></thead>
+        <tbody id="st-days"></tbody></table></div>
     </div>
 
     <div class="box">

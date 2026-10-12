@@ -6,26 +6,13 @@ const companionBox = $('#companions');
 let state = { free: null, maxPerPerson: 1, open: true };
 
 // Werbekanal aus dem QR-Code (z. B. /zeitung → ?utm_source=zeitung) – nur aus der Adresse gelesen,
-// bewusst nichts im Browser gespeichert (kein Cookie, kein Storage → kein Cookie-Banner nötig)
+// bewusst nichts im Browser gespeichert
 const source = new URLSearchParams(location.search).get('utm_source') || '';
 
-// Besuchszählung für die Auswertung in /admin – ohne Cookies, nichts wird auf dem Gerät gespeichert:
-// einmal „Aufruf“ beim Öffnen, einmal „aktiv“ nach 30 Sekunden sichtbarer Zeit auf der Seite
-const sendVisit = (type) => {
-  const body = JSON.stringify({ type, source });
-  if (!(navigator.sendBeacon && navigator.sendBeacon('/api/visit', new Blob([body], { type: 'application/json' })))) {
-    fetch('/api/visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body, keepalive: true }).catch(() => {});
-  }
-};
-sendVisit('view');
-let visibleMs = 0;
-let lastTick = Date.now();
-const engagedTimer = setInterval(() => {
-  const now = Date.now();
-  if (document.visibilityState === 'visible') visibleMs += now - lastTick;
-  lastTick = now;
-  if (visibleMs >= 30000) { clearInterval(engagedTimer); sendVisit('engaged'); }
-}, 1000);
+// Aufrufzähler für /admin – ohne Cookies, nichts wird auf dem Gerät gespeichert
+try {
+  if (!(navigator.sendBeacon && navigator.sendBeacon('/api/visit'))) fetch('/api/visit', { method: 'POST', keepalive: true }).catch(() => {});
+} catch {}
 
 // Countdown bis 9. Dezember 2026
 const eventDate = new Date('2026-12-09T18:00:00+01:00');
@@ -138,6 +125,8 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json();
     if (data.status === 'confirmed' || data.status === 'waitlist') {
+      // Meta-Pixel (nur mit Einwilligung): erfolgreiche Anmeldung bzw. Warteliste melden
+      window.metaTrack?.(data.status === 'confirmed' ? 'CompleteRegistration' : 'Lead');
       form.hidden = true;
       $('#seat-hint').hidden = true;
       $(data.status === 'confirmed' ? '#success' : '#waitlisted').hidden = false;
@@ -149,6 +138,7 @@ form.addEventListener('submit', async (e) => {
       body.waitlist = true;
       const r2 = await (await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })).json();
       if (r2.status === 'waitlist') {
+        window.metaTrack?.('Lead');
         form.hidden = true;
         $('#waitlisted').hidden = false;
         return;

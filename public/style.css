@@ -377,3 +377,10 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
 .legal-box { margin: 16px 0; padding: 16px 20px; border-left: 4px solid var(--secondary); border-radius: 0 var(--radius) var(--radius) 0; background: var(--light); }
 .legal-box p { margin: 0; }
 .legal-back { margin-top: 40px; }
+
+/* Einwilligungs-Hinweis Meta-Pixel (consent.js) – „Erlauben“ und „Ablehnen“ gleich groß */
+#consent { position: fixed; left: 16px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 1000; max-width: 720px; margin: 0 auto; padding: 18px 20px; border-radius: 16px; background: var(--white); color: var(--text); box-shadow: 0 10px 40px rgba(28,35,80,.28); font-size: 14px; line-height: 1.5; }
+#consent p { margin: 0 0 14px; }
+#consent a { color: var(--secondary); }
+.consent-buttons { display: flex; gap: 10px; }
+.consent-buttons button { flex: 1; padding: 11px 16px; border: 2px solid var(--primary); border-radius: 999px; background: var(--white); color: var(--primary); font: inherit; font-weight: 700; cursor: pointer; }

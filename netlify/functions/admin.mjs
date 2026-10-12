@@ -1,8 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, resetStats, purgePersonalData, markInternal, visitStats, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
-import { visitorHash } from '../lib/visitor.mjs';
 import { runDigest } from '../lib/digest.mjs';
 
 function authorized(req) {
@@ -26,9 +25,6 @@ export default async (req, context) => {
 
 async function handle(req, context) {
   if (req.method === 'GET') {
-    // Wer sich hier anmeldet, ist „eigenes Gerät“ und zählt in der Auswertung nicht mit
-    const hash = await visitorHash(req, context);
-    if (hash) await markInternal(hash);
     const [status, registrations, stats] = await Promise.all([
       seatStatus(),
       listRegistrations(),

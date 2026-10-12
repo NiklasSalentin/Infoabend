@@ -22,7 +22,7 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 | `…/zeitung`, `…/flyer`, `…/plakat` | QR-Codes | Kurzlinks: leiten auf die Anmeldeseite weiter und merken sich den Werbekanal |
 | `…/admin` | Team (Passwort) | Plätze einstellen, Anmeldeliste, Warteliste, Nachrücken, Stornieren, CSV-Export |
 
-## Einrichtung in 6 Schritten
+## Einrichtung in 7 Schritten
 
 ### 1. Datenspeicher – nichts zu tun
 
@@ -37,8 +37,8 @@ entsteht automatisch bei der ersten Anmeldung bzw. beim ersten Speichern in `/ad
   | Eintrag | Inhalt |
   |---|---|
   | `event` | Einstellungen (Plätze, Max. pro Person, offen/zu) und alle Anmeldungen |
-  | `stats` | Summen der Besucher-Auswertung (je Tag, je Quelle) |
-  | `visitors/3f9a…` | ein Eintrag je Besucher – nur ein unumkehrbarer Code, keine IP |
+  | `stats` | Summen des Aufrufzählers (gesamt und je Tag) |
+  | `visitors/3f9a…` | ein Eintrag je IP-Adresse – nur ein unumkehrbarer Code, keine IP |
   | `salt` | zufälliger Geheimwert für diesen Code |
 
 - **Keine Überbuchung:** Gespeichert wird nur, wenn sich der Eintrag seit dem Lesen nicht
@@ -105,38 +105,66 @@ npx netlify-cli deploy --prod
 3. Warten (meist Minuten, selten bis 24 Stunden). Das HTTPS-Zertifikat richtet Netlify
    automatisch ein.
 
-### 6. Besucher-Auswertung (eingebaut, ohne Cookies)
+### 6. Aufrufzähler (eingebaut, ohne Cookies)
 
-Nichts einzurichten – die Seite zählt selbst mit. Die Zahlen
-stehen in `/admin` im Kasten **Auswertung**.
+Nichts einzurichten. In `/admin` im Kasten **Aufrufe** stehen:
 
-So funktioniert es:
-- Beim Öffnen der Seite schickt sie einen „Aufruf“ an `/api/visit`, nach 30 Sekunden sichtbarer
-  Zeit einmal „aktiv“.
-- Der Server bildet aus IP-Adresse + Browserkennung einen **unumkehrbaren Code** (Hash). Nur
-  dieser Code wird gespeichert, keine IP und kein Cookie auf dem Gerät – deshalb kein
-  Cookie-Banner.
-- Gleicher Code = gleiche Person → zählt nur **einmal** („neue Besucher“). Mehrfachöffnungen
-  erhöhen nur die Zahl „Seitenaufrufe“.
-- Wer sich in `/admin` anmeldet, wird als **eigenes Gerät** markiert und nicht mitgezählt.
-  Bots/Link-Vorschauen (WhatsApp, Google …) werden ebenfalls ausgefiltert.
-- Optional: Umgebungsvariable `ANALYTICS_SALT` (beliebiger zufälliger Text) – sonst wird ein
-  vorhandener Schlüssel als „Salz“ für den Hash verwendet.
+- **Seitenaufrufe** – jedes Öffnen der Seite zählt (Beispiel: Frau Müller öffnet 3× → 3 Aufrufe).
+- **Besucher** – jede IP-Adresse zählt einmal (Frau Müller bleibt 1 Besucherin, solange sie im selben Netz ist).
+- **Aufrufe heute** und eine Liste **nach Tag**.
 
-Grenzen: Wechselt jemand das Netz (WLAN → Mobilfunk) oder das Gerät, kann er doppelt zählen;
-mehrere Personen im selben WLAN mit gleichem Browser können als eine zählen. Für einen
-Infoabend ist das genau genug.
+Gespeichert wird nur ein unumkehrbarer Code der IP-Adresse (keine IP, kein Cookie). Suchmaschinen-Roboter
+zählen nicht. **Zahlen zurücksetzen** setzt alles auf null (z. B. nach eigenen Tests vor dem Start).
 
-**Was ihr dann seht – Beispiel:**
+### 7. Meta-Pixel (Facebook-/Instagram-Werbung) einrichten
 
-| Quelle | Besucher | > 30 Sek. | angemeldet |
-|---|---|---|---|
-| zeitung | 320 | 150 | 40 |
-| flyer | 90 | 50 | 15 |
-| direkt | 60 | 20 | 5 |
+Mit dem Pixel sieht Meta, wer nach einer Anzeige auf die Seite kommt und sich anmeldet – damit lassen sich
+Anzeigen auf Anmeldungen optimieren und erneut an Seitenbesucher ausspielen. **Eingebaut ist alles**, es fehlt
+nur die Pixel-Nummer.
 
-Die **Datenschutzerklärung** sollte diese Zählung erwähnen (gekürzte, unumkehrbare
-Kennung aus IP und Browser, kein Cookie, Zweck: Besucherstatistik).
+Rechtlich läuft der Pixel nur mit Einwilligung: Besucher sehen unten einen Hinweis mit **„Erlauben“ /
+„Ablehnen“**; erst nach „Erlauben“ wird der Pixel geladen. Widerruf jederzeit über **Cookie-Einstellungen** im
+Fuß der Seite. Die Datenschutzhinweise (Abschnitt 6) sind schon angepasst.
+
+**Schritt 1 – Pixel anlegen (ca. 5 Min.)**
+1. https://business.facebook.com/events_manager2 öffnen (mit dem Facebook-Konto, das die Seite
+   „Baufinanz Düren“ verwaltet) und das Unternehmensportfolio **Baufinanz Düren** wählen.
+2. Links **„+ Datenquellen verbinden“** → **„Web“** → **„Verbinden“**.
+3. Name: `Infoabend Anmeldung` · Website: `anmeldung.baufinanz-dueren.de` → weiter.
+4. Fragt Meta nach der Art der Einrichtung: **„Meta-Pixel manuell einrichten“** bzw. **„Nur Meta-Pixel“** wählen.
+   Code muss **nicht** kopiert werden – das Fenster kann geschlossen werden. Die Nutzungsbedingungen für
+   Meta Business Tools bestätigen, falls gefragt.
+5. In der Übersicht steht die **Pixel-ID** (heißt teils „Datensatz-ID“), eine 15–16-stellige Zahl,
+   z. B. `123456789012345`. Kopieren.
+
+**Schritt 2 – Nummer in Netlify eintragen (2 Min.)**
+1. https://app.netlify.com/projects/baufiabend/configuration/env → **Add a variable**.
+2. Key: `META_PIXEL_ID` · Value: die Pixel-ID (kein Geheimnis, Häkchen „secret“ nicht nötig).
+3. **Deploys → Trigger deploy → Deploy project**. Nach 1–2 Minuten erscheint der Hinweis auf der Seite.
+   (Alternativ: die ID an Claude schicken – Claude trägt sie ein.)
+
+**Schritt 3 – Domain prüfen**
+baufinanz-dueren.de ist bei Meta bereits bestätigt (im DNS steht ein `facebook-domain-verification`-Eintrag),
+das gilt auch für `anmeldung.`. Kontrolle: Unternehmenseinstellungen → **Markensicherheit → Domains** –
+dort sollte `baufinanz-dueren.de` mit grünem Haken stehen. Falls nicht: dort „Hinzufügen“ und der Anleitung folgen.
+
+**Schritt 4 – Testen (5 Min.)**
+1. Events Manager → Pixel wählen → Reiter **„Ereignisse testen“** → Adresse
+   `https://anmeldung.baufinanz-dueren.de` eingeben → **„Website öffnen“**.
+2. Auf der Seite **„Erlauben“** klicken → im Events Manager erscheint **„PageView“**.
+3. Testanmeldung machen → es erscheint **„CompleteRegistration“** („Registrierung abschließen“).
+   Wartelisten-Anmeldungen melden **„Lead“**.
+4. Testanmeldung in `/admin` stornieren und löschen.
+
+**Schritt 5 – Anzeige schalten (Beispiel)**
+1. Werbeanzeigenmanager → **Erstellen** → Ziel **„Leads“** → Conversion-Ort **„Website“**.
+2. Pixel `Infoabend Anmeldung` und Conversion-Ereignis **„Registrierung abschließen“** wählen.
+3. Zielgruppe z. B. Standort **Düren + 25 km**, Alter 25–55, Budget z. B. **10 € pro Tag**, Laufzeit bis 8.12.2026.
+4. Link der Anzeige: `https://anmeldung.baufinanz-dueren.de/?utm_source=facebook` – dann steht bei diesen
+   Anmeldungen in `/admin` in der Spalte **Quelle** „facebook“.
+
+**Gut zu wissen:** Meta sieht nur Besucher, die „Erlauben“ geklickt haben. Beispiel: 100 Anmeldungen, davon
+60 mit Einwilligung → Meta meldet etwa 60. Die echte Zahl steht immer in `/admin`.
 
 ## Bedienung im Alltag
 
@@ -177,9 +205,9 @@ In der Liste in `/admin` je Zeile:
 
 Außerdem in `/admin`:
 
-- **Auswertung** – neue Besucher (jede Person einmal), länger als 30 Sek., Anmeldungen, Quote,
-  je Tag und je Quelle (siehe Schritt 6). **Zahlen zurücksetzen** setzt sie auf null, z. B. nach
-  eigenen Tests vor dem Start; Anmeldungen bleiben.
+- **Aufrufe** – Seitenaufrufe, Besucher (verschiedene IP-Adressen), Aufrufe heute und je Tag
+  (siehe Schritt 6). **Zahlen zurücksetzen** setzt sie auf null, z. B. nach eigenen Tests vor dem
+  Start; Anmeldungen bleiben.
 - **Adressliste** – alle mit vollständiger Adresse (Straße, PLZ, Ort), ohne stornierte;
   **CSV exportieren** für Excel/Serienbrief.
 

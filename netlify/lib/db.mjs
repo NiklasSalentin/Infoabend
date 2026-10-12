@@ -138,79 +138,29 @@ export function updateSettings({ total_seats, max_per_person, registration_open 
 }
 
 // ---------------------------------------------------------------------------
-// Besucher-Auswertung – jede Person zählt einmal, eigene Geräte (Login in /admin) gar nicht
+// Aufrufzähler – jedes Öffnen der Seite zählt als Aufruf, jede neue IP-Adresse einmal als Besucher
 // ---------------------------------------------------------------------------
 const today = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' }); // JJJJ-MM-TT
-const newStats = () => ({ visitors: 0, views: 0, engaged: 0, registered: 0, internal: 0, days: {}, sources: {} });
-const newVisitor = (source) => ({ day: today(), source: source || null, views: 0, engaged: false, registered: false, internal: false });
+const newStats = () => ({ views: 0, visitors: 0, days: {} });
 
-/** Zählt in der Gesamtsumme sowie beim Tag und der Quelle des ersten Besuchs. field: 'visitors' | 'engaged' | 'registered' */
-function bump(st, v, field, by = 1) {
-  st[field] += by;
-  for (const [map, k] of [[st.days, v.day], [st.sources, v.source || 'direkt']]) {
-    map[k] = map[k] || { visitors: 0, engaged: 0, registered: 0 };
-    map[k][field] += by;
-  }
-}
-
-/**
- * Einen Besucher ändern. `change(v, isNew)` passt den Eintrag an und gibt zurück:
- * false = nichts speichern, null = speichern ohne Kennzahlen, Funktion = speichern und damit die Kennzahlen anpassen.
- */
-async function updateVisitor(hash, source, change) {
-  const statsChange = await mutate(`visitors/${hash}`, () => null, (cur) => {
-    const v = cur || newVisitor(source);
-    const fn = change(v, !cur);
-    return fn === false ? { result: null } : { data: v, result: fn };
+/** Seite geöffnet: Aufruf +1, und Besucher +1, wenn diese IP-Adresse (als Code) neu ist */
+export async function trackVisit(hash) {
+  const { modified: isNew } = await store().setJSON(`visitors/${hash}`, { day: today() }, { onlyIfNew: true });
+  const day = today();
+  await mutate('stats', newStats, (st) => {
+    const d = (st.days[day] = st.days[day] || { views: 0, visitors: 0 });
+    st.views++; d.views++;
+    if (isNew) { st.visitors++; d.visitors++; }
+    return { data: st };
   });
-  if (statsChange) await mutate('stats', newStats, (st) => { statsChange(st); return { data: st }; });
 }
 
-/** Seite geöffnet */
-export const trackVisit = (hash, source) => updateVisitor(hash, source, (v, isNew) => {
-  v.views++;
-  return v.internal ? null : (st) => { st.views++; if (isNew) bump(st, v, 'visitors'); };
-});
-
-/** Mindestens 30 Sekunden aktiv auf der Seite */
-export const markEngaged = (hash) => updateVisitor(hash, null, (v, isNew) => {
-  if (isNew || v.engaged) return false;
-  v.engaged = true;
-  return v.internal ? null : (st) => bump(st, v, 'engaged');
-});
-
-/** Hat sich angemeldet */
-export const markRegistered = (hash, source) => updateVisitor(hash, source, (v, isNew) => {
-  if (v.registered) return false;
-  v.registered = true;
-  return v.internal ? null : (st) => { if (isNew) bump(st, v, 'visitors'); bump(st, v, 'registered'); };
-});
-
-/** Eigenes Gerät (Login in /admin): wird aus allen Zahlen herausgerechnet */
-export const markInternal = (hash) => updateVisitor(hash, null, (v, isNew) => {
-  if (v.internal) return false;
-  v.internal = true;
-  return (st) => {
-    st.internal++;
-    if (isNew) return;
-    st.views -= v.views;
-    bump(st, v, 'visitors', -1);
-    if (v.engaged) bump(st, v, 'engaged', -1);
-    if (v.registered) bump(st, v, 'registered', -1);
-  };
-});
-
-/** Auswertung auf null setzen (z. B. nach Tests vor dem Start). Eigene Geräte bleiben als „eigenes Gerät“ markiert. */
+/** Zähler auf null setzen (z. B. nach Tests vor dem Start) */
 export async function resetStats() {
   const s = store();
   const { blobs } = await s.list({ prefix: 'visitors/' });
-  let internal = 0;
-  for (const { key } of blobs) {
-    const v = await s.get(key, { type: 'json' });
-    if (v?.internal) { internal++; await s.setJSON(key, { ...v, views: 0, engaged: false, registered: false }); }
-    else await s.delete(key);
-  }
-  await s.setJSON('stats', { ...newStats(), internal });
+  for (const { key } of blobs) await s.delete(key);
+  await s.setJSON('stats', newStats());
 }
 
 /**
@@ -240,15 +190,15 @@ export async function secretSalt() {
   return salt;
 }
 
-/** Kennzahlen für /admin */
+/** Zahlen für /admin: gesamt und je Tag (letzte 60 Tage) */
 export async function visitStats() {
-  const st = (await store().get('stats', { type: 'json' })) || newStats();
+  const st = { ...newStats(), ...((await store().get('stats', { type: 'json' })) || {}) };
   const since = new Date(Date.now() - 60 * 864e5).toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
-  const rows = (map, key) => Object.entries(map).map(([k, v]) => ({ [key]: k, ...v }));
   return {
-    visitors: st.visitors, views: st.views, engaged: st.engaged, registered: st.registered, internal: st.internal,
-    by_day: rows(st.days, 'day').filter((d) => d.day >= since && d.visitors > 0).sort((a, b) => b.day.localeCompare(a.day)),
-    by_source: rows(st.sources, 'source').filter((s) => s.visitors > 0).sort((a, b) => b.visitors - a.visitors),
+    views: st.views || 0,
+    visitors: st.visitors || 0,
+    by_day: Object.entries(st.days || {}).map(([day, v]) => ({ day, views: v.views || 0, visitors: v.visitors || 0 }))
+      .filter((d) => d.day >= since && d.views > 0).sort((a, b) => b.day.localeCompare(a.day)),
   };
 }
 

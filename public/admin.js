@@ -36,19 +36,6 @@ async function load() {
   const wait = data.registrations.filter((r) => r.status === 'waitlist');
   $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
 
-  // Anmeldungen und Plätze je Werbekanal (nur bestätigte)
-  const bySource = {};
-  for (const r of data.registrations.filter((x) => x.status === 'confirmed')) {
-    const k = r.source || 'direkt';
-    bySource[k] = bySource[k] || { n: 0, seats: 0 };
-    bySource[k].n++;
-    bySource[k].seats += r.seats;
-  }
-  $('#sources').textContent = Object.keys(bySource).length
-    ? 'Nach Quelle: ' + Object.entries(bySource).sort((a, b) => b[1].seats - a[1].seats)
-        .map(([k, v]) => `${k}: ${v.n} Anmeldungen / ${v.seats} Plätze`).join(' · ')
-    : '';
-
   renderStats();
   renderAddresses();
 
@@ -71,29 +58,24 @@ async function load() {
     </tr>`).join('');
 }
 
-// Auswertung: Besucher (jede Person einmal), länger auf der Seite, angemeldet
+// Aufrufzähler: Seitenaufrufe und Besucher (verschiedene IP-Adressen), gesamt und je Tag
 function renderStats() {
   const st = data.stats;
-  const regs = data.registrations.filter((r) => r.status !== 'cancelled').length;
-  const pct = (a, b) => (b ? Math.round((a / b) * 100) + ' %' : '–');
-  const empty = '<tr><td colspan="4" class="note">Noch keine Daten</td></tr>';
-  $('#st-registered').textContent = regs;
+  $('#st-registered').textContent = data.registrations.filter((r) => r.status !== 'cancelled').length;
+  const empty = '<tr><td colspan="3" class="note">Noch keine Aufrufe</td></tr>';
   if (!st) {
-    for (const id of ['#st-visitors', '#st-engaged', '#st-rate']) $(id).textContent = '–';
-    $('#st-days').innerHTML = $('#st-sources').innerHTML = empty;
+    for (const id of ['#st-views', '#st-visitors', '#st-today']) $(id).textContent = '–';
+    $('#st-days').innerHTML = empty;
     return;
   }
-  $('#st-visitors').textContent = st.visitors;
-  $('#st-engaged').textContent = `${st.engaged} (${pct(st.engaged, st.visitors)})`;
-  $('#st-rate').textContent = pct(regs, st.visitors);
-  $('#st-note').textContent = `Jede Person zählt nur einmal – öffnet jemand die Seite mehrmals, bleibt es ein Besucher (insgesamt ${st.views} Seitenaufrufe). Eigene Geräte (nach dem Anmelden hier in der Verwaltung) und Suchmaschinen-Roboter werden nicht mitgezählt.`;
-  const row = (label, r) => `<tr><td>${esc(label)}</td><td class="r">${r.visitors}</td><td class="r">${r.engaged}</td><td class="r">${r.registered}</td></tr>`;
+  const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
   const days = st.by_day || [];
+  $('#st-views').textContent = st.views;
+  $('#st-visitors').textContent = st.visitors;
+  $('#st-today').textContent = days.find((d) => d.day === today)?.views || 0;
   $('#st-days').innerHTML = days.length
-    ? days.map((d) => row(new Date(d.day + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }), d)).join('')
+    ? days.map((d) => `<tr><td>${new Date(d.day + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' })}</td><td class="r">${d.views}</td><td class="r">${d.visitors}</td></tr>`).join('')
     : empty;
-  const sources = st.by_source || [];
-  $('#st-sources').innerHTML = sources.length ? sources.map((s) => row(s.source || 'direkt', s)).join('') : empty;
 }
 
 // Adressliste: nur vollständige Adressen, ohne stornierte
@@ -116,7 +98,7 @@ function download(name, cols, rows) {
 }
 
 $('#reset-stats').onclick = async () => {
-  if (!confirm('Besucherzahlen auf null setzen? Sinnvoll z. B. nach eigenen Tests vor dem Start. Anmeldungen bleiben erhalten.')) return;
+  if (!confirm('Aufrufe und Besucher auf null setzen? Sinnvoll z. B. nach eigenen Tests vor dem Start. Anmeldungen bleiben erhalten.')) return;
   try { await api('POST', { action: 'reset-stats' }); await load(); } catch (e) { alert(e.message); }
 };
 
