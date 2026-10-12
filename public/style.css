@@ -152,7 +152,6 @@ p { margin: 0 0 1em; }
 .nav-choice summary::-webkit-details-marker { display: none; }
 .nav-choice summary:hover .date-strong { text-decoration: underline; text-underline-offset: 4px; }
 .nav-choice summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 6px; }
-.nav-hint { display: inline-block; margin-top: 8px; padding: 3px 12px; border-radius: 999px; background: var(--gold); color: var(--navy); font-size: 14px; font-weight: 700; }
 .nav-menu { position: absolute; z-index: 5; top: calc(100% + 10px); left: 0; min-width: 230px; display: flex; flex-direction: column; padding: 8px; border-radius: 14px; background: var(--white); box-shadow: 0 16px 40px rgba(28,35,80,.3); }
 .nav-menu-title { padding: 6px 12px; color: var(--muted); font-size: 13px; }
 .nav-menu a { padding: 12px; border-radius: 10px; color: var(--navy); font-size: 17px; font-weight: 600; text-decoration: none; }
