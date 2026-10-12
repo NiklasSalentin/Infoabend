@@ -3,7 +3,6 @@ const $ = (s) => document.querySelector(s);
 const form = $('#form');
 const seatsSel = $('#seats');
 const companionBox = $('#companions');
-const hasCompanion = $('#has-companion');
 let state = { free: null, maxPerPerson: 1, open: true };
 
 // Werbekanal aus dem QR-Code (z. B. /zeitung → ?utm_source=zeitung) – nur aus der Adresse gelesen,
@@ -49,13 +48,11 @@ function renderSeats() {
   seatsSel.innerHTML = '';
   for (let i = 1; i <= max; i++) seatsSel.add(new Option(i === 1 ? '1 Platz' : `${i} Plätze`, i));
   seatsSel.value = Math.min(current, max);
-  hasCompanion.parentElement.hidden = max < 2;
   renderCompanions();
 }
 
 function renderCompanions() {
   const n = Number(seatsSel.value) - 1;
-  hasCompanion.checked = n > 0;
   const existing = [...companionBox.querySelectorAll('input')].map((i) => i.value);
   companionBox.innerHTML = '';
   for (let i = 0; i < n; i++) {
@@ -93,10 +90,6 @@ navChoice.querySelectorAll('a[data-nav]').forEach((a) => a.addEventListener('cli
 const questionsField = form.elements.questions;
 const updateCount = () => { $('#questions-count').textContent = `${questionsField.value.length} / 300 Zeichen`; };
 questionsField.addEventListener('input', updateCount);
-hasCompanion.addEventListener('change', () => {
-  seatsSel.value = hasCompanion.checked ? 2 : 1;
-  renderCompanions();
-});
 
 
 async function loadStatus() {
