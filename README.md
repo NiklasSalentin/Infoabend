@@ -3,6 +3,8 @@
 Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“** am
 **Mittwoch, 9. Dezember 2026** in der Festhalle Birkesdorf.
 
+> **Texte, Bilder, Uhrzeiten oder Plätze ändern?** → [`UEBERGABE.md`](UEBERGABE.md) (Anleitung mit Beispielen)
+
 **So läuft eine Anmeldung ab – ein Beispiel:**
 
 1. Frau Müller scannt den QR-Code auf dem **Flyer** → `anmeldung.baufinanz-dueren.de/flyer`

@@ -1,0 +1,239 @@
+# Übergabe: Anmeldeseite Infoabend
+
+Hallo Alex,
+
+hier ist alles, was du brauchst, um die Anmeldeseite für den Infoabend am **9. Dezember 2026**
+selbst zu pflegen – Texte, Bilder, Uhrzeiten, Plätze. Für die meisten Änderungen brauchst du
+**keine Programmierkenntnisse**.
+
+*Stand: 12. Oktober 2026 · Ansprechpartner bei Fragen: Niklas*
+
+---
+
+## 1. Die wichtigsten Adressen
+
+| Was | Adresse |
+|---|---|
+| Die Anmeldeseite (live) | https://anmeldung.baufinanz-dueren.de |
+| Verwaltung (Plätze, Anmeldeliste) | https://anmeldung.baufinanz-dueren.de/admin – Passwort bekommst du von Niklas |
+| Code (GitHub) | https://github.com/NiklasSalentin/Infoabend |
+| Veröffentlichung (Netlify) | https://app.netlify.com/projects/baufiabend |
+| Technische Einrichtung (Supabase, E-Mail, Domain, Plausible) | [`README.md`](README.md) |
+
+**Live-Branch:** `claude/relaxed-cannon-2kqiie` – nur was auf diesem Branch landet, geht online.
+
+---
+
+## 2. So kommt eine Änderung online
+
+```
+Du änderst eine Datei auf GitHub  →  Netlify merkt das automatisch  →  nach ca. 1 Minute ist sie live
+```
+
+Geht dabei etwas schief, bleibt einfach die alte Version online – kaputt machen kannst du nichts.
+Jede Änderung ist auf GitHub gespeichert und lässt sich zurückholen.
+
+### Weg A: Direkt im Browser auf GitHub (ohne Installation)
+
+Voraussetzung: Niklas lädt dich einmalig ins Repo ein
+(GitHub → Repo → *Settings → Collaborators → Add people*).
+
+1. https://github.com/NiklasSalentin/Infoabend öffnen, oben links muss der Branch
+   **`claude/relaxed-cannon-2kqiie`** ausgewählt sein.
+2. Datei anklicken, z. B. `public/index.html`.
+3. Oben rechts auf den **Stift** (*Edit this file*) klicken.
+4. Text ändern. Tipp: Mit **Strg + F** (Mac: **⌘ + F**) findest du die Stelle schnell.
+5. Oben rechts **Commit changes…** → kurze Beschreibung eintragen (z. B. „Einlass auf 17:30 Uhr“)
+   → **Commit changes**.
+6. Nach ca. 1 Minute https://anmeldung.baufinanz-dueren.de neu laden
+   (Mac: **⌘ + Shift + R**, Windows: **Strg + F5**).
+
+Ob die Veröffentlichung geklappt hat, siehst du in Netlify unter **Deploys**
+(grün „Published“ = online).
+
+### Weg B: Claude Code die Änderung machen lassen
+
+Auf https://claude.ai/code das Repo `NiklasSalentin/Infoabend` öffnen und die Änderung einfach
+beschreiben. Beispiele:
+
+> „Ändere auf der Anmeldeseite den Einlass von 18:00 auf 17:30 Uhr – überall, auch in der
+> Bestätigungsmail, im PDF und im Kalendereintrag. Committe und pushe auf den Live-Branch
+> `claude/relaxed-cannon-2kqiie`.“
+
+> „Tausche das Porträtfoto gegen die angehängte Datei aus.“
+
+> „Füge einen QR-Code für den Werbekanal ‚radio‘ hinzu.“
+
+Wichtig: Arbeitet Claude auf einem **anderen Branch**, geht die Änderung erst online, wenn sie in
+`claude/relaxed-cannon-2kqiie` übernommen wurde (Pull Request mergen).
+
+---
+
+## 3. Wo steht was?
+
+| Ich will … | Datei | Hinweis |
+|---|---|---|
+| Texte auf der Seite ändern | `public/index.html` | Nach dem Text suchen und nur den Text zwischen den Zeichen `>` und `<` ändern |
+| Datum, Einlass, Ort oben im blauen Bereich | `public/index.html` | Abschnitt „Datumsfeld“ (Suche nach `09.12.2026`) |
+| Texte in der **Bestätigungsmail** | `netlify/lib/mail.mjs` | |
+| Texte im **PDF** (Einladung) | `netlify/lib/pdf.mjs` | Die Absätze „Teil 1“, „Teil 2“, „Ankommen & Parken“ stehen hier ein zweites Mal |
+| Datum/Uhrzeit/Ort für **Mail, PDF und Kalender** | `netlify/lib/event.mjs` | Alles an einer Stelle |
+| Countdown und Google-Kalender-Knopf | `public/app.js` | ganz oben bei „Countdown“ |
+| Bilder austauschen | `public/assets/` | Siehe Beispiel 3 |
+| Farben, Schriftgrößen | `public/style.css` | Farben ganz oben unter `:root` |
+| Wer die Info-Mail bei Anmeldungen bekommt | Netlify-Variable `NOTIFY_EMAIL` | Standard: `infoabend@baufinanz-dueren.de` |
+| QR-Codes für den Druck | `druck/qr-codes/` | Siehe Abschnitt 5 |
+| Plätze, Maximum pro Person, Anmeldung zu/auf | **keine Datei** – in `/admin` | Siehe Abschnitt 4 |
+
+---
+
+## 4. Beispiele
+
+### Beispiel 1: Einen Text ändern
+
+Du möchtest „Praxisnah, verständlich, ohne Fachchinesisch.“ durch „Praxisnah und verständlich.“
+ersetzen.
+
+1. `public/index.html` öffnen → Stift → **Strg + F** → „Fachchinesisch“ suchen.
+2. Nur den Text ändern, die Zeichen drumherum stehen lassen:
+
+   ```html
+   <!-- vorher -->
+   … bis zum Annuitätendarlehen. Praxisnah, verständlich, ohne Fachchinesisch.</p>
+   <!-- nachher -->
+   … bis zum Annuitätendarlehen. Praxisnah und verständlich.</p>
+   ```
+
+3. Derselbe Absatz steht auch im PDF → in `netlify/lib/pdf.mjs` genauso ändern.
+4. **Commit changes** – fertig.
+
+### Beispiel 2: Einlass von 18:00 auf 17:30 Uhr ändern
+
+Uhrzeiten stehen an mehreren Stellen, weil Seite, Mail, PDF und Kalender sie jeweils brauchen:
+
+| Datei | Suchen nach | Ändern in |
+|---|---|---|
+| `public/index.html` | `Einlass 18:00 Uhr` | `Einlass 17:30 Uhr` |
+| `netlify/lib/event.mjs` | `admission: '18:00 Uhr'` | `admission: '17:30 Uhr'` |
+| `netlify/lib/event.mjs` | `startUtc: '20261209T170000Z'` | `startUtc: '20261209T163000Z'` |
+| `public/app.js` | `2026-12-09T18:00:00+01:00` | `2026-12-09T17:30:00+01:00` |
+| `public/app.js` | `20261209T170000Z/20261209T200000Z` | `20261209T163000Z/20261209T200000Z` |
+| `public/app.js` | `Einlass 18:00 Uhr` | `Einlass 17:30 Uhr` |
+
+> **Was ist `20261209T170000Z`?** Das ist die Uhrzeit für Kalender in Weltzeit (UTC).
+> Im Dezember gilt: **deutsche Uhrzeit minus 1 Stunde**.
+> 18:00 Uhr → `170000Z`, 17:30 Uhr → `163000Z`, 20:00 Uhr → `190000Z`.
+
+Ändert sich der **Beginn** (18:30 Uhr): `netlify/lib/event.mjs` (`start:`), in `public/index.html` und
+`netlify/lib/pdf.mjs` der Satz „… bevor es um 18:30 Uhr losgeht“ sowie in `public/app.js` der Text
+„Beginn 18:30 Uhr“.
+
+### Beispiel 3: Ein Bild austauschen
+
+Das neue Bild muss **genau so heißen** wie das alte, dann ist keine weitere Änderung nötig.
+
+| Bild | Dateiname in `public/assets/` |
+|---|---|
+| Porträt (Teil 1) | `portrait.jpg` |
+| Notar-Bild (Teil 2) | `notariat.jpg` |
+| Festhalle-Logo | `festhalle.png` |
+| Themenmagazin | `themenmagazin.jpg` |
+| FOCUS-MONEY-Siegel | `kundenliebling-2026.png` |
+| Hausfoto oben | `hero-haus.webp` |
+
+So geht's: Ordner `public/assets` öffnen → **Add file → Upload files** → Bild mit demselben
+Namen hochladen → **Commit changes**.
+Tipp: Bilder vorher verkleinern (max. ca. 1600 px breit, unter 300 KB), sonst lädt die Seite
+langsam – z. B. mit https://squoosh.app.
+
+### Beispiel 4: Plätze erhöhen (ohne Code)
+
+Die Festhalle hat mehr Stühle als gedacht → statt 120 sollen 150 Plätze buchbar sein:
+
+1. https://anmeldung.baufinanz-dueren.de/admin öffnen, Passwort eingeben.
+2. **Plätze gesamt** auf `150` → **Speichern**.
+3. Sofort zeigt die Seite z. B. „Noch 67 von 150 Plätzen frei“, und wer auf der Warteliste
+   steht, kann per **Nachrücken** übernommen werden (bekommt dann automatisch die Einladung).
+
+---
+
+## 5. Die Verwaltung `/admin`
+
+| Funktion | Was passiert |
+|---|---|
+| **Plätze gesamt** | Wie viele Plätze insgesamt buchbar sind |
+| **Max. Plätze pro Person** | z. B. `2` = eine Person + eine Begleitung |
+| **Anmeldung geöffnet** | Häkchen weg = Formular verschwindet von der Seite |
+| **Nachrücken** (Warteliste) | Nur wenn genug Plätze frei sind; Person bekommt automatisch die Einladung mit PDF |
+| **Stornieren** | Plätze werden sofort wieder frei |
+| **Mail erneut** | Schickt die Einladung noch einmal |
+| **CSV exportieren** | Liste für Excel: Stuhlplanung, Namensschilder, Versand des Themenmagazins |
+| **Nach Quelle** | Wie viele Anmeldungen über Zeitung, Flyer, Plakat oder direkt kamen |
+
+Regeln der Anmeldung: **eine Anmeldung pro E-Mail-Adresse**, höchstens so viele Plätze wie
+eingestellt. Ist der Abend voll, können sich Besucher auf die Warteliste setzen.
+
+### QR-Codes
+
+| Datei in `druck/qr-codes/` | Einsatz | führt auf |
+|---|---|---|
+| `qr-zeitung.svg` / `.png` | Zeitungsannonce | `anmeldung.baufinanz-dueren.de/zeitung` |
+| `qr-flyer.svg` / `.png` | Flyer | `anmeldung.baufinanz-dueren.de/flyer` |
+| `qr-plakat.svg` / `.png` | Plakat | `anmeldung.baufinanz-dueren.de/plakat` |
+| `qr-allgemein.svg` / `.png` | alles andere | `anmeldung.baufinanz-dueren.de` |
+
+**SVG** an die Druckerei (beliebig groß, scharf), **PNG** für Word/Canva.
+Mindestgröße 2 × 2 cm. Die Adressen `/zeitung`, `/flyer`, `/plakat` bitte **nie löschen**
+(in `netlify.toml`) – sonst funktionieren gedruckte Codes nicht mehr.
+
+---
+
+## 6. Bitte nicht ändern (oder nur mit Niklas)
+
+- **Die Teile in spitzen Klammern** in `public/index.html`, vor allem `id="…"` und `name="…"` im
+  Formular – daran hängt die Technik. Sichtbare Texte ändern ist immer okay.
+- `supabase/schema.sql` – das ist die Datenbank mit den Anmeldungen.
+- **Passwörter, Schlüssel, Zugangsdaten** gehören **nie** in eine Datei: Das Repo ist
+  **öffentlich** – alles, was dort steht, kann jeder lesen. Zugangsdaten nur in Netlify unter
+  *Project configuration → Environment variables*.
+- **Keine Anmeldelisten/CSV-Dateien** ins Repo hochladen (personenbezogene Daten).
+- Kopf und Fuß sind 1:1 von baufinanz-dueren.de übernommen. Ändert sich dort etwas
+  (Menü, Telefonnummer), am besten hier gleich mit anpassen.
+
+---
+
+## 7. Offene Punkte (Stand 12. Oktober 2026)
+
+1. ⚠️ **Die Anmeldung funktioniert live noch nicht.** Die freien Plätze zeigen nur „–“, und wer
+   sich anmeldet, bekommt eine Fehlermeldung – Datenbank und E-Mail-Versand sind noch nicht
+   verbunden.
+   Zu tun (Anleitung in [`README.md`](README.md), Schritte 1–3):
+   Supabase-Projekt anlegen und `supabase/schema.sql` ausführen → in Netlify (Projekt
+   **baufiabend**) die Variablen `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SMTP_HOST`,
+   `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `ADMIN_PASSWORD` eintragen →
+   *Deploys → Trigger deploy* → **Testanmeldung** machen.
+   **Erst danach die QR-Codes drucken bzw. die Annonce schalten.**
+2. **Plausible** (Besucherzahlen, cookiefrei) einrichten – README Schritt 6.
+3. **Datenschutzerklärung prüfen**: Veranstaltung, Versand Themenmagazin, Plausible
+   (Briefing Punkt 3 „Rechtliches“).
+4. **E-Mail im Fuß bestätigen**: Dort steht `info@baufinanz-dueren.de` – gibt es das Postfach?
+5. **Fehler auf der Hauptseite**: Im Fuß und im **Impressum** von baufinanz-dueren.de stehen
+   E-Mail-Adressen mit `@b10x69i.myrdbx.io` (Rest vom Hoster-Umzug) – in WordPress korrigieren.
+6. **Plakat**: Tippfehler „Rednerbeitrag durch eien Ntar“ → „einen Notar“.
+7. Offene Entscheidung: Soll der Absende-Knopf im Formular („Platz verbindlich reservieren“)
+   auch orange werden wie „Jetzt Platz sichern“?
+8. Netlify: Das leere Projekt **anmeldung-baufinanz** wird nicht gebraucht und kann gelöscht werden.
+9. Später: Einladung zusätzlich für **Apple Wallet / Google Wallet** (braucht ein
+   Apple-Developer- bzw. Google-Wallet-Konto).
+
+---
+
+## 8. Vor dem Start testen
+
+- [ ] Testanmeldung mit eigener E-Mail: Mail da? PDF öffnet? Kalendereintrag klappt?
+- [ ] Info-Mail an `infoabend@baufinanz-dueren.de` angekommen?
+- [ ] Gleiche E-Mail zweimal → wird abgelehnt
+- [ ] In `/admin`: Testanmeldung sichtbar → **Stornieren** (damit sie nicht mitzählt)
+- [ ] Alle vier QR-Codes mit dem Handy scannen
+- [ ] Auf iPhone und Android einmal komplett durchklicken
+- [ ] Plätze und Maximum pro Person in `/admin` final einstellen
