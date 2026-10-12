@@ -1,6 +1,6 @@
 import { EVENT, siteUrl } from './event.mjs';
 
-const esc = (s) => s.replace(/[\\;,]/g, (c) => '\\' + c);
+const esc = (s) => s.replace(/[\\;,]/g, (c) => '\\' + c).replace(/\n/g, '\\n');
 
 export function icsFile() {
   return [
@@ -14,7 +14,7 @@ export function icsFile() {
     `DTEND:${EVENT.endUtc}`,
     `SUMMARY:${esc('Infoabend: ' + EVENT.title)}`,
     `LOCATION:${esc(EVENT.venue + ', ' + EVENT.address)}`,
-    `DESCRIPTION:${esc(`Einlass ${EVENT.admission}, Beginn ${EVENT.start}. Infos: ${siteUrl()}`)}`,
+    `DESCRIPTION:${esc(`${EVENT.venue}, ${EVENT.address}\nEinlass ${EVENT.admission}, Beginn ${EVENT.start}. Die Teilnahme ist kostenlos.\nInfos: ${siteUrl()}`)}`,
     `URL:${siteUrl()}`,
     'BEGIN:VALARM',
     'TRIGGER:-P1D',

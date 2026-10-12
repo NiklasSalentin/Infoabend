@@ -63,7 +63,6 @@ async function load() {
       <td>${esc([r.street, r.zip, r.city].filter(Boolean).join(', '))}${r.address_consent ? '<br>✓ Post' : ''}</td>
       <td>${esc(r.questions)}</td>
       <td>${esc(r.source || 'direkt')}</td>
-      <td>${esc(r.ticket_code)}</td>
       <td>
         ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
         ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
@@ -151,7 +150,7 @@ $('#rows').onclick = async (e) => {
 };
 
 $('#csv').onclick = () => {
-  const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source', 'ticket_code'];
+  const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source'];
   const cell = (v) => '"' + String(Array.isArray(v) ? v.join(', ') : v ?? '').replace(/"/g, '""') + '"';
   const csv = '﻿' + [cols.join(';'), ...data.registrations.map((r) => cols.map((c) => cell(r[c])).join(';'))].join('\n');
   const a = document.createElement('a');

@@ -8,7 +8,7 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 1. Frau Müller scannt den QR-Code auf dem **Flyer** → `anmeldung.baufinanz-dueren.de/flyer`
 2. Sie landet auf der Anmeldeseite (im Hintergrund wird „Quelle: flyer“ gemerkt).
 3. Sie bucht **2 Plätze** (sich + Begleitung „Herr Müller“).
-4. Sofort danach bekommt sie eine **E-Mail mit PDF-Einladung** und Kalendereintrag.
+4. Sofort danach bekommt sie eine **Bestätigungs-Mail** im Plakat-Design mit allen Infos und Kalendereintrag.
 5. Ihr bekommt eine **Info-Mail** an `info@baufinanz-dueren.de`.
 6. In der Verwaltung (`/admin`) steht sie mit 2 Plätzen und der Quelle „flyer“.
 7. Will sie sich mit derselben E-Mail-Adresse noch einmal anmelden, kommt:
@@ -153,7 +153,7 @@ Mit dem `ADMIN_PASSWORD` anmelden. Oben stehen die Einstellungen:
 
 | Wer | bucht | Ergebnis | Anzeige danach |
 |---|---|---|---|
-| Person A | 2 Plätze | ✅ bestätigt, Mail mit PDF | „Noch 118 von 120 Plätzen frei“ |
+| Person A | 2 Plätze | ✅ bestätigt, Bestätigungs-Mail | „Noch 118 von 120 Plätzen frei“ |
 | Person A nochmal | 1 Platz | ❌ „bereits angemeldet“ | unverändert |
 | Person B | 3 Plätze | geht nicht – Auswahl endet bei 2 | – |
 | … | … | Abend voll | „ausgebucht“ → Knopf „Auf die Warteliste setzen“ |
@@ -167,7 +167,7 @@ Festhalle passen. Die neuen Plätze sind sofort buchbar.
 In der Liste in `/admin` je Zeile:
 
 - **Nachrücken** (bei Warteliste) – nur wenn genug Plätze frei sind; die Person bekommt
-  automatisch ihre Einladung mit PDF.
+  automatisch ihre Bestätigungs-Mail.
 - **Stornieren** – die Plätze werden sofort wieder frei.
   Beispiel: A (2 Plätze) storniert → Z (Warteliste, 2 Plätze) → **Nachrücken** klicken.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
@@ -206,17 +206,19 @@ in `scripts/qr-codes.mjs` eine Zeile hinzufügen und `npm install && npm run qr`
 
 ### Was Gäste per E-Mail bekommen
 
-- **PDF-Einladung** mit Name, Plätzen, Begleitung, Ticket-Code, Ablauf (Teil 1 Finanzierung,
-  Teil 2 Notar), Einlass/Parken und Link zur Seite
-- **Kalendereintrag**: Apple/Outlook als Anhang (mit Erinnerung am Vortag), Google als Knopf
-- Knopf **Termin vereinbaren**
+- **Eine Bestätigungs-Mail ohne Anhang** im Design von Plakat und Seite: Name, Plätze, Begleitung, Datum,
+  Uhrzeit, Ort mit Route (Google Maps/Apple Karten), Ablauf (Teil 1 Finanzierung, Teil 2 Notar), Ankommen & Parken.
+  Keine Ticketnummer – Gäste stehen mit Namen auf der Liste in `/admin`.
+- **Kalendereintrag** per Knopf: „iPhone / Outlook“ lädt die Kalenderdatei (mit Ort + Adresse und
+  Erinnerung am Vortag), „Google Kalender“ öffnet Google
+- Knopf **Persönliche Beratung buchen**
 
 Apple Wallet und Google Wallet sind für später vorgesehen (Apple-Developer-Konto bzw.
 Google-Wallet-Ausstellerkonto nötig).
 
 ## Vor dem Start testen (Checkliste aus dem Briefing)
 
-- [ ] Testanmeldung mit eigener E-Mail: Mail da? PDF öffnet? Kalendereintrag klappt?
+- [ ] Testanmeldung mit eigener E-Mail: Mail da? Kalendereintrag (iPhone/Outlook und Google) klappt?
 - [ ] Info-Mail an `info@baufinanz-dueren.de` angekommen?
 - [ ] Ohne Datenschutz-Häkchen lässt sich nicht absenden
 - [ ] Gleiche E-Mail zweimal → wird abgelehnt
@@ -230,13 +232,13 @@ Google-Wallet-Ausstellerkonto nötig).
 ```
 public/                 Seite (HTML/CSS/JS), Verwaltung /admin, Bilder
 netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics (Kalender), visit (Besucherzählung)
-netlify/lib/            Veranstaltungsdaten (event.mjs), Mail, PDF, Kalender
+netlify/lib/            Veranstaltungsdaten (event.mjs), Mail, Kalender
 netlify/lib/db.mjs      Datenspeicher (Netlify Blobs) + Buchungslogik (verhindert Überbuchung, auch bei gleichzeitigen Anmeldungen)
 scripts/qr-codes.mjs    erzeugt die QR-Codes (npm run qr)
 druck/qr-codes/         fertige QR-Codes
 ```
 
-Datum, Ort und Texte für Mail/PDF stehen zentral in `netlify/lib/event.mjs`.
+Datum, Ort und Texte für die Mail stehen zentral in `netlify/lib/event.mjs`.
 
 ## Design = baufinanz-dueren.de
 

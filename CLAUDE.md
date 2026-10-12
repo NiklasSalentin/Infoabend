@@ -27,9 +27,8 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Datenschutzhinweise (`/datenschutz`) | `public/datenschutz.html` – bei neuen Daten/Diensten mit anpassen |
 | Farben, Schriften, Layout | `public/style.css` (Variablen in `:root`) |
 | Countdown, Google-Kalender-Link, Formularlogik | `public/app.js` |
-| Datum/Ort/Uhrzeiten für Mail, PDF, Kalenderdatei | `netlify/lib/event.mjs` |
-| Bestätigungs-/Wartelisten-/Team-Mail | `netlify/lib/mail.mjs` |
-| PDF-Einladung (Texte doppelt zur Seite!) | `netlify/lib/pdf.mjs` |
+| Datum/Ort/Uhrzeiten für Mail und Kalenderdatei | `netlify/lib/event.mjs` |
+| Bestätigungs-/Wartelisten-/Team-Mail (Design wie Plakat, Texte teils doppelt zur Seite!) | `netlify/lib/mail.mjs` |
 | Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
 | QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
 | Besucher-Auswertung & Adressliste in `/admin` | `public/admin.html`/`admin.js`, `netlify/functions/visit.mjs`, `netlify/lib/visitor.mjs` |
@@ -41,8 +40,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 - **Datum und Uhrzeiten** stehen an mehreren Stellen und müssen gleich bleiben
   (`npm run check` prüft das): `netlify/lib/event.mjs` (`dateLabel`, `admission`, `start`,
   `startUtc`, `endUtc`), `public/index.html` (Datumsfeld, „Einlass …“, „… um 18:30 Uhr losgeht“,
-  Meta-Beschreibung), `public/app.js` (`eventDate`, Kalender-`dates`, `details`),
-  `netlify/lib/pdf.mjs` („… um 18:30 Uhr losgeht“). Kalenderzeiten in UTC: im Dezember
+  Meta-Beschreibung), `public/app.js` (`eventDate`, Kalender-`dates`, `details`). Kalenderzeiten in UTC: im Dezember
   deutsche Zeit minus 1 Stunde (18:00 → `170000Z`).
 - `id="…"`/`name="…"` im Formular nicht ändern – `public/app.js` hängt daran.
 - Kopf und Fuß sind 1:1 von baufinanz-dueren.de; der obere Abschnitt folgt dem Infoabend-Plakat

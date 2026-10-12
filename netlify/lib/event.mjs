@@ -15,9 +15,13 @@ export const EVENT = {
   privacyUrl: 'https://anmeldung.baufinanz-dueren.de/datenschutz',
   imprintUrl: 'https://baufinanz-dueren.de/impressum/',
   notifyEmail: 'info@baufinanz-dueren.de',
+  phone: '0172 60 75 100',
+  officeAddress: 'Bahnhofstraße 100 · 52382 Niederzier',
+  mapsGoogle: 'https://www.google.com/maps/dir/?api=1&destination=Festhalle+Birkesdorf%2C+An+der+Festhalle+3%2C+52353+D%C3%BCren',
+  mapsApple: 'https://maps.apple.com/?daddr=An+der+Festhalle+3%2C+52353+D%C3%BCren&q=Festhalle+Birkesdorf',
 };
 
-// Basis-URL für Links in Mails/PDF: SITE_URL (falls gesetzt), sonst die primäre
+// Basis-URL für Links in Mails: SITE_URL (falls gesetzt), sonst die primäre
 // Adresse des Netlify-Projekts (eigene Domain, solange keine da ist: *.netlify.app)
 let projectUrl = '';
 export function useSite(context) {

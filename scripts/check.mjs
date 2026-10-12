@@ -41,10 +41,9 @@ for (const p of ['/zeitung', '/flyer', '/plakat', '/admin', '/datenschutz']) {
   if (!toml.includes(`from = "${p}"`)) fail(`netlify.toml: Weiterleitung ${p} fehlt – gedruckte QR-Codes/Verwaltung wären kaputt.`);
 }
 
-// 5. Datum und Uhrzeiten überall gleich (Seite, Countdown, Kalender, Mail, PDF)
+// 5. Datum und Uhrzeiten überall gleich (Seite, Countdown, Kalender; Mail nutzt event.mjs)
 const { EVENT } = await import(root + 'netlify/lib/event.mjs');
 const app = read('public/app.js');
-const pdf = read('netlify/lib/pdf.mjs');
 const [, y, m, d] = EVENT.startUtc.match(/^(\d{4})(\d{2})(\d{2})T/);
 const same = (where, text, needle, hint) => { if (!text.includes(needle)) fail(`${where}: „${needle}“ nicht gefunden – ${hint}`); };
 const hint = 'Datum/Uhrzeit stehen in netlify/lib/event.mjs, public/index.html und public/app.js und müssen überall gleich sein.';
@@ -55,7 +54,6 @@ same('public/index.html', html, `datetime="${y}-${m}-${d}`, hint);
 same('public/app.js', app, `Einlass ${EVENT.admission}, Beginn ${EVENT.start}`, hint);
 same('public/app.js', app, `${EVENT.startUtc}/${EVENT.endUtc}`, hint);
 same('public/app.js', app, `'${y}-${m}-${d}T`, hint);
-same('netlify/lib/pdf.mjs', pdf, `um ${EVENT.start} losgeht`, hint);
 
 // 6. Keine Zugangsdaten und keine Anmeldelisten im (öffentlichen!) Repo
 const files = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);
