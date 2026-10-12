@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="top-blue">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,7 +17,8 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="/assets/favicon.png?v=2" type="image/png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2">
-<meta name="theme-color" content="#323D8D">
+<meta name="theme-color" media="(max-width: 767px)" content="#323D8D" id="theme-mobile">
+<meta name="theme-color" content="#ffffff">
 <link rel="preload" href="/assets/fonts/raleway-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/raleway-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
@@ -35,7 +36,7 @@
 <main>
   <!-- OBERER ABSCHNITT im Stil des Infoabend-Plakats (Variante A2):
        Logo-Blau mit Hausfoto, großer Titel, Navy-Datumsfeld mit Gold-Datum, FOCUS-MONEY-Siegel gleich hoch -->
-  <section class="hero">
+  <section class="hero" data-topbar>
     <div class="hero-photo" aria-hidden="true"></div>
     <div class="container hero-inner">
       <h1>Wie kaufe ich eigentlich eine Immobilie?</h1>
@@ -206,6 +207,7 @@
   </div>
 </footer>
 
+<script src="/topbar.js" defer></script>
 <script src="/app.js" defer></script>
 </body>
 </html>

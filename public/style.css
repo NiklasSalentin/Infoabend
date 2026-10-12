@@ -33,8 +33,10 @@
 [hidden] { display: none !important; }
 /* Seitengrund = Logo-Blau des oberen Abschnitts: so ist auch der Bereich der iPhone-Notch oben blau
    (Safari färbt ihn nach dem Seitenhintergrund). Der eigentliche Inhalt ist weiß hinterlegt. */
-html { scroll-behavior: smooth; scroll-padding-top: 16px; background: #323D8D; }
-body { margin: 0; font-family: var(--font); font-size: 18px; font-weight: 400; line-height: 1.5em; color: var(--text); background: #323D8D; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; background: var(--white); }
+body { margin: 0; font-family: var(--font); font-size: 18px; font-weight: 400; line-height: 1.5em; color: var(--text); background: var(--white); }
+/* Handy: Hintergrund (und damit die Browser-Leiste oben) nur blau, solange der blaue Kopfbereich oben ist – siehe topbar.js */
+@media (max-width: 767px) { html.top-blue, html.top-blue body { background: var(--poster-blue); } }
 main, .site-footer { background: var(--white); }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--primary); }
