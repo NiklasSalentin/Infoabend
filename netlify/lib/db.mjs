@@ -2,7 +2,7 @@
 //
 // Aufbau des Speichers „infoabend“:
 //   event              → { settings: {...}, registrations: [...] }   alle Anmeldungen + Einstellungen
-//   stats              → Kennzahlen der Besucher-Auswertung (Summen je Tag und je Quelle)
+//   stats              → Aufrufzähler (Aufrufe und Besucher, gesamt und je Tag)
 //   visitors/<code>    → ein Eintrag je Besucher (nur unumkehrbarer Code, keine IP)
 //
 // Gleichzeitige Änderungen (zwei Anmeldungen in derselben Sekunde) werden über „ETag“ abgesichert:
