@@ -179,7 +179,10 @@ form { margin-top: 24px; padding: 36px; border-radius: var(--radius-lg); backgro
 /* dezenter Hinweis „optional“ hinter dem Feldnamen */
 .optional { margin-left: 4px; color: #9aa0b4; font-size: 12px; font-weight: 400; }
 label { display: block; font-size: 16px; font-weight: 600; }
-input, select, textarea { display: block; width: 100%; margin-top: 6px; padding: 13px 16px; border: 1px solid #d5daea; border-radius: var(--radius); background: var(--white); color: var(--text); font: inherit; font-size: 16px; font-weight: 400; }
+input, select, textarea { display: block; width: 100%; margin-top: 6px; padding: 13px 16px; border: 1px solid #d5daea; border-radius: var(--radius); background: var(--white); color: var(--text); font: inherit; font-size: 16px; font-weight: 400; line-height: 1.5; }
+/* Auswahlfeld (Anzahl Plätze) so hoch wie die anderen Felder – auch in Safari/iPhone */
+select { -webkit-appearance: none; appearance: none; height: auto; padding-right: 44px; cursor: pointer;
+  background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231A3569' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center / 12px 8px; }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(60,89,173,.2); }
 input[type=checkbox] { accent-color: var(--secondary); }
 .check { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0; font-weight: 600; }
