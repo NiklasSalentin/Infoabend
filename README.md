@@ -156,7 +156,7 @@ In der Liste in `/admin` je Zeile:
 - **Stornieren** – die Plätze werden sofort wieder frei.
   Beispiel: A (2 Plätze) storniert → Z (Warteliste, 2 Plätze) → **Nachrücken** klicken.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
-- **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder, Versand des Themenmagazins).
+- **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder, Adressliste).
 
 ### QR-Codes für den Druck
 
@@ -230,7 +230,7 @@ Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen 
 ## Noch offen
 
 - **Plausible einrichten** (Schritt 6).
-- **Datenschutzerklärung prüfen** (Veranstaltung, Versand Themenmagazin, Plausible) – Briefing Punkt 3.
+- **Datenschutzerklärung prüfen** (Veranstaltung, Speicherung der Adressen, Plausible) – Briefing Punkt 3.
 - **E-Mail im Fuß bestätigen:** Dort steht `info@baufinanz-dueren.de`. Die Hauptseite zeigt im Fuß
   und im Impressum derzeit eine Adresse mit `@b10x69i.myrdbx.io` (vermutlich Rest vom Umzug zum
   Hoster) – das sollte auf der Hauptseite korrigiert werden.

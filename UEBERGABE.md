@@ -79,7 +79,7 @@ muss seine Passwörter nicht teilen.
 2. Oben **Plätze gesamt** und **Max. Plätze pro Person** einstellen → **Speichern**.
 3. Darunter siehst du alle Anmeldungen. Je Zeile kannst du:
    **Nachrücken** (von der Warteliste), **Stornieren** oder **Mail erneut** senden.
-4. **CSV exportieren** → Liste für Excel (Stuhlplanung, Namensschilder, Versand Themenmagazin).
+4. **CSV exportieren** → Liste für Excel (Stuhlplanung, Namensschilder, Adressliste).
 
 ### Gut zu wissen
 
@@ -248,7 +248,6 @@ Das neue Bild muss **genau so heißen** wie das alte, dann ist keine weitere Än
 | Porträt (Teil 1) | `portrait.jpg` |
 | Notar-Bild (Teil 2) | `notariat.jpg` |
 | Festhalle-Logo | `festhalle.png` |
-| Themenmagazin | `themenmagazin.jpg` |
 | FOCUS-MONEY-Siegel | `kundenliebling-2026.png` |
 | Hausfoto oben | `hero-haus.webp` |
 
@@ -281,7 +280,7 @@ Die Festhalle hat mehr Stühle als gedacht → statt 120 sollen 150 Plätze buch
 | **Nachrücken** (Warteliste) | Nur wenn genug Plätze frei sind; Person bekommt automatisch die Einladung mit PDF |
 | **Stornieren** | Plätze werden sofort wieder frei |
 | **Mail erneut** | Schickt die Einladung noch einmal |
-| **CSV exportieren** | Liste für Excel: Stuhlplanung, Namensschilder, Versand des Themenmagazins |
+| **CSV exportieren** | Liste für Excel: Stuhlplanung, Namensschilder, Adressliste |
 | **Nach Quelle** | Wie viele Anmeldungen über Zeitung, Flyer, Plakat oder direkt kamen |
 
 Regeln der Anmeldung: **eine Anmeldung pro E-Mail-Adresse**, höchstens so viele Plätze wie
@@ -328,7 +327,7 @@ Mindestgröße 2 × 2 cm. Die Adressen `/zeitung`, `/flyer`, `/plakat` bitte **n
    *Deploys → Trigger deploy* → **Testanmeldung** machen.
    **Erst danach die QR-Codes drucken bzw. die Annonce schalten.**
 2. **Plausible** (Besucherzahlen, cookiefrei) einrichten – README Schritt 6.
-3. **Datenschutzerklärung prüfen**: Veranstaltung, Versand Themenmagazin, Plausible
+3. **Datenschutzerklärung prüfen**: Veranstaltung, Speicherung der Adressen, Plausible
    (Briefing Punkt 3 „Rechtliches“).
 4. **E-Mail im Fuß bestätigen**: Dort steht `info@baufinanz-dueren.de` – gibt es das Postfach?
 5. **Fehler auf der Hauptseite**: Im Fuß und im **Impressum** von baufinanz-dueren.de stehen
