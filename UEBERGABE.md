@@ -104,7 +104,7 @@ Die Details zu allem findest du in den folgenden Abschnitten.
 | Verwaltung (Plätze, Anmeldeliste) | https://anmeldung.baufinanz-dueren.de/admin – Passwort bekommst du von Niklas |
 | Code (GitHub) | https://github.com/NiklasSalentin/Infoabend |
 | Veröffentlichung (Netlify) | https://app.netlify.com/projects/baufiabend |
-| Technische Einrichtung (Supabase, E-Mail, Domain, Besucherzählung) | [`README.md`](README.md) |
+| Technische Einrichtung (E-Mail, Domain, Speicher, Besucherzählung) | [`README.md`](README.md) |
 
 **Live-Branch:** `claude/relaxed-cannon-2kqiie` – nur was auf diesem Branch landet, geht online.
 
@@ -307,7 +307,8 @@ Mindestgröße 2 × 2 cm. Die Adressen `/zeitung`, `/flyer`, `/plakat` bitte **n
 
 - **Die Teile in spitzen Klammern** in `public/index.html`, vor allem `id="…"` und `name="…"` im
   Formular – daran hängt die Technik. Sichtbare Texte ändern ist immer okay.
-- `supabase/schema.sql` – das ist die Datenbank mit den Anmeldungen.
+- `netlify/lib/db.mjs` – das ist der Speicher mit den Anmeldungen (Buchungslogik).
+- Im Netlify-Dashboard unter *Blobs* den Speicher **infoabend** nie löschen – dort liegen alle Anmeldungen.
 - **Passwörter, Schlüssel, Zugangsdaten** gehören **nie** in eine Datei: Das Repo ist
   **öffentlich** – alles, was dort steht, kann jeder lesen. Zugangsdaten nur in Netlify unter
   *Project configuration → Environment variables*.
@@ -319,14 +320,11 @@ Mindestgröße 2 × 2 cm. Die Adressen `/zeitung`, `/flyer`, `/plakat` bitte **n
 
 ## 7. Offene Punkte (Stand 12. Oktober 2026)
 
-1. ⚠️ **Die Anmeldung funktioniert live noch nicht.** Die freien Plätze zeigen nur „–“, und wer
-   sich anmeldet, bekommt eine Fehlermeldung – Datenbank und E-Mail-Versand sind noch nicht
-   verbunden.
-   Zu tun (Anleitung in [`README.md`](README.md), Schritte 1–3):
-   Supabase-Projekt anlegen und `supabase/schema.sql` ausführen → in Netlify (Projekt
-   **baufiabend**) die Variablen `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SMTP_HOST`,
-   `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `ADMIN_PASSWORD` eintragen →
-   *Deploys → Trigger deploy* → **Testanmeldung** machen.
+1. ⚠️ **E-Mail-Versand fehlt noch.** Anmeldungen werden gespeichert und stehen in `/admin`,
+   aber die Bestätigungs-Mail mit PDF geht erst raus, wenn die Postfach-Zugangsdaten eingetragen
+   sind: in Netlify (Projekt **baufiabend**) `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`,
+   `MAIL_FROM` (Anleitung in [`README.md`](README.md), Schritte 2–3) → *Deploys → Trigger deploy*
+   → **Testanmeldung** machen. Fehlende Mails lassen sich danach in `/admin` mit **Mail erneut** nachschicken.
    **Erst danach die QR-Codes drucken bzw. die Annonce schalten.**
 2. **Datenschutzerklärung prüfen**: Veranstaltung, Speicherung der Adressen, Besucherzählung
    ohne Cookies (README Schritt 6; Briefing Punkt 3 „Rechtliches“).

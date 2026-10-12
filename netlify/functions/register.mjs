@@ -1,4 +1,4 @@
-import { db, json } from '../lib/db.mjs';
+import { bookSeats, markRegistered, json } from '../lib/db.mjs';
 import { sendConfirmation, sendWaitlist, notifyTeam } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { forwardQuestion, ASKME_MAX } from '../lib/askme.mjs';
@@ -41,24 +41,14 @@ export default async (req, context) => {
   if (b.privacyConsent !== true) errors.privacyConsent = 'Bitte bestätigen Sie die Datenschutzerklärung.';
   if (Object.keys(errors).length) return json({ error: 'Bitte prüfen Sie Ihre Angaben.', errors }, 422);
 
-  let data, error;
+  let r;
   try {
-    ({ data, error } = await db().rpc('book_seats', {
-      p_name: reg.name, p_email: reg.email, p_phone: reg.phone, p_seats: reg.seats,
-      p_companions: reg.companions, p_street: reg.street, p_zip: reg.zip, p_city: reg.city,
-      p_address_consent: reg.address_consent, p_questions: reg.questions,
-      p_waitlist_ok: b.waitlist === true, p_source: reg.source,
-    }));
+    r = await bookSeats(reg, b.waitlist === true);
   } catch (e) {
-    // z. B. Datenbank nicht eingerichtet (SUPABASE_URL fehlt) oder nicht erreichbar
-    error = e;
-  }
-  if (error) {
-    console.error(error);
+    console.error(e);
     return json({ error: 'Die Anmeldung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.' }, 500);
   }
 
-  const r = data[0];
   const messages = {
     duplicate: 'Mit dieser E-Mail-Adresse wurde bereits eine Anmeldung vorgenommen.',
     too_many: 'Die gewünschte Platzanzahl überschreitet das Maximum pro Person.',
@@ -69,8 +59,10 @@ export default async (req, context) => {
 
   const full = { ...reg, status: r.status, ticket_code: r.ticket_code };
   // Auswertung: diesen Besucher als „angemeldet“ markieren
-  const hash = visitorHash(req, context);
-  if (hash) await db().rpc('mark_registered', { p_hash: hash }).then(({ error }) => error && console.error(error), (e) => console.error(e));
+  try {
+    const hash = await visitorHash(req, context);
+    if (hash) await markRegistered(hash, reg.source);
+  } catch (e) { console.error(e); }
   // Frage vorab gleich an die AskMeSomething-App weitergeben (Fehler dort stoppen die Anmeldung nicht)
   const asked = reg.questions ? forwardQuestion({ text: reg.questions, name: reg.name, ticket: r.ticket_code }) : null;
   try {

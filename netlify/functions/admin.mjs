@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
-import { db, seatStatus, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, updateSettings, markInternal, visitStats, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { visitorHash } from '../lib/visitor.mjs';
@@ -19,24 +19,21 @@ export default async (req, context) => {
     return await handle(req, context);
   } catch (e) {
     console.error(e);
-    return json({ error: 'Datenbank nicht erreichbar – sind Supabase-Zugang (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) in Netlify eingetragen?' }, 500);
+    return json({ error: 'Speicher gerade nicht erreichbar – bitte in einer Minute erneut versuchen.' }, 500);
   }
 };
 
 async function handle(req, context) {
-  const client = db(); // wirft sofort, wenn die Datenbank nicht eingerichtet ist
-
   if (req.method === 'GET') {
     // Wer sich hier anmeldet, ist „eigenes Gerät“ und zählt in der Auswertung nicht mit
-    const hash = visitorHash(req, context);
-    if (hash) await client.rpc('mark_internal', { p_hash: hash });
-    const [status, list, stats] = await Promise.all([
+    const hash = await visitorHash(req, context);
+    if (hash) await markInternal(hash);
+    const [status, registrations, stats] = await Promise.all([
       seatStatus(),
-      client.from('registrations').select('*').order('created_at', { ascending: true }),
-      client.rpc('visit_stats'),
+      listRegistrations(),
+      visitStats().catch((e) => { console.error(e); return null; }),
     ]);
-    if (list.error) return json({ error: list.error.message }, 500);
-    return json({ status, registrations: list.data, stats: stats.error ? null : stats.data });
+    return json({ status, registrations, stats });
   }
 
   if (req.method !== 'POST') return json({ error: 'Methode nicht erlaubt' }, 405);
@@ -47,28 +44,22 @@ async function handle(req, context) {
       const total = Number.parseInt(b.totalSeats, 10);
       const max = Number.parseInt(b.maxPerPerson, 10);
       if (!(total >= 0) || !(max >= 1)) return json({ error: 'Ungültige Werte' }, 400);
-      const { error } = await db().from('settings')
-        .update({ total_seats: total, max_per_person: max, registration_open: b.open !== false, updated_at: new Date().toISOString() })
-        .eq('id', 1);
-      if (error) return json({ error: error.message }, 500);
+      await updateSettings({ total_seats: total, max_per_person: max, registration_open: b.open !== false });
       return json({ ok: true });
     }
     case 'promote': {
-      const { data, error } = await db().rpc('promote_registration', { p_id: b.id });
-      if (error) return json({ error: error.message }, 500);
-      if (data !== 'confirmed') return json({ error: data === 'full' ? 'Nicht genug freie Plätze' : 'Eintrag nicht auf Warteliste' }, 409);
-      const { data: reg } = await db().from('registrations').select('*').eq('id', b.id).single();
-      await sendConfirmation(reg).catch((e) => console.error(e));
+      const result = await promoteRegistration(b.id);
+      if (result !== 'confirmed') return json({ error: result === 'full' ? 'Nicht genug freie Plätze' : 'Eintrag nicht auf Warteliste' }, 409);
+      await sendConfirmation(await getRegistration(b.id)).catch((e) => console.error(e));
       return json({ ok: true });
     }
     case 'cancel': {
-      const { error } = await db().from('registrations').update({ status: 'cancelled' }).eq('id', b.id);
-      if (error) return json({ error: error.message }, 500);
+      if (!(await cancelRegistration(b.id))) return json({ error: 'Anmeldung nicht gefunden' }, 404);
       return json({ ok: true });
     }
     case 'resend': {
-      const { data: reg, error } = await db().from('registrations').select('*').eq('id', b.id).single();
-      if (error || reg.status !== 'confirmed') return json({ error: 'Nur für bestätigte Anmeldungen' }, 400);
+      const reg = await getRegistration(b.id);
+      if (!reg || reg.status !== 'confirmed') return json({ error: 'Nur für bestätigte Anmeldungen' }, 400);
       await sendConfirmation(reg);
       return json({ ok: true });
     }

@@ -26,18 +26,29 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 
 ## Einrichtung in 6 Schritten
 
-### 1. Datenbank bei Supabase anlegen
+### 1. Datenspeicher – nichts zu tun
 
-1. Auf [supabase.com](https://supabase.com) → **New project** → Name z. B. `infoabend`,
-   Region **Frankfurt (eu-central-1)**.
-2. Links **SQL Editor** → **New query** → den kompletten Inhalt von
-   [`supabase/schema.sql`](supabase/schema.sql) einfügen → **Run**.
-   (Das Skript darf auch zweimal laufen, es geht nichts kaputt.)
-3. **Project Settings → API** (bzw. *API Keys*): die **Project URL** und den
-   **service_role**- bzw. **Secret**-Schlüssel kopieren – beides braucht ihr in Schritt 3.
+Anmeldungen, Einstellungen und Besucherzahlen liegen im **Netlify-eigenen Speicher**
+(„Netlify Blobs“) des Projekts `baufiabend`. Kein extra Konto, keine Zugangsdaten – der Speicher
+entsteht automatisch bei der ersten Anmeldung bzw. beim ersten Speichern in `/admin`.
 
-> ⚠️ Der service_role-Schlüssel hat vollen Zugriff auf die Datenbank. Er gehört **nur** in die
-> Netlify-Einstellungen, nie in den Code oder in eine E-Mail.
+- **Daten ansehen/sichern:** in `/admin` (Tabellen + **CSV exportieren**). Zusätzlich im Netlify-
+  Dashboard unter *Blobs* → Speicher **infoabend**.
+- **Was dort liegt – Beispiel:**
+
+  | Eintrag | Inhalt |
+  |---|---|
+  | `event` | Einstellungen (Plätze, Max. pro Person, offen/zu) und alle Anmeldungen |
+  | `stats` | Summen der Besucher-Auswertung (je Tag, je Quelle) |
+  | `visitors/3f9a…` | ein Eintrag je Besucher – nur ein unumkehrbarer Code, keine IP |
+  | `salt` | zufälliger Geheimwert für diesen Code |
+
+- **Keine Überbuchung:** Gespeichert wird nur, wenn sich der Eintrag seit dem Lesen nicht
+  verändert hat; sonst wird automatisch neu gelesen und noch einmal versucht. Melden sich zwei
+  Personen in derselben Sekunde für den letzten Platz an, bekommt ihn genau eine – die andere
+  landet auf der Warteliste.
+- ⚠️ Den Speicher **nicht** im Netlify-Dashboard löschen – sonst sind alle Anmeldungen weg.
+  Vor dem Abend sicherheitshalber die CSV exportieren.
 
 ### 2. Zugangsdaten des E-Mail-Postfachs (SMTP) heraussuchen
 
@@ -62,8 +73,6 @@ Dort unter **Project configuration → Environment variables**:
 
 | Variable | Beispiel | Pflicht? |
 |---|---|---|
-| `SUPABASE_URL` | `https://abcdefghijk.supabase.co` | ja |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOi…` bzw. `sb_secret_…` | ja – **Secret** |
 | `SMTP_HOST` | `smtp.ionos.de` | ja |
 | `SMTP_PORT` | `587` | ja |
 | `SMTP_USER` | `infoabend@baufinanz-dueren.de` | ja |
@@ -106,7 +115,7 @@ npx netlify-cli deploy --prod
 
 ### 6. Besucher-Auswertung (eingebaut, ohne Cookies)
 
-Nichts einzurichten – sobald Supabase läuft (Schritt 1), zählt die Seite selbst mit. Die Zahlen
+Nichts einzurichten – die Seite zählt selbst mit. Die Zahlen
 stehen in `/admin` im Kasten **Auswertung**.
 
 So funktioniert es:
@@ -216,9 +225,9 @@ Google-Wallet-Ausstellerkonto nötig).
 
 ```
 public/                 Seite (HTML/CSS/JS), Verwaltung /admin, Bilder
-netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics (Kalender)
-netlify/lib/            Veranstaltungsdaten (event.mjs), Mail, PDF, Kalender, Datenbank
-supabase/schema.sql     Tabellen + Buchungslogik (verhindert Überbuchung, auch bei gleichzeitigen Anmeldungen)
+netlify/functions/      register (Anmeldung), status (freie Plätze), admin, ics (Kalender), visit (Besucherzählung)
+netlify/lib/            Veranstaltungsdaten (event.mjs), Mail, PDF, Kalender
+netlify/lib/db.mjs      Datenspeicher (Netlify Blobs) + Buchungslogik (verhindert Überbuchung, auch bei gleichzeitigen Anmeldungen)
 scripts/qr-codes.mjs    erzeugt die QR-Codes (npm run qr)
 druck/qr-codes/         fertige QR-Codes
 ```
