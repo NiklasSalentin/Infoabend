@@ -14,6 +14,15 @@ function authorized(req) {
 export default async (req, context) => {
   useSite(context);
   if (!authorized(req)) return json({ error: 'Nicht berechtigt' }, 401);
+  try {
+    return await handle(req);
+  } catch (e) {
+    console.error(e);
+    return json({ error: 'Datenbank nicht erreichbar – sind Supabase-Zugang (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) in Netlify eingetragen?' }, 500);
+  }
+};
+
+async function handle(req) {
 
   if (req.method === 'GET') {
     const [status, list] = await Promise.all([
@@ -60,6 +69,6 @@ export default async (req, context) => {
     default:
       return json({ error: 'Unbekannte Aktion' }, 400);
   }
-};
+}
 
 export const config = { path: '/api/admin' };
