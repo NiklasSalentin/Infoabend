@@ -23,11 +23,12 @@ export default async (req, context) => {
 };
 
 async function handle(req) {
+  const client = db(); // wirft sofort, wenn die Datenbank nicht eingerichtet ist
 
   if (req.method === 'GET') {
     const [status, list] = await Promise.all([
       seatStatus(),
-      db().from('registrations').select('*').order('created_at', { ascending: true }),
+      client.from('registrations').select('*').order('created_at', { ascending: true }),
     ]);
     if (list.error) return json({ error: list.error.message }, 500);
     return json({ status, registrations: list.data });
