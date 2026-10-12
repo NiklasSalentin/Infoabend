@@ -51,8 +51,6 @@ same('public/index.html', html, `Einlass ${EVENT.admission}`, hint);
 same('public/index.html', html, `um ${EVENT.start} losgeht`, hint);
 same('public/index.html', html, `${d}.${m}.${y}`, hint);
 same('public/index.html', html, `datetime="${y}-${m}-${d}`, hint);
-same('public/app.js', app, `Einlass ${EVENT.admission}, Beginn ${EVENT.start}`, hint);
-same('public/app.js', app, `${EVENT.startUtc}/${EVENT.endUtc}`, hint);
 same('public/app.js', app, `'${y}-${m}-${d}T`, hint);
 
 // 6. Keine Zugangsdaten und keine Anmeldelisten im (öffentlichen!) Repo

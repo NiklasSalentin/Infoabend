@@ -40,7 +40,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 - **Datum und Uhrzeiten** stehen an mehreren Stellen und müssen gleich bleiben
   (`npm run check` prüft das): `netlify/lib/event.mjs` (`dateLabel`, `admission`, `start`,
   `startUtc`, `endUtc`), `public/index.html` (Datumsfeld, „Einlass …“, „… um 18:30 Uhr losgeht“,
-  Meta-Beschreibung), `public/app.js` (`eventDate`, Kalender-`dates`, `details`). Kalenderzeiten in UTC: im Dezember
+  Meta-Beschreibung), `public/app.js` (`eventDate` für den Countdown); Kalender und Mail lesen alles aus `event.mjs`. Kalenderzeiten in UTC: im Dezember
   deutsche Zeit minus 1 Stunde (18:00 → `170000Z`).
 - `id="…"`/`name="…"` im Formular nicht ändern – `public/app.js` hängt daran.
 - Kopf und Fuß sind 1:1 von baufinanz-dueren.de; der obere Abschnitt folgt dem Infoabend-Plakat

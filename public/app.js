@@ -32,13 +32,7 @@ const eventDate = new Date('2026-12-09T18:00:00+01:00');
 const days = Math.max(0, Math.ceil((eventDate - Date.now()) / 864e5));
 $('#countdown').textContent = days;
 
-$('#gcal').href = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
-  action: 'TEMPLATE',
-  text: 'Infoabend: Wie kaufe ich eigentlich eine Immobilie?',
-  dates: '20261209T170000Z/20261209T200000Z',
-  location: 'Festhalle Birkesdorf, An der Festhalle 3, 52353 Düren-Birkesdorf',
-  details: 'Einlass 18:00 Uhr, Beginn 18:30 Uhr. Infos: ' + location.origin,
-});
+// Kalender-Knopf nach der Anmeldung: /kalender erkennt das Gerät (iPhone/Outlook → Kalenderdatei, Android → Google Kalender)
 
 const waitlistMode = () => !state.open ? false : state.free === 0;
 
