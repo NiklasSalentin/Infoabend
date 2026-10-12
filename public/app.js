@@ -74,6 +74,11 @@ function renderCompanions() {
 }
 
 seatsSel.addEventListener('change', renderCompanions);
+
+// Zeichenzähler für „Ihre Fragen vorab“ (max. 300 – so viel nimmt die Fragen-App an)
+const questionsField = form.elements.questions;
+const updateCount = () => { $('#questions-count').textContent = `${questionsField.value.length} / 300 Zeichen`; };
+questionsField.addEventListener('input', updateCount);
 hasCompanion.addEventListener('change', () => {
   seatsSel.value = hasCompanion.checked ? 2 : 1;
   renderCompanions();

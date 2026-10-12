@@ -148,8 +148,9 @@
         <label class="check"><input type="checkbox" id="has-companion"> Ich komme mit Begleitung</label>
         <div id="companions" class="grid" hidden></div>
 
-        <label>Ihre Fragen vorab (optional)
-          <textarea name="questions" rows="3" placeholder="Was möchten Sie an dem Abend unbedingt erfahren?"></textarea></label>
+        <label>Ihre Fragen vorab <span class="optional">optional</span>
+          <textarea name="questions" rows="3" maxlength="300" placeholder="Was möchten Sie an dem Abend unbedingt erfahren?"></textarea></label>
+        <p class="note char-count" id="questions-count" aria-live="polite">0 / 300 Zeichen</p>
 
         <label class="check small"><input type="checkbox" name="privacyConsent" required>
           <span>Ich habe die <a href="https://baufinanz-dueren.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung</a> zur Kenntnis genommen und bin mit der Verarbeitung meiner Daten gemäß der dort beschriebenen Zwecke einverstanden.*</span></label>

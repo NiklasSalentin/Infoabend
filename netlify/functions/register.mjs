@@ -1,6 +1,7 @@
 import { db, json } from '../lib/db.mjs';
 import { sendConfirmation, sendWaitlist, notifyTeam } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
+import { forwardQuestion, ASKME_MAX } from '../lib/askme.mjs';
 
 const str = (v, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,7 +28,7 @@ export default async (req, context) => {
     zip: str(b.zip, 10) || null,
     city: str(b.city, 100) || null,
     address_consent: false,
-    questions: str(b.questions, 2000) || null,
+    questions: str(b.questions, ASKME_MAX) || null,
     // Werbekanal aus dem QR-Code, z. B. 'zeitung' (leer = direkt aufgerufen)
     source: str(b.source, 40).toLowerCase().replace(/[^a-z0-9-]/g, '') || null,
   };
@@ -66,6 +67,8 @@ export default async (req, context) => {
   if (messages[r.status]) return json({ status: r.status, free: r.free, error: messages[r.status] }, 409);
 
   const full = { ...reg, status: r.status, ticket_code: r.ticket_code };
+  // Frage vorab gleich an die AskMeSomething-App weitergeben (Fehler dort stoppen die Anmeldung nicht)
+  const asked = reg.questions ? forwardQuestion({ text: reg.questions, name: reg.name, ticket: r.ticket_code }) : null;
   try {
     await Promise.all([
       r.status === 'confirmed' ? sendConfirmation(full) : sendWaitlist(full),
@@ -74,8 +77,10 @@ export default async (req, context) => {
   } catch (e) {
     // Buchung ist gespeichert – Mail-Fehler nur loggen, Nachversand über /admin möglich
     console.error('Mailversand fehlgeschlagen', e);
+    await asked;
     return json({ status: r.status, free: r.free, mailError: true });
   }
+  await asked;
   return json({ status: r.status, free: r.free });
 };
 
