@@ -66,10 +66,10 @@ function layout({ preheader, hero, body }) {
 const btn = (href, label, { bg = C.blue, color = '#ffffff' } = {}) =>
   `<a class="btn" href="${href}" style="display:inline-block;margin:0 8px 10px 0;padding:13px 24px;border-radius:999px;background:${bg};color:${color};font-family:${FONT};font-size:15px;font-weight:700;text-decoration:none">${label}</a>`;
 const pill = (t) => `<span style="display:inline-block;padding:7px 16px;border-radius:999px;background:${C.gold};color:${C.navy};font-family:${FONT};font-size:14px;font-weight:700">${t}</span>`;
-const heroTitle = (title, sub) => `
+const heroTitle = (title, sub, line = `Infoabend „${EVENT.title}“`) => `
   <p style="margin:30px 0 14px">${pill(sub)}</p>
   <h1 class="h1" style="margin:0;color:#ffffff;font-family:${FONT};font-size:36px;line-height:1.15;font-weight:600;letter-spacing:-.5px">${title}</h1>
-  <p style="margin:10px 0 0;color:#dfe3f5;font-family:${FONT};font-size:16px;line-height:1.5">Infoabend „${EVENT.title}“</p>`;
+  <p style="margin:10px 0 0;color:#dfe3f5;font-family:${FONT};font-size:16px;line-height:1.5">${line}</p>`;
 const label = (t) => `<p style="margin:0 0 2px;color:#b8c0e6;font-family:${FONT};font-size:12px;letter-spacing:2px;text-transform:uppercase">${t}</p>`;
 const tip = (title, text) => `<tr><td width="28" style="padding:0 0 12px;vertical-align:top;color:${C.gold};font-size:18px;line-height:1.4">&#9679;</td>
   <td style="padding:0 0 12px;font-family:${FONT};font-size:15px;line-height:1.55"><strong>${title}</strong> – ${text}</td></tr>`;
@@ -97,10 +97,11 @@ export function confirmationHtml(reg) {
 
   return layout({
     preheader: `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
-    hero: heroTitle(`Sie sind dabei, ${firstName(reg.name)}!`, '✓ Anmeldung bestätigt') + card,
+    hero: heroTitle(`Herzlich willkommen, ${firstName(reg.name)}!`, '✓ Anmeldung bestätigt',
+      `Wir freuen uns, Sie beim Infoabend „${EVENT.title}“ begrüßen zu dürfen.`) + card,
     body: `
       <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
-      <p style="margin:0 0 22px">schön, dass Sie dabei sind! Wir haben <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
+      <p style="margin:0 0 22px">vielen Dank für Ihre Anmeldung! Wir haben <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
       Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
 
       <p style="margin:0 0 10px;color:${C.blue};font-size:18px;font-weight:700">Termin speichern</p>
