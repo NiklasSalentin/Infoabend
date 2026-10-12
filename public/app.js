@@ -75,6 +75,26 @@ function renderCompanions() {
 
 seatsSel.addEventListener('change', renderCompanions);
 
+// Siegel immer genau so hoch wie das Datumsfeld (wie auf dem Plakat) – auch wenn Texte umbrechen
+const eckRow = $('.eckdaten-row');
+const dateBox = $('.date-box');
+eckRow.classList.add('js-seal');
+const syncSeal = () => {
+  if (getComputedStyle(eckRow).flexDirection === 'row') eckRow.style.setProperty('--eck-h', dateBox.offsetHeight + 'px');
+  else eckRow.style.removeProperty('--eck-h'); // Handy: Siegel unter dem Datumsfeld, feste Höhe aus dem CSS
+};
+new ResizeObserver(syncSeal).observe(dateBox);
+syncSeal();
+
+// Navigations-Auswahl (Google Maps / Apple Karten): schließen bei Klick daneben oder Escape; Klicks zählen
+const navChoice = $('.nav-choice');
+document.addEventListener('click', (e) => { if (navChoice.open && !navChoice.contains(e.target)) navChoice.open = false; });
+addEventListener('keydown', (e) => { if (e.key === 'Escape') navChoice.open = false; });
+navChoice.querySelectorAll('a[data-nav]').forEach((a) => a.addEventListener('click', () => {
+  track('Route', { app: a.dataset.nav });
+  navChoice.open = false;
+}));
+
 // Zeichenzähler für „Ihre Fragen vorab“ (max. 300 – so viel nimmt die Fragen-App an)
 const questionsField = form.elements.questions;
 const updateCount = () => { $('#questions-count').textContent = `${questionsField.value.length} / 300 Zeichen`; };
