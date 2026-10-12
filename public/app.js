@@ -1,16 +1,5 @@
 const $ = (s) => document.querySelector(s);
 
-// Menü-Knopf (Tablet/Handy): bleibt oben rechts stehen und öffnet das Menü-Panel
-const menuToggle = $('.menu-toggle');
-const mobileMenu = $('#mobile-menu');
-const setMenu = (open) => {
-  menuToggle.setAttribute('aria-expanded', String(open));
-  menuToggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
-  mobileMenu.hidden = !open;
-  document.body.style.overflow = open ? 'hidden' : ''; // Seite dahinter nicht scrollen
-};
-menuToggle.addEventListener('click', () => setMenu(menuToggle.getAttribute('aria-expanded') !== 'true'));
-addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 const form = $('#form');
 const seatsSel = $('#seats');
 const companionBox = $('#companions');

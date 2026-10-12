@@ -31,11 +31,10 @@ for (const f of readdirSync(root + 'netlify/functions').filter((f) => f.endsWith
 // 3. Formular und Seite: diese Kennungen braucht die Technik (public/app.js)
 const html = read('public/index.html');
 const ids = ['form', 'seats', 'companions', 'has-companion', 'error', 'submit', 'success', 'waitlisted', 'gcal',
-  'seat-hint', 'countdown', 'seats-free', 'seats-label', 'social-proof', 'attendees', 'anmeldung', 'mobile-menu'];
+  'seat-hint', 'countdown', 'seats-free', 'seats-label', 'social-proof', 'attendees', 'anmeldung'];
 for (const id of ids) if (!html.includes(`id="${id}"`)) fail(`public/index.html: id="${id}" fehlt – bitte wiederherstellen (wird von app.js gebraucht).`);
 const names = ['name', 'email', 'phone', 'street', 'houseNumber', 'zip', 'city', 'privacyConsent', 'questions', 'website'];
 for (const n of names) if (!html.includes(`name="${n}"`)) fail(`public/index.html: Formularfeld name="${n}" fehlt.`);
-if (!html.includes('class="menu-toggle"')) fail('public/index.html: Menü-Knopf (class="menu-toggle") fehlt.');
 
 // 4. Gedruckte QR-Codes müssen weiter funktionieren
 const toml = read('netlify.toml');
