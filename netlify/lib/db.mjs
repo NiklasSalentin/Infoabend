@@ -2,7 +2,7 @@
 //
 // Aufbau des Speichers „infoabend“:
 //   event              → { settings: {...}, registrations: [...] }   alle Anmeldungen + Einstellungen
-//   stats              → Aufrufzähler (Aufrufe und Besucher, gesamt und je Tag)
+//   stats              → Besucherzähler (verschiedene IP-Adressen, gesamt und je Tag)
 //   visitors/<code>    → ein Eintrag je Besucher (nur unumkehrbarer Code, keine IP)
 //
 // Gleichzeitige Änderungen (zwei Anmeldungen in derselben Sekunde) werden über „ETag“ abgesichert:
@@ -138,19 +138,19 @@ export function updateSettings({ total_seats, max_per_person, registration_open 
 }
 
 // ---------------------------------------------------------------------------
-// Aufrufzähler – jedes Öffnen der Seite zählt als Aufruf, jede neue IP-Adresse einmal als Besucher
+// Besucherzähler – jede IP-Adresse zählt genau einmal (5× öffnen mit derselben IP = 1 Besucher)
 // ---------------------------------------------------------------------------
 const today = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' }); // JJJJ-MM-TT
-const newStats = () => ({ views: 0, visitors: 0, days: {} });
+const newStats = () => ({ visitors: 0, days: {} });
 
-/** Seite geöffnet: Aufruf +1, und Besucher +1, wenn diese IP-Adresse (als Code) neu ist */
+/** Seite geöffnet: Besucher +1 nur, wenn diese IP-Adresse (als Code) zum ersten Mal kommt */
 export async function trackVisit(hash) {
   const { modified: isNew } = await store().setJSON(`visitors/${hash}`, { day: today() }, { onlyIfNew: true });
+  if (!isNew) return;
   const day = today();
   await mutate('stats', newStats, (st) => {
-    const d = (st.days[day] = st.days[day] || { views: 0, visitors: 0 });
-    st.views++; d.views++;
-    if (isNew) { st.visitors++; d.visitors++; }
+    st.visitors = (st.visitors || 0) + 1;
+    st.days[day] = { visitors: (st.days[day]?.visitors || 0) + 1 };
     return { data: st };
   });
 }
@@ -195,10 +195,9 @@ export async function visitStats() {
   const st = { ...newStats(), ...((await store().get('stats', { type: 'json' })) || {}) };
   const since = new Date(Date.now() - 60 * 864e5).toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
   return {
-    views: st.views || 0,
     visitors: st.visitors || 0,
-    by_day: Object.entries(st.days || {}).map(([day, v]) => ({ day, views: v.views || 0, visitors: v.visitors || 0 }))
-      .filter((d) => d.day >= since && d.views > 0).sort((a, b) => b.day.localeCompare(a.day)),
+    by_day: Object.entries(st.days || {}).map(([day, v]) => ({ day, visitors: v.visitors || 0 }))
+      .filter((d) => d.day >= since && d.visitors > 0).sort((a, b) => b.day.localeCompare(a.day)),
   };
 }
 

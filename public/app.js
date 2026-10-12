@@ -9,7 +9,7 @@ let state = { free: null, maxPerPerson: 1, open: true };
 // bewusst nichts im Browser gespeichert
 const source = new URLSearchParams(location.search).get('utm_source') || '';
 
-// Aufrufzähler für /admin – ohne Cookies, nichts wird auf dem Gerät gespeichert
+// Besucherzähler für /admin – ohne Cookies, nichts wird auf dem Gerät gespeichert
 try {
   if (!(navigator.sendBeacon && navigator.sendBeacon('/api/visit'))) fetch('/api/visit', { method: 'POST', keepalive: true }).catch(() => {});
 } catch {}

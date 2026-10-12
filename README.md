@@ -37,7 +37,7 @@ entsteht automatisch bei der ersten Anmeldung bzw. beim ersten Speichern in `/ad
   | Eintrag | Inhalt |
   |---|---|
   | `event` | Einstellungen (Plätze, Max. pro Person, offen/zu) und alle Anmeldungen |
-  | `stats` | Summen des Aufrufzählers (gesamt und je Tag) |
+  | `stats` | Summen des Besucherzählers (gesamt und je Tag) |
   | `visitors/3f9a…` | ein Eintrag je IP-Adresse – nur ein unumkehrbarer Code, keine IP |
   | `salt` | zufälliger Geheimwert für diesen Code |
 
@@ -105,13 +105,13 @@ npx netlify-cli deploy --prod
 3. Warten (meist Minuten, selten bis 24 Stunden). Das HTTPS-Zertifikat richtet Netlify
    automatisch ein.
 
-### 6. Aufrufzähler (eingebaut, ohne Cookies)
+### 6. Besucherzähler (eingebaut, ohne Cookies)
 
-Nichts einzurichten. In `/admin` im Kasten **Aufrufe** stehen:
+Nichts einzurichten. In `/admin` im Kasten **Besucher** stehen:
 
-- **Seitenaufrufe** – jedes Öffnen der Seite zählt (Beispiel: Frau Müller öffnet 3× → 3 Aufrufe).
-- **Besucher** – jede IP-Adresse zählt einmal (Frau Müller bleibt 1 Besucherin, solange sie im selben Netz ist).
-- **Aufrufe heute** und eine Liste **nach Tag**.
+- **Besucher gesamt** – jede IP-Adresse zählt genau einmal (Beispiel: Frau Müller öffnet die Seite 5× mit
+  derselben IP → 1 Besucherin).
+- **Neue Besucher heute** und eine Liste **nach Tag**.
 
 Gespeichert wird nur ein unumkehrbarer Code der IP-Adresse (keine IP, kein Cookie). Suchmaschinen-Roboter
 zählen nicht. **Zahlen zurücksetzen** setzt alles auf null (z. B. nach eigenen Tests vor dem Start).
@@ -205,8 +205,7 @@ In der Liste in `/admin` je Zeile:
 
 Außerdem in `/admin`:
 
-- **Aufrufe** – Seitenaufrufe, Besucher (verschiedene IP-Adressen), Aufrufe heute und je Tag
-  (siehe Schritt 6). **Zahlen zurücksetzen** setzt sie auf null, z. B. nach eigenen Tests vor dem
+- **Besucher** – verschiedene IP-Adressen gesamt, heute und je Tag (siehe Schritt 6). **Zahlen zurücksetzen** setzt sie auf null, z. B. nach eigenen Tests vor dem
   Start; Anmeldungen bleiben.
 - **Adressliste** – alle mit vollständiger Adresse (Straße, PLZ, Ort), ohne stornierte;
   **CSV exportieren** für Excel/Serienbrief.

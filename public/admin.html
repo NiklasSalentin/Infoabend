@@ -52,19 +52,18 @@
 
     <div class="box">
       <div class="row" style="justify-content:space-between">
-        <h2 style="margin:0">Aufrufe</h2>
+        <h2 style="margin:0">Besucher</h2>
         <button class="btn btn-outline" id="reset-stats">Zahlen zurücksetzen</button>
       </div>
       <div class="tiles">
-        <div class="tile"><b id="st-views">–</b><span>Seitenaufrufe gesamt</span></div>
-        <div class="tile"><b id="st-visitors">–</b><span>Besucher (verschiedene IP-Adressen)</span></div>
-        <div class="tile"><b id="st-today">–</b><span>Aufrufe heute</span></div>
+        <div class="tile"><b id="st-visitors">–</b><span>Besucher gesamt (verschiedene IP-Adressen)</span></div>
+        <div class="tile"><b id="st-today">–</b><span>neue Besucher heute</span></div>
         <div class="tile"><b id="st-registered">–</b><span>Anmeldungen</span></div>
       </div>
-      <p class="note">Jedes Öffnen der Seite zählt als Aufruf. Jede IP-Adresse zählt einmal als Besucher. Suchmaschinen-Roboter zählen nicht mit.</p>
+      <p class="note">Jede IP-Adresse zählt genau einmal – öffnet jemand die Seite fünfmal, bleibt es 1 Besucher. Suchmaschinen-Roboter zählen nicht mit.</p>
       <h3>Nach Tag</h3>
-      <div class="scroll"><table style="max-width:520px">
-        <thead><tr><th>Tag</th><th class="r">Aufrufe</th><th class="r">neue Besucher</th></tr></thead>
+      <div class="scroll"><table style="max-width:360px">
+        <thead><tr><th>Tag</th><th class="r">neue Besucher</th></tr></thead>
         <tbody id="st-days"></tbody></table></div>
     </div>
 

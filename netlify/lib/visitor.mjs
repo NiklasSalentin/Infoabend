@@ -1,4 +1,4 @@
-// Unumkehrbarer Code der IP-Adresse für den Aufrufzähler in /admin – ohne Cookies, ohne Speicher auf dem Gerät.
+// Unumkehrbarer Code der IP-Adresse für den Besucherzähler in /admin – ohne Cookies, ohne Speicher auf dem Gerät.
 // Aus IP + geheimem Salz wird ein Hash gebildet; die IP-Adresse selbst wird nie gespeichert.
 // Bots/Vorschau-Dienste (z. B. WhatsApp-Linkvorschau, Suchmaschinen) werden nicht gezählt.
 import { createHash } from 'node:crypto';

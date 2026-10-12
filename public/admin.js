@@ -58,23 +58,22 @@ async function load() {
     </tr>`).join('');
 }
 
-// Aufrufzähler: Seitenaufrufe und Besucher (verschiedene IP-Adressen), gesamt und je Tag
+// Besucherzähler: jede IP-Adresse einmal, gesamt und je Tag
 function renderStats() {
   const st = data.stats;
   $('#st-registered').textContent = data.registrations.filter((r) => r.status !== 'cancelled').length;
-  const empty = '<tr><td colspan="3" class="note">Noch keine Aufrufe</td></tr>';
+  const empty = '<tr><td colspan="2" class="note">Noch keine Besucher</td></tr>';
   if (!st) {
-    for (const id of ['#st-views', '#st-visitors', '#st-today']) $(id).textContent = '–';
+    for (const id of ['#st-visitors', '#st-today']) $(id).textContent = '–';
     $('#st-days').innerHTML = empty;
     return;
   }
   const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
   const days = st.by_day || [];
-  $('#st-views').textContent = st.views;
   $('#st-visitors').textContent = st.visitors;
-  $('#st-today').textContent = days.find((d) => d.day === today)?.views || 0;
+  $('#st-today').textContent = days.find((d) => d.day === today)?.visitors || 0;
   $('#st-days').innerHTML = days.length
-    ? days.map((d) => `<tr><td>${new Date(d.day + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' })}</td><td class="r">${d.views}</td><td class="r">${d.visitors}</td></tr>`).join('')
+    ? days.map((d) => `<tr><td>${new Date(d.day + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' })}</td><td class="r">${d.visitors}</td></tr>`).join('')
     : empty;
 }
 
@@ -98,7 +97,7 @@ function download(name, cols, rows) {
 }
 
 $('#reset-stats').onclick = async () => {
-  if (!confirm('Aufrufe und Besucher auf null setzen? Sinnvoll z. B. nach eigenen Tests vor dem Start. Anmeldungen bleiben erhalten.')) return;
+  if (!confirm('Besucherzahl auf null setzen? Sinnvoll z. B. nach eigenen Tests vor dem Start. Anmeldungen bleiben erhalten.')) return;
   try { await api('POST', { action: 'reset-stats' }); await load(); } catch (e) { alert(e.message); }
 };
 

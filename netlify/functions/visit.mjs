@@ -1,7 +1,7 @@
 import { trackVisit } from '../lib/db.mjs';
 import { visitorHash } from '../lib/visitor.mjs';
 
-// POST /api/visit – Aufrufzähler für /admin (Seite geöffnet)
+// POST /api/visit – Besucherzähler für /admin (Seite geöffnet)
 export default async (req, context) => {
   const done = new Response(null, { status: 204 });
   if (req.method !== 'POST') return done;
