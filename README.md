@@ -73,6 +73,8 @@ Dort unter **Project configuration → Environment variables**:
 | `NOTIFY_EMAIL` | `info@baufinanz-dueren.de` | optional – Empfänger der Info-Mails (Standard: diese Adresse) |
 | `SITE_URL` | `https://anmeldung.baufinanz-dueren.de` | optional – sonst gilt automatisch die Hauptadresse des Netlify-Projekts |
 
+Geheime Werte mit **„Contains secret values“** und den Bereichen *Builds, Functions, Runtime* anlegen
+(nur „Functions“ reicht bei geheimen Werten nicht – die Variable kommt dann nicht an).
 Eine Vorlage aller Variablen steht in [`.env.example`](.env.example). Nach jeder Änderung einmal
 **Deploys → Trigger deploy**, damit die Werte greifen.
 
