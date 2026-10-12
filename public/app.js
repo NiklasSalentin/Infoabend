@@ -6,12 +6,9 @@ const companionBox = $('#companions');
 const hasCompanion = $('#has-companion');
 let state = { free: null, maxPerPerson: 1, open: true };
 
-// Werbekanal aus dem QR-Code (z. B. /zeitung → ?utm_source=zeitung), bleibt für die Sitzung erhalten
-let source = new URLSearchParams(location.search).get('utm_source') || '';
-try {
-  if (source) sessionStorage.setItem('quelle', source);
-  else source = sessionStorage.getItem('quelle') || '';
-} catch {}
+// Werbekanal aus dem QR-Code (z. B. /zeitung → ?utm_source=zeitung) – nur aus der Adresse gelesen,
+// bewusst nichts im Browser gespeichert (kein Cookie, kein Storage → kein Cookie-Banner nötig)
+const source = new URLSearchParams(location.search).get('utm_source') || '';
 
 // Besuchszählung für die Auswertung in /admin – ohne Cookies, nichts wird auf dem Gerät gespeichert:
 // einmal „Aufruf“ beim Öffnen, einmal „aktiv“ nach 30 Sekunden sichtbarer Zeit auf der Seite
