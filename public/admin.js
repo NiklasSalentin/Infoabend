@@ -67,7 +67,7 @@ async function load() {
       <td>
         ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
         ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
-        ${r.status !== 'cancelled' ? `<button data-a="cancel" data-id="${r.id}">Stornieren</button>` : ''}
+        ${r.status !== 'cancelled' ? `<button data-a="cancel" data-id="${r.id}">Stornieren</button>` : `<button data-a="delete" data-id="${r.id}">Löschen</button>`}
       </td>
     </tr>`).join('');
 }
@@ -134,7 +134,7 @@ $('#save').onclick = async () => {
 $('#rows').onclick = async (e) => {
   const b = e.target.closest('button');
   if (!b) return;
-  const msg = { promote: 'Nachrücken lassen und Einladung senden?', cancel: 'Anmeldung stornieren? Die Plätze werden wieder frei.', resend: 'Einladung erneut senden?' };
+  const msg = { promote: 'Nachrücken lassen und Einladung senden?', cancel: 'Anmeldung stornieren? Die Plätze werden wieder frei.', resend: 'Einladung erneut senden?', delete: 'Stornierte Anmeldung endgültig löschen? Das lässt sich nicht rückgängig machen.' };
   if (!confirm(msg[b.dataset.a])) return;
   try { await api('POST', { action: b.dataset.a, id: b.dataset.id }); await load(); } catch (err) { alert(err.message); }
 };

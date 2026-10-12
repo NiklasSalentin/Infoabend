@@ -120,6 +120,16 @@ export function cancelRegistration(id) {
   });
 }
 
+/** Stornierten Eintrag endgültig entfernen (z. B. Testanmeldungen) */
+export function deleteRegistration(id) {
+  return mutate('event', newEvent, (ev) => {
+    const i = ev.registrations.findIndex((x) => x.id === id && x.status === 'cancelled');
+    if (i < 0) return { result: false };
+    ev.registrations.splice(i, 1);
+    return { data: ev, result: true };
+  });
+}
+
 export function updateSettings({ total_seats, max_per_person, registration_open }) {
   return mutate('event', newEvent, (ev) => {
     ev.settings = { total_seats, max_per_person, registration_open, updated_at: new Date().toISOString() };
