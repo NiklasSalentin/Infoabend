@@ -165,23 +165,3 @@ export async function sendWaitlist(reg) {
     html: waitlistHtml(reg),
   });
 }
-
-// Interne Info an info@baufinanz-dueren.de
-export async function notifyTeam(reg) {
-  const rows = [
-    ['Status', reg.status === 'confirmed' ? 'Bestätigt' : 'Warteliste'],
-    ['Name', reg.name], ['E-Mail', reg.email], ['Telefon', reg.phone],
-    ['Plätze', reg.seats], ['Begleitung', (reg.companions || []).join(', ') || '–'],
-    ['Adresse', [reg.street, reg.zip, reg.city].filter(Boolean).join(', ') || '–'],
-    ['Fragen vorab', reg.questions || '–'], ['Quelle', reg.source || 'direkt'],
-  ];
-  await smtp().sendMail({
-    from: from(),
-    to: process.env.NOTIFY_EMAIL || EVENT.notifyEmail,
-    replyTo: reg.email,
-    subject: `${reg.status === 'confirmed' ? 'Neue Anmeldung' : 'Warteliste'}: ${reg.name} (${reg.seats})`,
-    html: `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px"><table cellpadding="6" style="border-collapse:collapse">` +
-      rows.map(([k, v]) => `<tr><td style="color:#5a6585"><b>${k}</b></td><td>${esc(v)}</td></tr>`).join('') +
-      `</table><p><a href="${siteUrl()}/admin">Zur Verwaltung</a></p></div>`,
-  });
-}

@@ -1,5 +1,5 @@
 import { bookSeats, markRegistered, json } from '../lib/db.mjs';
-import { sendConfirmation, sendWaitlist, notifyTeam } from '../lib/mail.mjs';
+import { sendConfirmation, sendWaitlist } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { forwardQuestion, ASKME_MAX } from '../lib/askme.mjs';
 import { visitorHash } from '../lib/visitor.mjs';
@@ -66,10 +66,8 @@ export default async (req, context) => {
   // Frage vorab gleich an die AskMeSomething-App weitergeben (Fehler dort stoppen die Anmeldung nicht)
   const asked = reg.questions ? forwardQuestion({ text: reg.questions, name: reg.name, ticket: r.ticket_code }) : null;
   try {
-    await Promise.all([
-      r.status === 'confirmed' ? sendConfirmation(full) : sendWaitlist(full),
-      notifyTeam(full),
-    ]);
+    // Nur die Mail an den Gast – keine Info-Mail ans Team (neue Anmeldungen stehen in /admin)
+    await (r.status === 'confirmed' ? sendConfirmation(full) : sendWaitlist(full));
   } catch (e) {
     // Buchung ist gespeichert – Mail-Fehler nur loggen, Nachversand über /admin möglich
     console.error('Mailversand fehlgeschlagen', e);
