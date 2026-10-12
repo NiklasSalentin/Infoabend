@@ -29,7 +29,14 @@ const FONT = "Raleway, 'Segoe UI', Arial, Helvetica, sans-serif";
 // Termin als Kurzform wie auf dem Plakat: „Mittwoch“ + „09.12.2026“
 const [, y, m, d] = EVENT.startUtc.match(/^(\d{4})(\d{2})(\d{2})/);
 const weekday = EVENT.dateLabel.split(',')[0];
-const firstName = (name) => esc(String(name || '').trim().split(/\s+/)[0]);
+// Anrede für die Überschrift: Vorname („Maria Muster“ → „Maria“); bei Anrede/Titel/Initiale
+// den ganzen Namen („Herr Müller“, „Dr. Weber“, „S. Salentin“ bleiben vollständig)
+const firstName = (name) => {
+  const full = String(name || '').trim().replace(/\s+/g, ' ');
+  const first = full.split(' ')[0];
+  const keepFull = /^(herr|frau|familie|fam\.?|dr\.?|prof\.?)$/i.test(first) || first.length <= 2 || first.endsWith('.');
+  return esc(keepFull || !full.includes(' ') ? full : first);
+};
 const seatsText = (n) => `${n} ${n === 1 ? 'Platz' : 'Plätze'}`;
 
 /**
