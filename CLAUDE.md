@@ -2,23 +2,15 @@
 
 Anmeldeseite für den Infoabend der Baufinanz Düren am 9. Dezember 2026, live unter
 https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
-Änderungen kommen meist von **Alex** (Inhaber, kein Entwickler) oder **Niklas**.
 
-## Wie Änderungen live gehen – automatisch
+## Wie Änderungen live gehen
 
-- Live-Branch: **`claude/relaxed-cannon-2kqiie`**. Netlify veröffentlicht jeden Push darauf.
-- Du arbeitest auf deinem Sitzungs-Branch. Nach dem Push übernimmt die GitHub Action
-  `.github/workflows/auto-merge.yml` die Änderung **automatisch**: zusammenführen → `npm run check`
-  → Push auf den Live-Branch → Netlify veröffentlicht (ca. 1–2 Minuten).
-  **Kein Pull Request nötig, nicht selbst in den Live-Branch mergen.**
+- Live-Branch: **`claude/relaxed-cannon-2kqiie`**. Netlify veröffentlicht jeden Push darauf
+  (ca. 1–2 Minuten).
 - Vor jedem Push: `npm ci` (falls nötig) und **`npm run check`** – nur bei „✓ Alles in Ordnung“ pushen.
-- Nach dem Push dem Nutzer sagen: „Die Änderung wird geprüft und ist in ca. 2 Minuten live auf
-  https://anmeldung.baufinanz-dueren.de (Seite neu laden).“ Wenn möglich den Lauf der Action
-  bzw. den Netlify-Deploy prüfen und das Ergebnis melden.
-- Schlägt die Action fehl (Konflikt oder Prüfung rot), ist nichts live gegangen: Ursache beheben,
-  bei Konflikt den Live-Branch in den Sitzungs-Branch mergen, erneut pushen.
+- Nach dem Push live prüfen (z. B. `/api/status` oder die geänderte Datei abrufen) und das Ergebnis melden.
 
-## Umgang mit Alex
+## Kommunikation
 
 - Deutsch, einfache Worte, keine Fachbegriffe ohne Erklärung; mit Beispielen erklären.
 - Rückfragen als Auswahl (Multiple Choice), eine pro Nachricht.
@@ -60,4 +52,4 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
   (z. B. Canva-Stockfotos).
 - Bilder vor dem Einchecken verkleinern (max. ca. 1600 px, möglichst < 300 KB; WebP/JPG).
 - Die Weiterleitungen `/zeitung`, `/flyer`, `/plakat` nie entfernen – gedruckte QR-Codes zeigen darauf.
-- Bedienungsanleitung für Menschen: `UEBERGABE.md`; technische Einrichtung: `README.md`.
+- Einrichtung und Bedienung: `README.md`.

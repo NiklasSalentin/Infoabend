@@ -3,8 +3,6 @@
 Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“** am
 **Mittwoch, 9. Dezember 2026** in der Festhalle Birkesdorf.
 
-> **Texte, Bilder, Uhrzeiten oder Plätze ändern?** → [`UEBERGABE.md`](UEBERGABE.md) (Anleitung mit Beispielen)
-
 **So läuft eine Anmeldung ab – ein Beispiel:**
 
 1. Frau Müller scannt den QR-Code auf dem **Flyer** → `anmeldung.baufinanz-dueren.de/flyer`
@@ -178,7 +176,16 @@ In der Liste in `/admin` je Zeile:
 - **Stornieren** – die Plätze werden sofort wieder frei.
   Beispiel: A (2 Plätze) storniert → Z (Warteliste, 2 Plätze) → **Nachrücken** klicken.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
-- **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder, Adressliste).
+- **Löschen** (nur bei stornierten) – entfernt den Eintrag endgültig, z. B. Testanmeldungen.
+- **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder).
+
+Außerdem in `/admin`:
+
+- **Auswertung** – neue Besucher (jede Person einmal), länger als 30 Sek., Anmeldungen, Quote,
+  je Tag und je Quelle (siehe Schritt 6). **Zahlen zurücksetzen** setzt sie auf null, z. B. nach
+  eigenen Tests vor dem Start; Anmeldungen bleiben.
+- **Adressliste** – alle mit vollständiger Adresse (Straße, PLZ, Ort), ohne stornierte;
+  **Adressen als CSV** für Excel/Serienbrief.
 
 ### QR-Codes für den Druck
 
@@ -216,7 +223,7 @@ Google-Wallet-Ausstellerkonto nötig).
 - [ ] Info-Mail an `infoabend@baufinanz-dueren.de` angekommen?
 - [ ] Ohne Datenschutz-Häkchen lässt sich nicht absenden
 - [ ] Gleiche E-Mail zweimal → wird abgelehnt
-- [ ] `/admin`: Testanmeldung sichtbar → **Stornieren** (damit sie nicht mitzählt)
+- [ ] `/admin`: Testanmeldung sichtbar → **Stornieren** → **Löschen**, danach **Zahlen zurücksetzen**
 - [ ] QR-Codes mit dem Handy scannen (alle vier)
 - [ ] Auf dem Handy durchklicken (iPhone und Android)
 - [ ] Plätze und Maximum pro Person in `/admin` final einstellen

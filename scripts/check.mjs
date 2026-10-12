@@ -1,6 +1,5 @@
 // Prüft vor jeder Veröffentlichung, dass nichts Wichtiges kaputt ist: npm run check
-// Läuft automatisch in GitHub Actions (siehe .github/workflows/auto-merge.yml).
-// Nur wenn alles grün ist, wird eine Änderung in den Live-Branch übernommen.
+// Vor jedem Push auf den Live-Branch ausführen – nur wenn alles grün ist, veröffentlichen.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
