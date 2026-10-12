@@ -6,7 +6,7 @@ import { icsFile, googleCalendarUrl } from './ics.mjs';
 let transport;
 function smtp() {
   if (!transport) {
-    // Standard: Strato-Postfach infoabend@baufinanz-dueren.de – in Netlify muss nur SMTP_PASS stehen
+    // Standard: Strato-Postfach info@baufinanz-dueren.de – in Netlify muss nur SMTP_PASS stehen
     const port = Number(process.env.SMTP_PORT || 465);
     if (!process.env.SMTP_PASS) throw new Error('SMTP_PASS fehlt in Netlify – Mails können nicht verschickt werden');
     transport = nodemailer.createTransport({
@@ -81,7 +81,7 @@ export async function sendWaitlist(reg) {
   });
 }
 
-// Interne Info an infoabend@baufinanz-dueren.de
+// Interne Info an info@baufinanz-dueren.de
 export async function notifyTeam(reg) {
   const rows = [
     ['Status', reg.status === 'confirmed' ? 'Bestätigt' : 'Warteliste'],

@@ -9,7 +9,7 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 2. Sie landet auf der Anmeldeseite (im Hintergrund wird „Quelle: flyer“ gemerkt).
 3. Sie bucht **2 Plätze** (sich + Begleitung „Herr Müller“).
 4. Sofort danach bekommt sie eine **E-Mail mit PDF-Einladung** und Kalendereintrag.
-5. Ihr bekommt eine **Info-Mail** an `infoabend@baufinanz-dueren.de`.
+5. Ihr bekommt eine **Info-Mail** an `info@baufinanz-dueren.de`.
 6. In der Verwaltung (`/admin`) steht sie mit 2 Plätzen und der Quelle „flyer“.
 7. Will sie sich mit derselben E-Mail-Adresse noch einmal anmelden, kommt:
    *„Mit dieser E-Mail-Adresse wurde bereits eine Anmeldung vorgenommen.“*
@@ -50,7 +50,7 @@ entsteht automatisch bei der ersten Anmeldung bzw. beim ersten Speichern in `/ad
 
 ### 2. E-Mail-Postfach (Strato)
 
-Die Mails gehen über das Strato-Postfach **`infoabend@baufinanz-dueren.de`** raus
+Die Mails gehen über das Strato-Postfach **`info@baufinanz-dueren.de`** raus
 (Server `smtp.strato.de`, Port `465` – im Code als Standard hinterlegt). In Netlify muss dafür nur
 das **Passwort dieses Postfachs** als `SMTP_PASS` stehen. Strato signiert die Mails (DKIM), die Domain
 weist gefälschte Absender ab (DMARC) – so landen die Mails nicht im Spam.
@@ -67,10 +67,10 @@ Dort unter **Project configuration → Environment variables**:
 
 | Variable | Beispiel | Pflicht? |
 |---|---|---|
-| `SMTP_PASS` | Passwort des Postfachs `infoabend@baufinanz-dueren.de` | ja – **Secret** |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `MAIL_FROM` | `smtp.strato.de`, `465`, `infoabend@…` | optional – nur bei anderem Postfach |
+| `SMTP_PASS` | Passwort des Postfachs `info@baufinanz-dueren.de` | ja – **Secret** |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `MAIL_FROM` | `smtp.strato.de`, `465`, `info@…` | optional – nur bei anderem Postfach |
 | `ADMIN_PASSWORD` | mind. 12 Zeichen, z. B. drei zufällige Wörter: `Kompass-Laterne-Rübe-47` | ja – **Secret** |
-| `NOTIFY_EMAIL` | `infoabend@baufinanz-dueren.de` | optional – Empfänger der Info-Mails (Standard: diese Adresse) |
+| `NOTIFY_EMAIL` | `info@baufinanz-dueren.de` | optional – Empfänger der Info-Mails (Standard: diese Adresse) |
 | `SITE_URL` | `https://anmeldung.baufinanz-dueren.de` | optional – sonst gilt automatisch die Hauptadresse des Netlify-Projekts |
 
 Eine Vorlage aller Variablen steht in [`.env.example`](.env.example). Nach jeder Änderung einmal
@@ -215,7 +215,7 @@ Google-Wallet-Ausstellerkonto nötig).
 ## Vor dem Start testen (Checkliste aus dem Briefing)
 
 - [ ] Testanmeldung mit eigener E-Mail: Mail da? PDF öffnet? Kalendereintrag klappt?
-- [ ] Info-Mail an `infoabend@baufinanz-dueren.de` angekommen?
+- [ ] Info-Mail an `info@baufinanz-dueren.de` angekommen?
 - [ ] Ohne Datenschutz-Häkchen lässt sich nicht absenden
 - [ ] Gleiche E-Mail zweimal → wird abgelehnt
 - [ ] `/admin`: Testanmeldung sichtbar → **Stornieren** → **Löschen**, danach **Zahlen zurücksetzen**

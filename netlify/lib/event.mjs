@@ -14,7 +14,7 @@ export const EVENT = {
   contactUrl: 'https://baufinanz-dueren.de/kontakt/',
   privacyUrl: 'https://anmeldung.baufinanz-dueren.de/datenschutz',
   imprintUrl: 'https://baufinanz-dueren.de/impressum/',
-  notifyEmail: 'infoabend@baufinanz-dueren.de',
+  notifyEmail: 'info@baufinanz-dueren.de',
 };
 
 // Basis-URL für Links in Mails/PDF: SITE_URL (falls gesetzt), sonst die primäre
