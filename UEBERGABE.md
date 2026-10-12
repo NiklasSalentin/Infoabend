@@ -10,6 +10,75 @@ selbst zu pflegen – Texte, Bilder, Uhrzeiten, Plätze. Für die meisten Änder
 
 ---
 
+## Schnellstart: Schritt für Schritt
+
+### Teil 1 – Einmalig einrichten (ca. 10 Minuten)
+
+1. **GitHub-Konto anlegen** (falls noch keins): https://github.com/signup
+2. **Niklas deinen GitHub-Benutzernamen schicken.** Er lädt dich ins Projekt ein.
+3. **Einladung annehmen:** Du bekommst eine E-Mail von GitHub → **Accept invitation** klicken.
+4. **Claude Code öffnen:** https://claude.ai/code – mit deinem Claude-Konto anmelden.
+5. **GitHub mit Claude verbinden:** Claude fragt beim ersten Mal nach GitHub → **Verbinden**
+   bzw. **Authorize** klicken und den Zugriff erlauben.
+6. **Repo auswählen:** In Claude Code als Projekt **`NiklasSalentin/Infoabend`** auswählen.
+7. **Passwort für die Verwaltung** von Niklas geben lassen und sicher aufbewahren
+   (z. B. im Passwort-Manager).
+
+✅ Fertig – ab jetzt brauchst du nur noch Schritt 4 + 6, um loszulegen.
+
+### Teil 2 – Deine erste Änderung (ca. 3 Minuten)
+
+Übungsbeispiel: Wir ändern die Unterzeile oben auf der Seite.
+
+1. https://claude.ai/code öffnen, Projekt **`NiklasSalentin/Infoabend`** wählen.
+2. In das Eingabefeld schreiben, **was** du ändern willst – so, als würdest du es einem
+   Mitarbeiter sagen:
+
+   > „Ändere die Unterzeile oben auf der Anmeldeseite in: ‚Vom ersten Gespräch mit dem Makler
+   > bis zum Notartermin – der große Infoabend rund um Ihre Finanzierung‘.“
+
+3. **Enter** drücken. Claude sucht die Stelle, ändert sie und sagt dir, was es gemacht hat.
+   Hat Claude eine Rückfrage, beantwortest du sie einfach per Klick.
+4. Wenn Claude meldet, dass die Änderung gespeichert ist: **ca. 2 Minuten warten**.
+5. https://anmeldung.baufinanz-dueren.de öffnen und **neu laden**
+   (Mac: **⌘ + Shift + R**, Windows: **Strg + F5**, Handy: Seite nach unten ziehen).
+6. Änderung sichtbar? ✅ Fertig. Nicht sichtbar? → noch 1–2 Minuten warten, dann Teil 3.
+
+**Gefällt dir das Ergebnis nicht?** Einfach schreiben: „Mach das wieder rückgängig.“
+
+### Teil 3 – Prüfen, ob alles geklappt hat
+
+1. https://github.com/NiklasSalentin/Infoabend/actions öffnen.
+2. Oben steht deine letzte Änderung:
+   - **Grüner Haken ✅** → übernommen, die Seite ist aktuell.
+   - **Gelber Punkt 🟡** → läuft noch, kurz warten.
+   - **Rotes ✗** → **nicht** übernommen, die Seite ist unverändert (nichts kaputt).
+     In Claude Code schreiben: „Die automatische Übernahme ist fehlgeschlagen – bitte prüfen
+     und beheben.“
+
+### Teil 4 – Plätze und Anmeldungen verwalten (ohne Claude)
+
+1. https://anmeldung.baufinanz-dueren.de/admin öffnen, Passwort eingeben.
+2. Oben **Plätze gesamt** und **Max. Plätze pro Person** einstellen → **Speichern**.
+3. Darunter siehst du alle Anmeldungen. Je Zeile kannst du:
+   **Nachrücken** (von der Warteliste), **Stornieren** oder **Mail erneut** senden.
+4. **CSV exportieren** → Liste für Excel (Stuhlplanung, Namensschilder, Versand Themenmagazin).
+
+### Gut zu wissen
+
+| Situation | Was du tust |
+|---|---|
+| Du willst einen Text, eine Uhrzeit oder ein Bild ändern | Claude Code (Teil 2) |
+| Mehr Plätze, Warteliste, Anmeldeliste | `/admin` (Teil 4) |
+| Du willst vorher sehen, wie es aussieht | „Zeig mir vorher einen Screenshot, bevor du es änderst.“ |
+| Du bist unsicher, wo etwas steht | „Wo steht auf der Seite der Text über …?“ |
+| Etwas sieht nach einer Änderung komisch aus | „Mach die letzte Änderung rückgängig.“ |
+| Es klemmt grundsätzlich | Niklas fragen |
+
+Die Details zu allem findest du in den folgenden Abschnitten.
+
+---
+
 ## 1. Die wichtigsten Adressen
 
 | Was | Adresse |
