@@ -127,14 +127,17 @@
             <select name="seats" id="seats"><option value="1">1 Platz</option></select>
           </label>
         </div>
-        <div class="grid grid-street">
-          <label>Straße <span class="optional">optional</span><input name="street" autocomplete="address-line1"></label>
-          <label>Hausnummer <span class="optional">optional</span><input name="houseNumber" autocomplete="off"></label>
-        </div>
-        <div class="grid grid-city">
-          <label>PLZ <span class="optional">optional</span><input name="zip" autocomplete="postal-code" inputmode="numeric"></label>
-          <label>Ort <span class="optional">optional</span><input name="city" autocomplete="address-level2"></label>
-        </div>
+        <details class="address-toggle">
+          <summary><span class="address-plus" aria-hidden="true"></span><span><strong>Adresse ergänzen</strong> – damit wir Sie persönlich erreichen können</span></summary>
+          <div class="grid grid-street">
+            <label>Straße <span class="optional">optional</span><input name="street" autocomplete="address-line1"></label>
+            <label>Hausnummer <span class="optional">optional</span><input name="houseNumber" autocomplete="off"></label>
+          </div>
+          <div class="grid grid-city">
+            <label>PLZ <span class="optional">optional</span><input name="zip" autocomplete="postal-code" inputmode="numeric"></label>
+            <label>Ort <span class="optional">optional</span><input name="city" autocomplete="address-level2"></label>
+          </div>
+        </details>
 
         <label class="check"><input type="checkbox" id="has-companion"> Ich komme mit Begleitung</label>
         <div id="companions" class="grid" hidden></div>
