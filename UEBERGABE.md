@@ -12,19 +12,36 @@ selbst zu pflegen – Texte, Bilder, Uhrzeiten, Plätze. Für die meisten Änder
 
 ## Schnellstart: Schritt für Schritt
 
-### Teil 1 – Einmalig einrichten (ca. 10 Minuten)
+### Teil 1 – Einmalig einrichten
 
-1. **GitHub-Konto anlegen** (falls noch keins): https://github.com/signup
-2. **Niklas deinen GitHub-Benutzernamen schicken.** Er lädt dich ins Projekt ein.
-3. **Einladung annehmen:** Du bekommst eine E-Mail von GitHub → **Accept invitation** klicken.
-4. **Claude Code öffnen:** https://claude.ai/code – mit deinem Claude-Konto anmelden.
-5. **GitHub mit Claude verbinden:** Claude fragt beim ersten Mal nach GitHub → **Verbinden**
-   bzw. **Authorize** klicken und den Zugriff erlauben.
-6. **Repo auswählen:** In Claude Code als Projekt **`NiklasSalentin/Infoabend`** auswählen.
-7. **Passwort für die Verwaltung** von Niklas geben lassen und sicher aufbewahren
-   (z. B. im Passwort-Manager).
+Es gibt zwei Wege. **Für den Start nimmst du Weg 1**, später wechselst du am besten auf Weg 2.
 
-✅ Fertig – ab jetzt brauchst du nur noch Schritt 4 + 6, um loszulegen.
+#### Weg 1: Mit den Zugängen von Niklas (sofort startklar, ca. 2 Minuten)
+
+1. https://claude.ai/code öffnen und mit den Zugangsdaten anmelden, die Niklas dir gegeben hat.
+2. Als Projekt **`NiklasSalentin/Infoabend`** auswählen.
+3. Das Passwort für die Verwaltung (`/admin`) gibt dir ebenfalls Niklas.
+
+⚠️ **Bitte beachten:** Mit diesen Zugängen siehst du auch Niklas' andere Projekte und Unterhaltungen.
+Arbeite **nur im Projekt `Infoabend`** und ändere keine Einstellungen in GitHub, Netlify oder Claude.
+Alle Änderungen erscheinen unter Niklas' Namen.
+
+#### Weg 2: Mit eigenem Konto (empfohlen auf Dauer, ca. 10 Minuten)
+
+Vorteile: Du siehst nur dieses Projekt, deine Änderungen sind als deine erkennbar, und Niklas
+muss seine Passwörter nicht teilen.
+
+1. **GitHub-Konto anlegen:** https://github.com/signup (kostenlos).
+2. **Niklas deinen GitHub-Benutzernamen schicken.** Er lädt dich ein
+   (*Repo → Settings → Collaborators → Add people*).
+3. **Einladung annehmen:** E-Mail von GitHub → **Accept invitation**.
+4. **Claude Code mit eigenem Claude-Konto öffnen:** https://claude.ai/code
+5. **GitHub mit Claude verbinden:** Beim ersten Mal fragt Claude nach GitHub → **Verbinden** /
+   **Authorize** klicken.
+6. Als Projekt **`NiklasSalentin/Infoabend`** auswählen.
+7. Danach ändert Niklas seine Passwörter, die er dir für Weg 1 gegeben hat.
+
+✅ Ab jetzt brauchst du zum Loslegen nur noch: Claude Code öffnen → Projekt `Infoabend` wählen.
 
 ### Teil 2 – Deine erste Änderung (ca. 3 Minuten)
 
@@ -108,8 +125,7 @@ nichts, und jede Änderung lässt sich zurückholen.
 
 ### Empfohlen: Weg A – Änderungen in Claude Code eingeben
 
-Voraussetzung (einmalig): Niklas lädt dich ins GitHub-Repo ein
-(*Settings → Collaborators → Add people*), und dein GitHub-Konto ist in Claude verbunden.
+Voraussetzung: einmal eingerichtet wie im Schnellstart, Teil 1 (Weg 1 oder Weg 2).
 
 1. https://claude.ai/code öffnen, das Repo **`NiklasSalentin/Infoabend`** auswählen.
 2. Die Änderung in normalen Worten beschreiben, z. B.:
@@ -129,7 +145,7 @@ Voraussetzung (einmalig): Niklas lädt dich ins GitHub-Repo ein
 
 ### Weg B – kleine Textänderung direkt im Browser auf GitHub
 
-Voraussetzung: dieselbe GitHub-Einladung wie bei Weg A.
+Voraussetzung: Anmeldung bei GitHub – mit Niklas' Zugängen oder deinem eigenen, eingeladenen Konto.
 
 1. https://github.com/NiklasSalentin/Infoabend öffnen, oben links muss der Branch
    **`claude/relaxed-cannon-2kqiie`** ausgewählt sein.
