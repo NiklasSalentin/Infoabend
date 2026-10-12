@@ -179,20 +179,21 @@ form { margin-top: 24px; padding: 36px; border-radius: var(--radius-lg); backgro
 /* dezenter Hinweis „optional“ hinter dem Feldnamen */
 .optional { margin-left: 4px; color: #9aa0b4; font-size: 12px; font-weight: 400; }
 .char-count { margin: 4px 0 0; text-align: right; font-size: 12px; }
-/* Aufklapper für die (freiwillige) Adresse – einladend, damit man ihn öffnet */
-.address-toggle { margin: 4px 0 16px; border: 1.5px dashed var(--secondary); border-radius: var(--radius); background: #f5f7fd; transition: .3s; }
-.address-toggle summary { display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: var(--secondary); font-size: 16px; cursor: pointer; list-style: none; }
+/* Aufklapper für die (freiwillige) Adresse – ruhige, hellblau hinterlegte Fläche ohne Rahmen */
+.address-toggle { margin: 4px 0 16px; border-radius: 12px; background: var(--light); transition: background .3s; }
+.address-toggle summary { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 12px; color: var(--primary); font-size: 16px; cursor: pointer; list-style: none; transition: background .3s; }
 .address-toggle summary::-webkit-details-marker { display: none; }
 .address-toggle summary strong { font-weight: 700; }
-.address-toggle summary:hover { background: #edf1fb; border-radius: var(--radius); }
-.address-toggle summary:focus-visible { outline: 3px solid rgba(60,89,173,.35); outline-offset: 2px; border-radius: var(--radius); }
-.address-plus { position: relative; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--secondary); transition: transform .3s; }
-.address-plus::before, .address-plus::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; margin: -1px 0 0 -6px; border-radius: 2px; background: #fff; }
+.address-toggle summary span:last-child { color: #5a6585; }
+.address-toggle summary strong { color: var(--primary); }
+.address-toggle summary:hover { background: #e8ecf7; }
+.address-toggle summary:focus-visible { outline: 3px solid rgba(60,89,173,.3); outline-offset: 2px; }
+.address-plus { position: relative; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--secondary); transition: transform .3s; }
+.address-plus::before, .address-plus::after { content: ''; position: absolute; left: 50%; top: 50%; width: 10px; height: 2px; margin: -1px 0 0 -5px; border-radius: 2px; background: #fff; }
 .address-plus::after { transform: rotate(90deg); transition: transform .3s; }
-.address-toggle[open] { border-style: solid; border-color: #d5daea; background: #fff; }
 .address-toggle[open] .address-plus::after { transform: rotate(0); }
-.address-toggle[open] summary { padding-bottom: 6px; }
-.address-toggle .grid { margin: 0; padding: 0 16px 16px; }
+.address-toggle[open] summary:hover { background: none; }
+.address-toggle .grid { margin: 0; padding: 4px 18px 16px; }
 .address-toggle .grid + .grid { padding-top: 0; }
 label { display: block; font-size: 16px; font-weight: 600; }
 input, select, textarea { display: block; width: 100%; margin-top: 6px; padding: 13px 16px; border: 1px solid #d5daea; border-radius: var(--radius); background: var(--white); color: var(--text); font: inherit; font-size: 16px; font-weight: 400; line-height: 1.5; }
