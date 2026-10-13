@@ -268,6 +268,8 @@ Datum, Ort und Texte für die Mail stehen zentral in `netlify/lib/event.mjs`.
 
 ## Design = baufinanz-dueren.de
 
+Ausführlich (Farben, Bausteine, Mails, Fallstricke): [`DESIGN.md`](DESIGN.md).
+
 Kopf, Fuß, Farben, Schrift und Buttons sind 1:1 von der Hauptseite übernommen (Stand Oktober 2026):
 
 | | Wert |

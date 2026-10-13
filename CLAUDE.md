@@ -14,6 +14,8 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 
 - Deutsch, einfache Worte, keine Fachbegriffe ohne Erklärung; mit Beispielen erklären.
 - Rückfragen als Auswahl (Multiple Choice), eine pro Nachricht.
+- **Design:** vor jeder Design-Änderung `DESIGN.md` lesen (Farben, Bausteine, Mail-Aufbau, Fallstricke) und neue
+  Entscheidungen dort nachtragen.
 - Bei Design-/Farbfragen vorher/nachher als Screenshot zeigen (Playwright, Chromium unter
   `/opt/pw-browsers/chromium`, lokal z. B. `python3 -m http.server` im Ordner `public`).
 - Texte stammen aus der finalen Inhalts-Checkliste: nur ändern, wenn darum gebeten wird;
