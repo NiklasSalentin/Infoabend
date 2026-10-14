@@ -7,7 +7,8 @@
   let pixelId = null;
 
   // Für app.js: Ereignis melden (z. B. erfolgreiche Anmeldung) – tut nichts ohne Einwilligung
-  window.metaTrack = (event) => { if (window.fbq && read() === 'ja') window.fbq('track', event); };
+  // Beispiel: metaTrack('Lead', { content_name: 'Infoabend 09.12.2026' })
+  window.metaTrack = (event, params) => { if (window.fbq && read() === 'ja') window.fbq('track', event, params); };
 
   function loadPixel() {
     if (window.fbq || !pixelId) return;

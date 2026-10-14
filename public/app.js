@@ -19,6 +19,12 @@ const eventDate = new Date('2026-12-09T18:00:00+01:00');
 const days = Math.max(0, Math.ceil((eventDate - Date.now()) / 864e5));
 $('#countdown').textContent = days;
 
+// Meta-Pixel: Name des Abends für das Ereignis „Lead“, z. B. „Infoabend 09.12.2026“ (Datum aus eventDate)
+const metaLead = (status) => window.metaTrack?.('Lead', {
+  content_name: `Infoabend ${eventDate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin' })}`,
+  content_category: status, // 'Anmeldung' oder 'Warteliste' – zum Unterscheiden im Events Manager
+});
+
 // Kalender-Knopf nach der Anmeldung: /kalender erkennt das Gerät (iPhone/Outlook → Kalenderdatei, Android → Google Kalender)
 
 const waitlistMode = () => !state.open ? false : state.free === 0;
@@ -125,8 +131,8 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json();
     if (data.status === 'confirmed' || data.status === 'waitlist') {
-      // Meta-Pixel (nur mit Einwilligung): erfolgreiche Anmeldung bzw. Warteliste melden
-      window.metaTrack?.(data.status === 'confirmed' ? 'CompleteRegistration' : 'Lead');
+      // Meta-Pixel (nur mit Einwilligung): erfolgreiche Anmeldung bzw. Warteliste als „Lead“ melden
+      metaLead(data.status === 'confirmed' ? 'Anmeldung' : 'Warteliste');
       form.hidden = true;
       $('#seat-hint').hidden = true;
       $(data.status === 'confirmed' ? '#success' : '#waitlisted').hidden = false;
@@ -138,7 +144,7 @@ form.addEventListener('submit', async (e) => {
       body.waitlist = true;
       const r2 = await (await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })).json();
       if (r2.status === 'waitlist') {
-        window.metaTrack?.('Lead');
+        metaLead('Warteliste');
         form.hidden = true;
         $('#waitlisted').hidden = false;
         return;

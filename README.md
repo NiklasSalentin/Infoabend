@@ -126,16 +126,15 @@ Rechtlich läuft der Pixel nur mit Einwilligung: Besucher sehen unten einen Hinw
 „Ablehnen“**; erst nach „Erlauben“ wird der Pixel geladen. Widerruf jederzeit über **Cookie-Einstellungen** im
 Fuß der Seite. Die Datenschutzhinweise (Abschnitt 6) sind schon angepasst.
 
-**Schritt 1 – Pixel anlegen (ca. 5 Min.)**
-1. https://business.facebook.com/events_manager2 öffnen (mit dem Facebook-Konto, das die Seite
-   „Baufinanz Düren“ verwaltet) und das Unternehmensportfolio **Baufinanz Düren** wählen.
-2. Links **„+ Datenquellen verbinden“** → **„Web“** → **„Verbinden“**.
-3. Name: `Infoabend Anmeldung` · Website: `anmeldung.baufinanz-dueren.de` → weiter.
-4. Fragt Meta nach der Art der Einrichtung: **„Meta-Pixel manuell einrichten“** bzw. **„Nur Meta-Pixel“** wählen.
-   Code muss **nicht** kopiert werden – das Fenster kann geschlossen werden. Die Nutzungsbedingungen für
-   Meta Business Tools bestätigen, falls gefragt.
-5. In der Übersicht steht die **Pixel-ID** (heißt teils „Datensatz-ID“), eine 15–16-stellige Zahl,
-   z. B. `123456789012345`. Kopieren.
+**Schritt 1 – Pixel-ID des bestehenden Pixels holen (2 Min.)**
+**Keinen neuen Pixel anlegen** – wir nutzen denselben Pixel wie baufinanz-dueren.de. So laufen alle Daten und
+Zielgruppen (z. B. „hat die Hauptseite besucht“) zusammen.
+1. https://business.facebook.com/events_manager2 öffnen und das Unternehmensportfolio **Baufinanz Düren** wählen.
+2. Links den Pixel von baufinanz-dueren.de anklicken. Darunter bzw. in den Einstellungen steht die **Pixel-ID**
+   (heißt teils „Datensatz-ID“), eine 15–16-stellige Zahl, z. B. `123456789012345`. Kopieren.
+3. Hat man nur den Basiscode („Code manuell installieren“): die Zahl steht darin bei `fbq('init', '…')`.
+   Den Code selbst **nicht** in die Seite kopieren – er würde ohne Einwilligung laden. `consent.js` enthält
+   denselben Code und startet ihn erst nach „Erlauben“.
 
 **Schritt 2 – Nummer in Netlify eintragen (2 Min.)**
 1. https://app.netlify.com/projects/baufiabend/configuration/env → **Add a variable**.
@@ -152,16 +151,19 @@ dort sollte `baufinanz-dueren.de` mit grünem Haken stehen. Falls nicht: dort �
 1. Events Manager → Pixel wählen → Reiter **„Ereignisse testen“** → Adresse
    `https://anmeldung.baufinanz-dueren.de` eingeben → **„Website öffnen“**.
 2. Auf der Seite **„Erlauben“** klicken → im Events Manager erscheint **„PageView“**.
-3. Testanmeldung machen → es erscheint **„CompleteRegistration“** („Registrierung abschließen“).
-   Wartelisten-Anmeldungen melden **„Lead“**.
+3. Testanmeldung machen („Platz verbindlich reservieren“) → es erscheint **„Lead“** mit
+   `content_name: Infoabend 09.12.2026` und `content_category: Anmeldung`.
+   Wartelisten-Anmeldungen melden ebenfalls **„Lead“**, aber mit `content_category: Warteliste`.
 4. Testanmeldung in `/admin` stornieren und löschen.
 
 **Schritt 5 – Anzeige schalten (Beispiel)**
 1. Werbeanzeigenmanager → **Erstellen** → Ziel **„Leads“** → Conversion-Ort **„Website“**.
-2. Pixel `Infoabend Anmeldung` und Conversion-Ereignis **„Registrierung abschließen“** wählen.
+2. Den Pixel von baufinanz-dueren.de und das Conversion-Ereignis **„Lead“** wählen.
 3. Zielgruppe z. B. Standort **Düren + 25 km**, Alter 25–55, Budget z. B. **10 € pro Tag**, Laufzeit bis 8.12.2026.
 4. Link der Anzeige: `https://anmeldung.baufinanz-dueren.de/?utm_source=facebook` – dann steht bei diesen
    Anmeldungen in `/admin` in der Spalte **Quelle** „facebook“.
+5. Zusätzlich möglich: **Retargeting** – eine Zielgruppe „Besucher von anmeldung.baufinanz-dueren.de, aber kein
+   Lead“ anlegen und diesen Personen eine Erinnerungs-Anzeige zeigen.
 
 **Gut zu wissen:** Meta sieht nur Besucher, die „Erlauben“ geklickt haben. Beispiel: 100 Anmeldungen, davon
 60 mit Einwilligung → Meta meldet etwa 60. Die echte Zahl steht immer in `/admin`.
