@@ -126,6 +126,9 @@ Rechtlich läuft der Pixel nur mit Einwilligung: Besucher sehen unten einen Hinw
 „Ablehnen“**; erst nach „Erlauben“ wird der Pixel geladen. Widerruf jederzeit über **Cookie-Einstellungen** im
 Fuß der Seite. Die Datenschutzhinweise (Abschnitt 6) sind schon angepasst.
 
+**Stand 14.10.2026: eingerichtet** mit dem Pixel von baufinanz-dueren.de (ID `1759216724481642`, steht in Netlify
+unter `META_PIXEL_ID`). Die Schritte unten sind zum Nachschlagen, z. B. bei einem Pixel-Wechsel.
+
 **Schritt 1 – Pixel-ID des bestehenden Pixels holen (2 Min.)**
 **Keinen neuen Pixel anlegen** – wir nutzen denselben Pixel wie baufinanz-dueren.de. So laufen alle Daten und
 Zielgruppen (z. B. „hat die Hauptseite besucht“) zusammen.
