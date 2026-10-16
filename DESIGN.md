@@ -47,7 +47,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Begleitung** | Auswahl „Anzahl Begleitpersonen“: Keine / 1 Begleitperson / … (intern Plätze = Anmelder + Begleitung, max. aus `/admin` minus 1), darunter je ein Namensfeld |
 | **Aufnahmen-Hinweis** | unter dem Datenschutz-Häkchen, eingerückt, klein (13 px, Grau-Blau): „Hinweis zu Aufnahmen: …“ mit Link „Mehr dazu“ → `/datenschutz#aufnahmen`; in der Bestätigungs-Mail als Punkt „Fotos & Video“ unter „Gut zu wissen“ |
 | **Adresse** | Klappfeld (hellgrau hinterlegt, kein gestrichelter Rahmen) mit rundem „+“, nur der Text „Adresse ergänzen“ (Erklärsatz und „Angaben optional“ auf Wunsch entfernt) |
-| **Erfolgsmeldung** | weiße Karte mit blauer Linie links, ein Knopf „Termin in den Kalender eintragen“ (`/kalender` erkennt das Gerät) |
+| **Erfolgsmeldung** | weiße Karte wie das Formular (Radius 24 px, weicher Schatten), oben runder blauer Kreis mit weißem Häkchen (Warteliste: Gold-Kreis mit Uhr) – **keine farbige Linie links** (bog sich an der runden Ecke krumm), ein Knopf „Termin in den Kalender eintragen“ (`/kalender` erkennt das Gerät) |
 | **Fuß** | 1:1 Hauptseite, ohne Menü; Impressum, Datenschutz, Cookie-Einstellungen |
 | **Einwilligungs-Hinweis** | weiße Karte unten, „Ablehnen“ und „Erlauben“ **gleich groß und gleich gestaltet** (rechtlich wichtig) |
 
