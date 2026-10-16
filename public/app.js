@@ -87,7 +87,7 @@ async function loadStatus() {
     // Schild neben „Jetzt Platz sichern“. s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) –
     // keine Gesamtzahl auf der Seite
     const full = s.free === 0;
-    $('#seats-prefix').textContent = full ? 'Ausgebucht –' : 'Nur noch';
+    $('#seats-prefix').textContent = full ? 'Ausgebucht –' : 'Noch';
     $('#seats-free').textContent = full ? '' : s.free;
     $('#seats-label').textContent = full ? 'Warteliste offen' : s.free === 1 ? 'Platz frei' : 'Plätze frei';
     $('#seats-badge').hidden = !s.open;

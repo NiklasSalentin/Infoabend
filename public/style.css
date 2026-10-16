@@ -134,11 +134,12 @@ p { margin: 0 0 1em; }
 .button-navy .button-icon { background: var(--secondary); }
 /* Freie Plätze direkt neben „Jetzt Platz sichern“: Navy-Schild, Gold-Zahl, blinkender Punkt („live“) */
 .hero-cta { align-items: center; }
-.seats-badge { display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 12px 22px; border-radius: 120px; background: rgba(28,35,80,.55); border: 1px solid rgba(255,255,255,.22); color: var(--white); font-size: 17px; font-weight: 600; line-height: 1.2; }
+/* gleiche Höhe, Schrift und Innenabstand wie der Knopf (.button-main: 12px oben/unten + 38px Icon = 62px) */
+.seats-badge { box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; min-height: 62px; margin: 0; padding: 12px 27px; border-radius: 120px; background: rgba(28,35,80,.55); border: 1px solid rgba(255,255,255,.22); color: var(--white); font-size: 18px; font-weight: 700; line-height: 1.5em; }
 .seats-badge[hidden] { display: none; }
-.seats-badge strong { color: var(--gold); font-size: 22px; font-weight: 800; }
+.seats-badge strong { color: var(--gold); font-size: 18px; font-weight: 800; }
 .seats-badge strong:empty { display: none; }
-.live-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(217,181,108,.7); animation: live 1.6s ease-out infinite; }
+.live-dot { margin-right: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(217,181,108,.7); animation: live 1.6s ease-out infinite; }
 @keyframes live { 0% { box-shadow: 0 0 0 0 rgba(217,181,108,.7); } 100% { box-shadow: 0 0 0 10px rgba(217,181,108,0); } }
 @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
 .pill-gold { display: inline-block; margin: 24px 0 0; padding: 6px 18px; border-radius: 999px; background: var(--gold); color: var(--navy); font-size: 16px; font-weight: 700; }
@@ -303,6 +304,8 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   h2 { font-size: 36px; }
   .button-main { font-size: 16px; }
   .button-main .button-icon { padding: 15px; }
+  .seats-badge { min-height: 68px; font-size: 16px; } /* wie der Knopf hier: 12px + 44px Icon + 12px */
+  .seats-badge strong { font-size: 16px; }
   .header-nav { display: none; }
   .menu-toggle { display: inline-flex; }
   .hero h1 { font-size: 54px; }
@@ -366,6 +369,7 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .grid.grid-street { grid-template-columns: 2fr 1fr; }
   .grid.grid-city { grid-template-columns: 1fr 2fr; }
   .button-main { padding: 12px 22px; }
+  .seats-badge { padding: 12px 22px; }
 }
 
 /* iPhone (viewport-fit=cover): Inhalte im Querformat nicht unter die Notch schieben */

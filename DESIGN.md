@@ -39,7 +39,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Kopf** | nur Logo (weiß) links und rechts dezent „Persönliche Beratung buchen ↗“ (Rahmen-Knopf, weiß); kein Menü |
 | **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, oranger pulsierender Knopf „Jetzt Platz sichern ↓“, darunter goldene Pill |
 | **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld** |
-| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Nur noch **117** Plätze frei“ (Zahl Gold, fett); voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
+| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett), **gleich hoch und gleiche Schrift wie der Knopf** (62 px, 18 px fett); voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
 | **Zahlen-Streifen** | Countdown, Personen angemeldet (erst ab 10) |
 | **Inhaltsblöcke** | weiß, Bild + Text zweispaltig, Eyebrow-Pill (hellgrau, blaue Schrift) über H2 |
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
@@ -65,7 +65,7 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Betreff: „Ihr Sitzplatz ist gesichert!“ · keine Ticketnummer.
 - Von der Warteliste nachgerückt: gleiche Mail, Etikett „✓ Platz frei geworden“, erster Satz „gute Nachricht: Für Sie
   ist ein Platz frei geworden!“, Betreff „Gute Nachricht: Ihr Sitzplatz ist gesichert!“.
-- Freie Plätze (Schild neben „Jetzt Platz sichern“): „Nur noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
+- Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
 - Interne Abend-Zusammenfassung (20 Uhr an info@): gleiche Farben, schlicht, Kennzahl-Kästen + Tabelle.
