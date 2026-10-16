@@ -217,7 +217,6 @@ form { margin-top: 24px; padding: 36px; border-radius: var(--radius-lg); backgro
 .address-toggle summary::-webkit-details-marker { display: none; }
 .address-toggle summary strong { font-weight: 700; }
 .address-toggle summary .address-text { color: #5a6585; }
-.address-toggle .address-optional { display: block; margin: 2px 0 0; }
 .address-toggle summary strong { color: var(--primary); }
 .address-toggle summary:hover { background: #e8ecf7; }
 .address-toggle summary:focus-visible { outline: 3px solid rgba(60,89,173,.3); outline-offset: 2px; }

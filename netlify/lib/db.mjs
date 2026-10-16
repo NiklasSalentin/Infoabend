@@ -14,7 +14,7 @@ import { shownFree } from '../../public/plaetze.js';
 
 // display_batch: Kontingent – so viele freie Plätze zeigt die Seite höchstens (0 = immer die echte Zahl)
 // display_refill: zeigt die Seite nur noch so wenige, werden weitere Plätze freigegeben (public/plaetze.js)
-const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 2, registration_open: true, display_batch: 120, display_refill: 30 };
+const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 4, registration_open: true, display_batch: 120, display_refill: 30 };
 
 let storeOptions = {};
 /** Nur für Tests: anderen Speicher verwenden (z. B. lokalen BlobsServer). */
