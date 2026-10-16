@@ -122,6 +122,7 @@ export function confirmationHtml(reg) {
         ${tip('Freie Platzwahl', `Einlass ab ${EVENT.admission}, los geht es um ${EVENT.start}.`)}
         ${tip('Parken', 'kostenlose Parkplätze direkt an der Festhalle.')}
         ${tip('Kostenlos', 'die Teilnahme kostet nichts.')}
+        ${tip('Fotos &amp; Video', 'am Abend fotografieren und filmen wir für unsere Öffentlichkeitsarbeit. Sie möchten nicht erkennbar zu sehen sein? Sagen Sie es uns beim Einlass.')}
         ${tip('Verhindert?', 'antworten Sie kurz auf diese E-Mail, dann geben wir Ihren Platz frei.')}
       </table>
 

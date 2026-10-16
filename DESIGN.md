@@ -45,6 +45,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
 | **Anmeldung** | hellgrauer Abschnitt, max. 1200 px breit; Formular als weiße Karte (Radius 24 px, weicher Schatten); Felder 2-spaltig, alle gleich hoch (auch das Auswahlfeld) |
 | **Begleitung** | Auswahl „Anzahl Begleitpersonen“: Keine / 1 Begleitperson / … (intern Plätze = Anmelder + Begleitung, max. aus `/admin` minus 1), darunter je ein Namensfeld |
+| **Aufnahmen-Hinweis** | unter dem Datenschutz-Häkchen, eingerückt, klein (13 px, Grau-Blau): „Hinweis zu Aufnahmen: …“ mit Link „Mehr dazu“ → `/datenschutz#aufnahmen`; in der Bestätigungs-Mail als Punkt „Fotos & Video“ unter „Gut zu wissen“ |
 | **Adresse** | Klappfeld (hellgrau hinterlegt, kein gestrichelter Rahmen) mit rundem „+“, nur der Text „Adresse ergänzen“ (Erklärsatz und „Angaben optional“ auf Wunsch entfernt) |
 | **Erfolgsmeldung** | weiße Karte mit blauer Linie links, ein Knopf „Termin in den Kalender eintragen“ (`/kalender` erkennt das Gerät) |
 | **Fuß** | 1:1 Hauptseite, ohne Menü; Impressum, Datenschutz, Cookie-Einstellungen |
