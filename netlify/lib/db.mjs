@@ -12,9 +12,9 @@ import { getStore } from '@netlify/blobs';
 import { randomUUID, randomBytes } from 'node:crypto';
 import { shownFree } from '../../public/plaetze.js';
 
-// display_start: so viele freie Plätze zeigt die Seite zu Beginn (0 = immer die echte Zahl)
-// display_real_from: ab so wenigen freien Plätzen zeigt die Seite die echte Zahl
-const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 2, registration_open: true, display_start: 0, display_real_from: 10 };
+// display_batch: Kontingent – so viele freie Plätze zeigt die Seite höchstens (0 = immer die echte Zahl)
+// display_refill: zeigt die Seite nur noch so wenige, werden weitere Plätze freigegeben (public/plaetze.js)
+const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 2, registration_open: true, display_batch: 0, display_refill: 5 };
 
 let storeOptions = {};
 /** Nur für Tests: anderen Speicher verwenden (z. B. lokalen BlobsServer). */
@@ -50,14 +50,16 @@ function summarize(ev) {
   const confirmed = ev.registrations.filter((r) => r.status === 'confirmed');
   const booked = confirmed.reduce((a, r) => a + r.seats, 0);
   const free = Math.max(s.total_seats - booked, 0);
+  const shown = shownFree({ total: s.total_seats, booked, batch: s.display_batch, refillAt: s.display_refill });
   return {
     total_seats: s.total_seats,
     booked,
     free,
     // diese Zahl sieht der Besucher auf der Seite (public/plaetze.js)
-    shown_free: shownFree({ total: s.total_seats, free, displayStart: s.display_start, realFrom: s.display_real_from }),
-    display_start: s.display_start,
-    display_real_from: s.display_real_from,
+    shown_free: shown.free,
+    shown_released: shown.released, // gerade weitere Plätze freigegeben → Hinweis auf der Seite
+    display_batch: s.display_batch,
+    display_refill: s.display_refill,
     max_per_person: s.max_per_person,
     registration_open: s.registration_open,
     attendees: confirmed.length,
@@ -175,9 +177,9 @@ export function deleteRegistration(id) {
 }
 
 /** Einstellungen speichern – mehr Plätze gehen sofort der Reihe nach an die Warteliste. Ergebnis: { promoted } */
-export function updateSettings({ total_seats, max_per_person, registration_open, display_start, display_real_from }) {
+export function updateSettings({ total_seats, max_per_person, registration_open, display_batch, display_refill }) {
   return mutate('event', newEvent, (ev) => {
-    ev.settings = { total_seats, max_per_person, registration_open, display_start, display_real_from, updated_at: new Date().toISOString() };
+    ev.settings = { total_seats, max_per_person, registration_open, display_batch, display_refill, updated_at: new Date().toISOString() };
     return { data: ev, result: { promoted: fillFromWaitlist(ev) } };
   });
 }

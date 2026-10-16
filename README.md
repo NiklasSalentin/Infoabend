@@ -180,8 +180,8 @@ Mit dem `ADMIN_PASSWORD` anmelden. Oben stehen die Einstellungen:
 - **Plätze gesamt** – z. B. `120`
 - **Max. Plätze pro Person** – z. B. `2`
 - **Anmeldung geöffnet** – Häkchen weg = Formular verschwindet
-- **Anzeige beginnt bei** – so viele freie Plätze zeigt die Seite zu Beginn, z. B. `60` (`0` = immer die echte Zahl)
-- **Echte Zahl ab … freien Plätzen** – z. B. `10`: ab da steht auf der Seite genau die echte Zahl
+- **Kontingent** – so viele freie Plätze zeigt die Seite höchstens, z. B. `30` (`0` = immer die echte Zahl)
+- **Nachschub, wenn nur noch … angezeigt** – z. B. `5`: dann werden „weitere Plätze freigegeben“
 
 **Beispiel mit 120 Plätzen und max. 2 pro Person:**
 
@@ -196,27 +196,32 @@ Mit dem `ADMIN_PASSWORD` anmelden. Oben stehen die Einstellungen:
 Die Zahlen lassen sich jederzeit ändern – z. B. von 120 auf 150, wenn mehr Stühle in die
 Festhalle passen. Stehen Leute auf der Warteliste, bekommen **sie** die neuen Plätze zuerst (siehe unten).
 
-### Knappe Anzeige der freien Plätze
+### Knappe Anzeige der freien Plätze (Kontingent)
 
-Die Seite zeigt weniger freie Plätze als wirklich frei sind – je voller der Abend, desto näher an der
-echten Zahl; im Endspurt steht dort genau die echte Zahl, damit niemand einen freien Platz verpasst.
-Die echte Gesamtzahl steht nirgends auf der Seite (auch nicht in `/api/status`), nur in `/admin`.
-Unter den Feldern rechnet `/admin` beim Tippen ein Beispiel vor.
+Die Seite zeigt nicht alle echten Plätze, sondern ein kleines **Kontingent**. Jede Anmeldung senkt die
+Anzeige um genau die gebuchten Plätze (27 frei, jemand bucht 2 → 25). Steht die Anzeige bei der
+Nachschub-Zahl, springt sie zurück aufs Kontingent und über dem Formular steht kurz
+„Weitere Plätze freigegeben“. Die Anzeige ist nie höher als die echte Zahl – im Endspurt steht dort
+genau die echte Zahl, damit niemand einen freien Platz verpasst. Die echte Gesamtzahl steht nirgends
+auf der Seite (auch nicht in `/api/status`), nur in `/admin`. Unter den Feldern rechnet `/admin` beim
+Tippen ein Beispiel vor.
 
-**Beispiel: 200 Plätze, Anzeige beginnt bei 60, echte Zahl ab 10:**
+**Beispiel: 200 Plätze, Kontingent 30, Nachschub bei 5:**
 
 | belegt | wirklich frei | Seite zeigt |
 |---|---|---|
-| 0 | 200 | 60 |
-| 1 | 199 | 59 |
-| 100 | 100 | 33 |
-| 160 | 40 | 17 |
-| 190 | 10 | 10 ← ab hier die echte Zahl |
-| 197 | 3 | 3 |
+| 0 | 200 | 30 |
+| 3 | 197 | 27 |
+| 24 | 176 | 6 |
+| 25 | 175 | 30 – „Weitere Plätze freigegeben“ |
+| 49 | 151 | 6 |
+| 50 | 150 | 30 – „Weitere Plätze freigegeben“ |
+| 190 | 10 | 10 (echte Zahl) |
+| 197 | 3 | 3 (echte Zahl) |
 | 200 | 0 | ausgebucht → Knopf „Auf die Warteliste setzen“ |
 
 Die Rechenregel steht in `public/plaetze.js`; `npm run check` prüft, dass die Anzeige nie höher als die
-echte Zahl ist und im Endspurt genau stimmt.
+echte Zahl ist, bei jeder Anmeldung genau mitzählt und im Endspurt stimmt.
 
 ### Warteliste, Stornieren, Nachsenden
 

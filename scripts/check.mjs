@@ -53,20 +53,23 @@ same('public/index.html', html, `${d}.${m}.${y}`, hint);
 same('public/index.html', html, `datetime="${y}-${m}-${d}`, hint);
 same('public/app.js', app, `'${y}-${m}-${d}T`, hint);
 
-// 6. Angezeigte freie Plätze: nie mehr als echt frei, nie 0 solange etwas frei ist, im Endspurt die echte Zahl
+// 6. Angezeigte freie Plätze (Kontingent): nie mehr als echt frei, nie 0 solange etwas frei ist,
+//    jede Anmeldung senkt die Anzeige um genau die gebuchten Plätze (außer bei Nachschub/echter Zahl)
 const { shownFree } = await import(root + 'public/plaetze.js');
-for (const [total, displayStart, realFrom] of [[200, 60, 10], [200, 60, 0], [120, 40, 5], [50, 80, 10], [30, 5, 10], [200, 0, 10]]) {
-  let last = Infinity;
-  for (let free = total; free >= 0; free--) {
-    const shown = shownFree({ total, free, displayStart, realFrom });
-    const where = `Anzeige (${total} Plätze, Start ${displayStart}, echt ab ${realFrom}) bei ${free} echt frei`;
+for (const [total, batch, refillAt] of [[200, 30, 5], [120, 20, 3], [50, 80, 10], [30, 10, 0], [200, 0, 5], [200, 5, 10]]) {
+  let prev = null;
+  for (let booked = 0; booked <= total; booked++) {
+    const free = total - booked;
+    const { free: shown } = shownFree({ total, booked, batch, refillAt });
+    const where = `Anzeige (${total} Plätze, Kontingent ${batch}, Nachschub bei ${refillAt}) bei ${booked} belegt`;
     if (!Number.isInteger(shown) || shown > free || (free > 0 && shown < 1)) fail(`public/plaetze.js: ${where} → ${shown} (falsch)`);
-    if (free <= realFrom && shown !== free) fail(`public/plaetze.js: ${where} → ${shown}, erwartet ${free} (echte Zahl)`);
-    if (shown > last) fail(`public/plaetze.js: ${where} → ${shown} steigt, obwohl Plätze weggehen`);
-    last = shown;
+    if (free <= refillAt && shown !== free) fail(`public/plaetze.js: ${where} → ${shown}, erwartet ${free} (echte Zahl)`);
+    if (prev !== null && shown !== prev - 1 && shown !== free && shown !== batch) fail(`public/plaetze.js: ${where} → ${shown} nach ${prev} – sinkt nicht um genau 1 Platz`);
+    prev = shown;
   }
 }
-if (shownFree({ total: 200, free: 200, displayStart: 60, realFrom: 10 }) !== 60) fail('public/plaetze.js: Beispiel 200/60/10 zeigt zu Beginn nicht 60.');
+const ex = (booked) => shownFree({ total: 200, booked, batch: 30, refillAt: 5 }).free;
+if (ex(0) !== 30 || ex(3) !== 27 || ex(24) !== 6 || ex(25) !== 30 || ex(197) !== 3) fail('public/plaetze.js: Beispiel 200/30/5 stimmt nicht mehr (siehe Kommentar in der Datei).');
 
 // 7. Keine Zugangsdaten und keine Anmeldelisten im (öffentlichen!) Repo
 const files = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);

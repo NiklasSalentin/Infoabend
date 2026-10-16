@@ -40,12 +40,12 @@ async function handle(req, context) {
     case 'settings': {
       const total = Number.parseInt(b.totalSeats, 10);
       const max = Number.parseInt(b.maxPerPerson, 10);
-      const displayStart = Number.parseInt(b.displayStart, 10) || 0;
-      const realFrom = Number.parseInt(b.displayRealFrom, 10);
-      if (!(total >= 0) || !(max >= 1) || !(displayStart >= 0) || !(realFrom >= 0)) return json({ error: 'Ungültige Werte' }, 400);
+      const batch = Number.parseInt(b.displayBatch, 10) || 0;
+      const refill = Number.parseInt(b.displayRefill, 10) || 0;
+      if (!(total >= 0) || !(max >= 1) || !(batch >= 0) || !(refill >= 0)) return json({ error: 'Ungültige Werte' }, 400);
       const { promoted } = await updateSettings({
         total_seats: total, max_per_person: max, registration_open: b.open !== false,
-        display_start: displayStart, display_real_from: realFrom,
+        display_batch: batch, display_refill: refill,
       });
       // Einladungs-Mails an Nachgerückte verschickt /admin danach einzeln (Aktion „resend“)
       return json({ ok: true, promoted: promoted.map((r) => r.id) });

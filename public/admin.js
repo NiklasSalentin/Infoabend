@@ -35,11 +35,11 @@ async function load() {
   $('#total').value = s.total_seats;
   $('#max').value = s.max_per_person;
   $('#open').checked = s.registration_open;
-  $('#display-start').value = s.display_start;
-  $('#display-real').value = s.display_real_from;
+  $('#display-batch').value = s.display_batch;
+  $('#display-refill').value = s.display_refill;
   renderPreview();
   const wait = waitlist();
-  $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei (Seite zeigt: ${s.shown_free}) · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
+  $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei (Seite zeigt: ${s.shown_free}${s.shown_released ? ', „weitere freigegeben“' : ''}) · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
 
   const pending = data.registrations.filter((r) => r.invite_pending && r.status === 'confirmed');
   $('#pending').hidden = !pending.length;
@@ -89,20 +89,21 @@ function wouldPromote(free) {
 // Beispiel-Zeile unter den Anzeige-Feldern – rechnet live mit, während man tippt
 function renderPreview() {
   const total = Number($('#total').value) || 0;
-  const displayStart = Number($('#display-start').value) || 0;
-  const realFrom = Number($('#display-real').value) || 0;
-  if (!displayStart || displayStart >= total || displayStart <= realFrom) {
+  const batch = Number($('#display-batch').value) || 0;
+  const refillAt = Number($('#display-refill').value) || 0;
+  if (!batch || refillAt >= batch) {
     $('#display-preview').textContent = 'Aus – die Seite zeigt die echte Zahl der freien Plätze.'
-      + (displayStart && displayStart <= realFrom ? ' („Anzeige beginnt bei“ muss größer sein als „Echte Zahl ab“.)' : '');
+      + (batch && refillAt >= batch ? ' („Nachschub“ muss kleiner sein als das Kontingent.)' : '');
     return;
   }
-  const points = [...new Set([0, 1, Math.round(total / 2), Math.round(total * 0.8), total - realFrom, total - 3].filter((b) => b >= 0 && b < total))].sort((a, b) => a - b);
+  const step = batch - refillAt;
+  const points = [...new Set([0, 3, step - 1, step, 2 * step, total - 10, total - 3].filter((b) => b >= 0 && b < total))].sort((a, b) => a - b);
   $('#display-preview').textContent = 'Beispiel: ' + points.map((booked) => {
-    const free = total - booked;
-    return `${booked} belegt → Seite zeigt ${shownFree({ total, free, displayStart, realFrom })} (echt ${free})`;
+    const s = shownFree({ total, booked, batch, refillAt });
+    return `${booked} belegt → Seite zeigt ${s.free}${s.released ? ' („weitere freigegeben“)' : ''}${s.free === total - booked ? ' (echte Zahl)' : ''}`;
   }).join(' · ');
 }
-for (const id of ['#total', '#display-start', '#display-real']) $(id).addEventListener('input', renderPreview);
+for (const id of ['#total', '#display-batch', '#display-refill']) $(id).addEventListener('input', renderPreview);
 
 /** Einladungs-Mails an Nachgerückte nacheinander verschicken (einzeln, damit nichts in eine Zeitüberschreitung läuft) */
 async function sendInvites(ids) {
@@ -186,7 +187,7 @@ $('#save').onclick = async () => {
   try {
     const r = await api('POST', {
       action: 'settings', totalSeats: $('#total').value, maxPerPerson: $('#max').value, open: $('#open').checked,
-      displayStart: $('#display-start').value, displayRealFrom: $('#display-real').value,
+      displayBatch: $('#display-batch').value, displayRefill: $('#display-refill').value,
     });
     if (r.promoted?.length) return sendInvites(r.promoted);
     await load();

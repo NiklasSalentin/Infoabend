@@ -1,21 +1,28 @@
-// Angezeigte freie Plätze („knappe“ Anzeige) – eine Formel für Seite (über /api/status) und /admin.
+// Angezeigte freie Plätze („Kontingent“) – eine Formel für Seite (über /api/status) und /admin.
 //
-// Die Seite zeigt weniger freie Plätze als wirklich frei sind. Je voller der Abend, desto näher kommt
-// die Anzeige an die echte Zahl; ab `realFrom` freien Plätzen steht dort genau die echte Zahl.
+// Die Seite zeigt nicht alle echten Plätze, sondern ein kleines Kontingent. Jede Anmeldung senkt die
+// Anzeige um genau die gebuchten Plätze. Fällt die Anzeige auf `refillAt` oder darunter, werden
+// „weitere Plätze freigegeben“ – die Anzeige springt zurück auf `batch`.
+// Nie mehr als echt frei: Sind nur noch wenige echte Plätze übrig, steht dort die echte Zahl.
 //
-// Beispiel: 200 Plätze gesamt, Anzeige beginnt bei 60, echte Zahl ab 10 freien Plätzen
-//   0 belegt   → echt 200 frei → Anzeige 60
-//   1 belegt   → echt 199 frei → Anzeige 59
-//   100 belegt → echt 100 frei → Anzeige 33
-//   190 belegt → echt  10 frei → Anzeige 10   (ab hier immer die echte Zahl)
-//   197 belegt → echt   3 frei → Anzeige 3
+// Beispiel: 200 Plätze gesamt, Kontingent 30, Nachschub bei 5
+//   0 belegt   → Anzeige 30
+//   3 belegt   → Anzeige 27          (jemand bucht 3 Plätze → genau 3 weniger)
+//   24 belegt  → Anzeige 6
+//   25 belegt  → Anzeige 30          „Weitere Plätze freigegeben“
+//   50 belegt  → Anzeige 30          „Weitere Plätze freigegeben“
+//   190 belegt → Anzeige 10          (echte Zahl)
+//   197 belegt → Anzeige 3           (echte Zahl)
 //
-// Die Anzeige ist nie größer als die echte Zahl und nie 0, solange noch ein Platz frei ist.
-export function shownFree({ total, free, displayStart, realFrom }) {
-  const start = Number(displayStart) || 0;
-  const real = Math.max(Number(realFrom) || 0, 0);
-  // Anzeige aus (0, nicht kleiner als gesamt oder nicht größer als realFrom) bzw. Endspurt: echte Zahl
-  if (start <= real || start >= total || free <= real) return free;
-  // gerade Linie von (echt = realFrom → Anzeige = realFrom) bis (echt = total → Anzeige = displayStart)
-  return Math.min(free, Math.max(1, Math.floor(real + ((free - real) * (start - real)) / (total - real))));
+// Ergebnis: { free, released } – released = gerade erst neue Plätze freigegeben (für den Hinweis auf der Seite)
+export function shownFree({ total, booked, batch, refillAt }) {
+  const free = Math.max(total - booked, 0);
+  const size = Number(batch) || 0;
+  const refill = Math.max(Number(refillAt) || 0, 0);
+  if (size <= 0 || refill >= size) return { free, released: false }; // Kontingent aus: echte Zahl
+  const step = size - refill; // so viele Plätze passen in ein Kontingent, bevor Nachschub kommt
+  const used = booked % step; // davon im aktuellen Kontingent schon gebucht
+  const shown = size - used;
+  if (shown >= free) return { free, released: false }; // Endspurt: echte Zahl
+  return { free: shown, released: booked >= step && used < step / 2 };
 }

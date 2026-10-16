@@ -7,6 +7,7 @@ export default async () => {
     const s = await seatStatus();
     return json({
       free: s.shown_free,
+      released: s.shown_released,
       maxPerPerson: s.max_per_person,
       open: s.registration_open,
       attendees: s.booked,
