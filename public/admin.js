@@ -182,7 +182,7 @@ $('#pw').onkeydown = (e) => { if (e.key === 'Enter') $('#login-btn').click(); };
 $('#save').onclick = async () => {
   const total = Number($('#total').value);
   const next = wouldPromote(total - data.status.booked);
-  if (next.length && !confirm(`Durch die neue Platzzahl rücken ${next.length} ${next.length === 1 ? 'Person' : 'Personen'} von der Warteliste nach `
+  if (next.length && !confirm(`Durch die neue Platzzahl ${next.length === 1 ? 'rückt 1 Person' : `rücken ${next.length} Personen`} von der Warteliste nach `
     + `(${next.map((r) => r.name).join(', ')}) und ${next.length === 1 ? 'bekommt' : 'bekommen'} eine Einladung per E-Mail.\n\nSpeichern?`)) return;
   try {
     const r = await api('POST', {
@@ -204,7 +204,7 @@ $('#rows').onclick = async (e) => {
   const msg = {
     promote: 'Diese Person vor allen anderen auf der Warteliste nachrücken lassen und Einladung senden?',
     cancel: 'Anmeldung stornieren? Die Plätze werden wieder frei.'
-      + (next.length ? `\n\nDafür rückt von der Warteliste nach: ${next.map((r) => r.name).join(', ')} (bekommt eine Einladung per E-Mail).` : ''),
+      + (next.length ? `\n\nDafür ${next.length === 1 ? 'rückt' : 'rücken'} von der Warteliste nach: ${next.map((r) => r.name).join(', ')} (${next.length === 1 ? 'bekommt' : 'bekommen'} eine Einladung per E-Mail).` : ''),
     resend: 'Einladung erneut senden?',
     delete: 'Stornierte Anmeldung endgültig löschen? Das lässt sich nicht rückgängig machen.',
   };
