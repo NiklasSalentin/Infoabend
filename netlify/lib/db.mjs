@@ -10,8 +10,11 @@
 // lesen und noch einmal versuchen. So wird nie überbucht und nichts geht verloren.
 import { getStore } from '@netlify/blobs';
 import { randomUUID, randomBytes } from 'node:crypto';
+import { shownFree } from '../../public/plaetze.js';
 
-const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 2, registration_open: true };
+// display_start: so viele freie Plätze zeigt die Seite zu Beginn (0 = immer die echte Zahl)
+// display_real_from: ab so wenigen freien Plätzen zeigt die Seite die echte Zahl
+const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 2, registration_open: true, display_start: 0, display_real_from: 10 };
 
 let storeOptions = {};
 /** Nur für Tests: anderen Speicher verwenden (z. B. lokalen BlobsServer). */
@@ -43,16 +46,45 @@ async function mutate(key, init, change) {
 const newEvent = () => ({ settings: { ...DEFAULT_SETTINGS }, registrations: [] });
 
 function summarize(ev) {
+  const s = { ...DEFAULT_SETTINGS, ...ev.settings };
   const confirmed = ev.registrations.filter((r) => r.status === 'confirmed');
   const booked = confirmed.reduce((a, r) => a + r.seats, 0);
+  const free = Math.max(s.total_seats - booked, 0);
   return {
-    total_seats: ev.settings.total_seats,
+    total_seats: s.total_seats,
     booked,
-    free: Math.max(ev.settings.total_seats - booked, 0),
-    max_per_person: ev.settings.max_per_person,
-    registration_open: ev.settings.registration_open,
+    free,
+    // diese Zahl sieht der Besucher auf der Seite (public/plaetze.js)
+    shown_free: shownFree({ total: s.total_seats, free, displayStart: s.display_start, realFrom: s.display_real_from }),
+    display_start: s.display_start,
+    display_real_from: s.display_real_from,
+    max_per_person: s.max_per_person,
+    registration_open: s.registration_open,
     attendees: confirmed.length,
   };
+}
+
+/**
+ * Freie Plätze der Reihe nach an die Warteliste geben (wer sich zuerst eingetragen hat, kommt zuerst dran).
+ * Passt jemand nicht mehr hinein (z. B. 2 Plätze gewünscht, nur 1 frei), ist der Nächste dran, der passt.
+ * Nachgerückte bekommen `invite_pending` – die Einladungs-Mail verschickt danach /admin.
+ * Gibt die nachgerückten Einträge zurück.
+ */
+function fillFromWaitlist(ev) {
+  let free = summarize(ev).free;
+  const promoted = [];
+  const waiting = ev.registrations.filter((r) => r.status === 'waitlist')
+    .sort((a, b) => a.created_at.localeCompare(b.created_at));
+  for (const r of waiting) {
+    if (free <= 0) break;
+    if (r.seats > free) continue;
+    r.status = 'confirmed';
+    r.promoted_at = new Date().toISOString();
+    r.invite_pending = true;
+    free -= r.seats;
+    promoted.push(r);
+  }
+  return promoted;
 }
 
 async function readEvent() {
@@ -100,22 +132,34 @@ export function bookSeats(reg, waitlistOk) {
   });
 }
 
-/** Wartelisten-Eintrag nachrücken lassen (nur wenn genug Plätze frei sind): 'confirmed' | 'full' | 'invalid' */
+/** Einen bestimmten Wartelisten-Eintrag vorziehen (nur wenn genug Plätze frei sind): 'confirmed' | 'full' | 'invalid' */
 export function promoteRegistration(id) {
   return mutate('event', newEvent, (ev) => {
     const r = ev.registrations.find((x) => x.id === id);
     if (!r || r.status !== 'waitlist') return { result: 'invalid' };
     if (summarize(ev).free < r.seats) return { result: 'full' };
-    r.status = 'confirmed';
+    Object.assign(r, { status: 'confirmed', promoted_at: new Date().toISOString(), invite_pending: true });
     return { data: ev, result: 'confirmed' };
   });
 }
 
+/** Stornieren – frei gewordene Plätze gehen sofort der Reihe nach an die Warteliste. Ergebnis: null | { promoted } */
 export function cancelRegistration(id) {
   return mutate('event', newEvent, (ev) => {
     const r = ev.registrations.find((x) => x.id === id);
-    if (!r) return { result: false };
+    if (!r) return { result: null };
     r.status = 'cancelled';
+    delete r.invite_pending;
+    return { data: ev, result: { promoted: fillFromWaitlist(ev) } };
+  });
+}
+
+/** Einladungs-Mail an einen Nachgerückten ist raus */
+export function markInvited(id) {
+  return mutate('event', newEvent, (ev) => {
+    const r = ev.registrations.find((x) => x.id === id);
+    if (!r?.invite_pending) return { result: false };
+    delete r.invite_pending;
     return { data: ev, result: true };
   });
 }
@@ -130,10 +174,11 @@ export function deleteRegistration(id) {
   });
 }
 
-export function updateSettings({ total_seats, max_per_person, registration_open }) {
+/** Einstellungen speichern – mehr Plätze gehen sofort der Reihe nach an die Warteliste. Ergebnis: { promoted } */
+export function updateSettings({ total_seats, max_per_person, registration_open, display_start, display_real_from }) {
   return mutate('event', newEvent, (ev) => {
-    ev.settings = { total_seats, max_per_person, registration_open, updated_at: new Date().toISOString() };
-    return { data: ev, result: true };
+    ev.settings = { total_seats, max_per_person, registration_open, display_start, display_real_from, updated_at: new Date().toISOString() };
+    return { data: ev, result: { promoted: fillFromWaitlist(ev) } };
   });
 }
 

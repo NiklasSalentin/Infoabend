@@ -36,7 +36,8 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Besucherzähler & Adressliste in `/admin` | `public/admin.html`/`admin.js`, `netlify/functions/visit.mjs`, `netlify/lib/visitor.mjs` |
 | Meta-Pixel mit Einwilligungs-Hinweis | `public/consent.js` (Pixel-ID aus Netlify `META_PIXEL_ID` über `/api/config`) – Pixel nie ohne Einwilligung laden |
 | Speicher für Anmeldungen (Netlify Blobs) + Buchungslogik | `netlify/lib/db.mjs` – nur mit Niklas ändern; Speicher „infoabend“ im Netlify-Dashboard nie löschen |
-| Plätze, Max. pro Person, Warteliste | keine Datei – Verwaltung unter `/admin` |
+| Plätze, Max. pro Person, Warteliste, knappe Anzeige | keine Datei – Verwaltung unter `/admin` |
+| Rechenregel „angezeigte freie Plätze“ (Seite + `/admin`) | `public/plaetze.js` |
 
 ## Regeln
 

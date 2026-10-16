@@ -62,6 +62,9 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
   → Navy-Fuß mit Adresse, Telefon, Impressum, Datenschutz.
 - **Keine Kopie der Seite** – die Mail ist eine Bestätigung im Design, keine Wiederholung der Seitentexte.
 - Betreff: „Ihr Sitzplatz ist gesichert!“ · keine Ticketnummer.
+- Von der Warteliste nachgerückt: gleiche Mail, Etikett „✓ Platz frei geworden“, erster Satz „gute Nachricht: Für Sie
+  ist ein Platz frei geworden!“, Betreff „Gute Nachricht: Ihr Sitzplatz ist gesichert!“.
+- Zahlen-Streifen der Seite: „59 freie Plätze“ – **ohne „von 200“**, damit die echte Gesamtzahl nicht sichtbar ist.
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
 - Interne Abend-Zusammenfassung (20 Uhr an info@): gleiche Farben, schlicht, Kennzahl-Kästen + Tabelle.
 

@@ -1,12 +1,12 @@
 import { seatStatus, json } from '../lib/db.mjs';
 
-// GET /api/status – Restplätze für die Anzeige auf der Landingpage
+// GET /api/status – Restplätze für die Anzeige auf der Landingpage.
+// Bewusst nur die angezeigte Zahl (public/plaetze.js) – die echte Gesamtzahl steht nur in /admin.
 export default async () => {
   try {
     const s = await seatStatus();
     return json({
-      total: s.total_seats,
-      free: s.free,
+      free: s.shown_free,
       maxPerPerson: s.max_per_person,
       open: s.registration_open,
       attendees: s.booked,

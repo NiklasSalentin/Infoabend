@@ -18,7 +18,7 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 
 | Adresse | Für wen | Was passiert dort |
 |---|---|---|
-| `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 von 120 Plätzen frei“, Anmeldeformular, Knopf **Termin vereinbaren** (→ baufinanz-dueren.de/kontakt) |
+| `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 Plätze frei“ (knappe Anzeige, siehe unten), Anmeldeformular, Knopf **Termin vereinbaren** (→ baufinanz-dueren.de/kontakt) |
 | `…/zeitung`, `…/flyer`, `…/plakat` | QR-Codes | Kurzlinks: leiten auf die Anmeldeseite weiter und merken sich den Werbekanal |
 | `…/admin` | Team (Passwort) | Plätze einstellen, Anmeldeliste, Warteliste, Nachrücken, Stornieren, CSV-Export |
 
@@ -180,28 +180,64 @@ Mit dem `ADMIN_PASSWORD` anmelden. Oben stehen die Einstellungen:
 - **Plätze gesamt** – z. B. `120`
 - **Max. Plätze pro Person** – z. B. `2`
 - **Anmeldung geöffnet** – Häkchen weg = Formular verschwindet
+- **Anzeige beginnt bei** – so viele freie Plätze zeigt die Seite zu Beginn, z. B. `60` (`0` = immer die echte Zahl)
+- **Echte Zahl ab … freien Plätzen** – z. B. `10`: ab da steht auf der Seite genau die echte Zahl
 
 **Beispiel mit 120 Plätzen und max. 2 pro Person:**
 
 | Wer | bucht | Ergebnis | Anzeige danach |
 |---|---|---|---|
-| Person A | 2 Plätze | ✅ bestätigt, Bestätigungs-Mail | „Noch 118 von 120 Plätzen frei“ |
+| Person A | 2 Plätze | ✅ bestätigt, Bestätigungs-Mail | „Noch 118 Plätze frei“ (ohne knappe Anzeige) |
 | Person A nochmal | 1 Platz | ❌ „bereits angemeldet“ | unverändert |
 | Person B | 3 Plätze | geht nicht – Auswahl endet bei 2 | – |
 | … | … | Abend voll | „ausgebucht“ → Knopf „Auf die Warteliste setzen“ |
 | Person Z | 2 Plätze | ⏳ Warteliste, Mail „Sie stehen auf der Warteliste“ | – |
 
 Die Zahlen lassen sich jederzeit ändern – z. B. von 120 auf 150, wenn mehr Stühle in die
-Festhalle passen. Die neuen Plätze sind sofort buchbar.
+Festhalle passen. Stehen Leute auf der Warteliste, bekommen **sie** die neuen Plätze zuerst (siehe unten).
+
+### Knappe Anzeige der freien Plätze
+
+Die Seite zeigt weniger freie Plätze als wirklich frei sind – je voller der Abend, desto näher an der
+echten Zahl; im Endspurt steht dort genau die echte Zahl, damit niemand einen freien Platz verpasst.
+Die echte Gesamtzahl steht nirgends auf der Seite (auch nicht in `/api/status`), nur in `/admin`.
+Unter den Feldern rechnet `/admin` beim Tippen ein Beispiel vor.
+
+**Beispiel: 200 Plätze, Anzeige beginnt bei 60, echte Zahl ab 10:**
+
+| belegt | wirklich frei | Seite zeigt |
+|---|---|---|
+| 0 | 200 | 60 |
+| 1 | 199 | 59 |
+| 100 | 100 | 33 |
+| 160 | 40 | 17 |
+| 190 | 10 | 10 ← ab hier die echte Zahl |
+| 197 | 3 | 3 |
+| 200 | 0 | ausgebucht → Knopf „Auf die Warteliste setzen“ |
+
+Die Rechenregel steht in `public/plaetze.js`; `npm run check` prüft, dass die Anzeige nie höher als die
+echte Zahl ist und im Endspurt genau stimmt.
 
 ### Warteliste, Stornieren, Nachsenden
 
+**Automatisch der Reihe nach:** Werden Plätze frei – weil Sie die Platzzahl erhöhen oder jemand
+storniert wird –, gehen sie sofort an die Warteliste, in der Reihenfolge der Anmeldungen
+(„Warteliste 1.“ ist als Nächstes dran). Passt jemand nicht mehr hinein (möchte 2 Plätze, nur 1 frei),
+ist der Nächste dran, der passt. Vorher fragt `/admin` nach („Dafür rücken nach: …“), danach verschickt
+`/admin` die Einladungen einzeln („Gute Nachricht: Ihr Sitzplatz ist gesichert!“).
+
+Beispiele:
+- Abend voll, 80 auf der Warteliste → Plätze von 200 auf 250 → die ersten 50 (bei je 1 Platz) rücken nach.
+- 30 Plätze werden durch Absagen frei → die nächsten 30 auf der Warteliste rücken nach.
+
+Bricht der Versand ab (z. B. Fenster geschlossen), steht oben ein Kasten „… noch keine Einladungs-Mail
+bekommen“ mit dem Knopf **Einladungen jetzt verschicken**; in der Liste steht „nachgerückt · Einladung offen“.
+
 In der Liste in `/admin` je Zeile:
 
-- **Nachrücken** (bei Warteliste) – nur wenn genug Plätze frei sind; die Person bekommt
-  automatisch ihre Bestätigungs-Mail.
-- **Stornieren** – die Plätze werden sofort wieder frei.
-  Beispiel: A (2 Plätze) storniert → Z (Warteliste, 2 Plätze) → **Nachrücken** klicken.
+- **Nachrücken** (bei Warteliste) – zieht genau diese Person vor (außer der Reihe), nur wenn genug
+  Plätze frei sind; sie bekommt ihre Einladung per Mail.
+- **Stornieren** – die Plätze werden sofort wieder frei und gehen der Reihe nach an die Warteliste.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
 - **Alle Anmeldungen löschen** (unten in `/admin`, nach dem Abend) – für die Speicherfrist aus den
   Datenschutzhinweisen; zur Bestätigung `LÖSCHEN` eintippen.

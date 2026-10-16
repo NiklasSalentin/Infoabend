@@ -15,6 +15,8 @@
   th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: top; }
   .tag { padding: 2px 8px; border-radius: 10px; font-size: .8rem; color: #fff; }
   .confirmed { background: #2e7d32; } .waitlist { background: var(--secondary); } .cancelled { background: #999; }
+  .pending { border-left: 6px solid var(--orange, #f0a63a); }
+  .invite { display: inline-block; margin-top: 4px; font-size: .78rem; color: #b26b00; }
   .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
   .row label { flex: 1; min-width: 160px; }
   .scroll { overflow-x: auto; }
@@ -47,7 +49,20 @@
         <label class="check"><input type="checkbox" id="open"> Anmeldung geöffnet</label>
         <button class="btn btn-primary" id="save">Speichern</button>
       </div>
+      <h3 style="margin:20px 0 6px">Anzeige der freien Plätze auf der Seite</h3>
+      <div class="row">
+        <label>Anzeige beginnt bei (0 = echte Zahl)<input type="number" min="0" id="display-start"></label>
+        <label>Echte Zahl ab … freien Plätzen<input type="number" min="0" id="display-real"></label>
+      </div>
+      <p class="note" id="display-preview"></p>
       <p id="summary" class="seat-hint"></p>
+      <p class="note">Mehr Plätze oder eine Stornierung: Die frei gewordenen Plätze gehen <strong>automatisch der Reihe nach</strong>
+        an die Warteliste (wer sich zuerst eingetragen hat, ist zuerst dran) – jede nachgerückte Person bekommt ihre Einladung per E-Mail.</p>
+    </div>
+
+    <div class="box pending" id="pending" hidden>
+      <p style="margin:0 0 10px"><strong id="pending-text"></strong></p>
+      <button class="btn btn-primary" id="pending-send">Einladungen jetzt verschicken</button>
     </div>
 
     <div class="box">
@@ -99,6 +114,6 @@
     </div>
   </div>
 </div>
-<script src="/admin.js" defer></script>
+<script type="module" src="/admin.js"></script>
 </body>
 </html>

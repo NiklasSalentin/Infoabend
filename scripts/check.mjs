@@ -10,7 +10,7 @@ const errors = [];
 const fail = (msg) => errors.push(msg);
 
 // 1. JavaScript im Browser fehlerfrei
-for (const f of ['public/app.js', 'public/admin.js']) {
+for (const f of ['public/app.js', 'public/admin.js', 'public/plaetze.js']) {
   try {
     execFileSync(process.execPath, ['--check', f], { cwd: root, stdio: 'pipe' });
   } catch (e) {
@@ -53,7 +53,22 @@ same('public/index.html', html, `${d}.${m}.${y}`, hint);
 same('public/index.html', html, `datetime="${y}-${m}-${d}`, hint);
 same('public/app.js', app, `'${y}-${m}-${d}T`, hint);
 
-// 6. Keine Zugangsdaten und keine Anmeldelisten im (öffentlichen!) Repo
+// 6. Angezeigte freie Plätze: nie mehr als echt frei, nie 0 solange etwas frei ist, im Endspurt die echte Zahl
+const { shownFree } = await import(root + 'public/plaetze.js');
+for (const [total, displayStart, realFrom] of [[200, 60, 10], [200, 60, 0], [120, 40, 5], [50, 80, 10], [30, 5, 10], [200, 0, 10]]) {
+  let last = Infinity;
+  for (let free = total; free >= 0; free--) {
+    const shown = shownFree({ total, free, displayStart, realFrom });
+    const where = `Anzeige (${total} Plätze, Start ${displayStart}, echt ab ${realFrom}) bei ${free} echt frei`;
+    if (!Number.isInteger(shown) || shown > free || (free > 0 && shown < 1)) fail(`public/plaetze.js: ${where} → ${shown} (falsch)`);
+    if (free <= realFrom && shown !== free) fail(`public/plaetze.js: ${where} → ${shown}, erwartet ${free} (echte Zahl)`);
+    if (shown > last) fail(`public/plaetze.js: ${where} → ${shown} steigt, obwohl Plätze weggehen`);
+    last = shown;
+  }
+}
+if (shownFree({ total: 200, free: 200, displayStart: 60, realFrom: 10 }) !== 60) fail('public/plaetze.js: Beispiel 200/60/10 zeigt zu Beginn nicht 60.');
+
+// 7. Keine Zugangsdaten und keine Anmeldelisten im (öffentlichen!) Repo
 const files = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);
 const secret = /eyJhbGciOi[\w-]{20,}\.[\w-]{20,}|sb_secret_[A-Za-z0-9_-]{16,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;
 for (const f of files) {

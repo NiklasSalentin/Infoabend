@@ -82,6 +82,8 @@ const tip = (title, text) => `<tr><td width="28" style="padding:0 0 12px;vertica
 
 export function confirmationHtml(reg) {
   const companions = (reg.companions || []).filter(Boolean);
+  // Von der Warteliste nachgerückt? Dann beginnt die Mail mit der guten Nachricht
+  const promoted = Boolean(reg.promoted_at);
   // Bestätigungskarte (Navy, Gold-Datum) – wie das Datumsfeld auf Plakat und Seite
   const card = `
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;background:${C.navy};border-radius:16px"><tr><td style="padding:22px 24px 8px">
@@ -103,11 +105,13 @@ export function confirmationHtml(reg) {
 
   return layout({
     preheader: `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
-    hero: heroTitle(`Herzlich willkommen, ${firstName(reg.name)}!`, '✓ Anmeldung bestätigt',
+    hero: heroTitle(`Herzlich willkommen, ${firstName(reg.name)}!`, promoted ? '✓ Platz frei geworden' : '✓ Anmeldung bestätigt',
       `Wir freuen uns, Sie beim Infoabend „${EVENT.title}“ begrüßen zu dürfen.`) + card,
     body: `
       <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
-      <p style="margin:0 0 22px">vielen Dank für Ihre Anmeldung! Wir haben <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
+      <p style="margin:0 0 22px">${promoted
+    ? 'gute Nachricht: Für Sie ist ein Platz frei geworden! Sie sind von der Warteliste nachgerückt – wir haben'
+    : 'vielen Dank für Ihre Anmeldung! Wir haben'} <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
       Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
 
       <p style="margin:0">${btn(siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
@@ -136,7 +140,7 @@ export async function sendConfirmation(reg) {
     from: from(),
     to: reg.email,
     replyTo: EVENT.notifyEmail,
-    subject: 'Ihr Sitzplatz ist gesichert!',
+    subject: reg.promoted_at ? 'Gute Nachricht: Ihr Sitzplatz ist gesichert!' : 'Ihr Sitzplatz ist gesichert!',
     html: confirmationHtml(reg),
   });
 }
@@ -147,8 +151,8 @@ export const waitlistHtml = (reg) => layout({
   body: `
     <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
     <p style="margin:0 0 14px">der Infoabend am <strong>${EVENT.dateLabel}</strong> ist aktuell ausgebucht. Wir haben Sie mit
-    <strong>${seatsText(reg.seats)}</strong> auf die Warteliste gesetzt. Sobald ein Platz frei wird, melden wir uns –
-    dann erhalten Sie Ihre Bestätigung per E-Mail.</p>
+    <strong>${seatsText(reg.seats)}</strong> auf die Warteliste gesetzt. Frei werdende Plätze vergeben wir in der Reihenfolge
+    der Anmeldungen – sobald Sie an der Reihe sind, erhalten Sie Ihre Bestätigung per E-Mail.</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 22px;background:${C.light};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
       <p style="margin:0 0 12px;font-size:16px;line-height:1.5"><strong>Gern beraten wir Sie auch persönlich.</strong></p>
       ${btn(EVENT.contactUrl, 'Persönliche Beratung buchen', { bg: C.orange, color: C.navy })}

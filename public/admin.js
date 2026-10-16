@@ -1,3 +1,5 @@
+import { shownFree } from '/plaetze.js';
+
 const $ = (s) => document.querySelector(s);
 let pw = sessionStorage.getItem('adminPw') || '';
 let data = null;
@@ -33,15 +35,25 @@ async function load() {
   $('#total').value = s.total_seats;
   $('#max').value = s.max_per_person;
   $('#open').checked = s.registration_open;
-  const wait = data.registrations.filter((r) => r.status === 'waitlist');
-  $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
+  $('#display-start').value = s.display_start;
+  $('#display-real').value = s.display_real_from;
+  renderPreview();
+  const wait = waitlist();
+  $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei (Seite zeigt: ${s.shown_free}) · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
+
+  const pending = data.registrations.filter((r) => r.invite_pending && r.status === 'confirmed');
+  $('#pending').hidden = !pending.length;
+  $('#pending-text').textContent = `${pending.length} nachgerückte ${pending.length === 1 ? 'Person hat' : 'Personen haben'} noch keine Einladungs-Mail bekommen.`;
 
   renderStats();
   renderAddresses();
 
+  // Platz auf der Warteliste (1 = als Nächstes dran)
+  const rank = new Map(wait.map((r, i) => [r.id, i + 1]));
   $('#rows').innerHTML = data.registrations.map((r) => `
     <tr>
-      <td><span class="tag ${r.status}">${LABEL[r.status]}</span></td>
+      <td><span class="tag ${r.status}">${LABEL[r.status]}${rank.has(r.id) ? ` ${rank.get(r.id)}.` : ''}</span>
+        ${r.promoted_at && r.status === 'confirmed' ? `<br><span class="invite">nachgerückt${r.invite_pending ? ' · Einladung offen' : ''}</span>` : ''}</td>
       <td>${new Date(r.created_at).toLocaleString('de-DE')}</td>
       <td>${esc(r.name)}</td>
       <td>${esc(r.email)}<br>${esc(r.phone)}</td>
@@ -57,6 +69,58 @@ async function load() {
       </td>
     </tr>`).join('');
 }
+
+// Warteliste in der Reihenfolge, in der nachgerückt wird (wer zuerst kam, ist zuerst dran)
+const waitlist = (regs = data.registrations) => regs.filter((r) => r.status === 'waitlist')
+  .sort((a, b) => a.created_at.localeCompare(b.created_at));
+
+/** Wer würde bei so vielen freien Plätzen nachrücken? (gleiche Regel wie netlify/lib/db.mjs fillFromWaitlist) */
+function wouldPromote(free) {
+  const out = [];
+  for (const r of waitlist()) {
+    if (free <= 0) break;
+    if (r.seats > free) continue;
+    out.push(r);
+    free -= r.seats;
+  }
+  return out;
+}
+
+// Beispiel-Zeile unter den Anzeige-Feldern – rechnet live mit, während man tippt
+function renderPreview() {
+  const total = Number($('#total').value) || 0;
+  const displayStart = Number($('#display-start').value) || 0;
+  const realFrom = Number($('#display-real').value) || 0;
+  if (!displayStart || displayStart >= total || displayStart <= realFrom) {
+    $('#display-preview').textContent = 'Aus – die Seite zeigt die echte Zahl der freien Plätze.'
+      + (displayStart && displayStart <= realFrom ? ' („Anzeige beginnt bei“ muss größer sein als „Echte Zahl ab“.)' : '');
+    return;
+  }
+  const points = [...new Set([0, 1, Math.round(total / 2), Math.round(total * 0.8), total - realFrom, total - 3].filter((b) => b >= 0 && b < total))].sort((a, b) => a - b);
+  $('#display-preview').textContent = 'Beispiel: ' + points.map((booked) => {
+    const free = total - booked;
+    return `${booked} belegt → Seite zeigt ${shownFree({ total, free, displayStart, realFrom })} (echt ${free})`;
+  }).join(' · ');
+}
+for (const id of ['#total', '#display-start', '#display-real']) $(id).addEventListener('input', renderPreview);
+
+/** Einladungs-Mails an Nachgerückte nacheinander verschicken (einzeln, damit nichts in eine Zeitüberschreitung läuft) */
+async function sendInvites(ids) {
+  let ok = 0;
+  const failed = [];
+  for (const [i, id] of ids.entries()) {
+    $('#pending').hidden = false;
+    $('#pending-text').textContent = `Einladungen werden verschickt … ${i + 1} von ${ids.length}`;
+    try { await api('POST', { action: 'resend', id }); ok++; } catch (e) { failed.push(e.message); }
+  }
+  await load();
+  alert(`${ok} Einladung${ok === 1 ? '' : 'en'} verschickt.` + (failed.length ? `\n\n${failed.length} fehlgeschlagen:\n${failed.join('\n')}` : ''));
+}
+
+$('#pending-send').onclick = () => {
+  const ids = data.registrations.filter((r) => r.invite_pending && r.status === 'confirmed').map((r) => r.id);
+  if (ids.length && confirm(`${ids.length} Einladung${ids.length === 1 ? '' : 'en'} jetzt per E-Mail verschicken?`)) sendInvites(ids);
+};
 
 // Besucherzähler: jede IP-Adresse einmal, gesamt und je Tag
 function renderStats() {
@@ -115,8 +179,16 @@ $('#login-btn').onclick = () => { pw = $('#pw').value; load(); };
 $('#pw').onkeydown = (e) => { if (e.key === 'Enter') $('#login-btn').click(); };
 
 $('#save').onclick = async () => {
+  const total = Number($('#total').value);
+  const next = wouldPromote(total - data.status.booked);
+  if (next.length && !confirm(`Durch die neue Platzzahl rücken ${next.length} ${next.length === 1 ? 'Person' : 'Personen'} von der Warteliste nach `
+    + `(${next.map((r) => r.name).join(', ')}) und ${next.length === 1 ? 'bekommt' : 'bekommen'} eine Einladung per E-Mail.\n\nSpeichern?`)) return;
   try {
-    await api('POST', { action: 'settings', totalSeats: $('#total').value, maxPerPerson: $('#max').value, open: $('#open').checked });
+    const r = await api('POST', {
+      action: 'settings', totalSeats: $('#total').value, maxPerPerson: $('#max').value, open: $('#open').checked,
+      displayStart: $('#display-start').value, displayRealFrom: $('#display-real').value,
+    });
+    if (r.promoted?.length) return sendInvites(r.promoted);
     await load();
     alert('Gespeichert');
   } catch (e) { alert(e.message); }
@@ -125,9 +197,22 @@ $('#save').onclick = async () => {
 $('#rows').onclick = async (e) => {
   const b = e.target.closest('button');
   if (!b) return;
-  const msg = { promote: 'Nachrücken lassen und Einladung senden?', cancel: 'Anmeldung stornieren? Die Plätze werden wieder frei.', resend: 'Einladung erneut senden?', delete: 'Stornierte Anmeldung endgültig löschen? Das lässt sich nicht rückgängig machen.' };
+  const reg = data.registrations.find((r) => r.id === b.dataset.id);
+  // Stornieren einer bestätigten Anmeldung: wer rückt dafür von der Warteliste nach?
+  const next = b.dataset.a === 'cancel' && reg?.status === 'confirmed' ? wouldPromote(data.status.free + reg.seats) : [];
+  const msg = {
+    promote: 'Diese Person vor allen anderen auf der Warteliste nachrücken lassen und Einladung senden?',
+    cancel: 'Anmeldung stornieren? Die Plätze werden wieder frei.'
+      + (next.length ? `\n\nDafür rückt von der Warteliste nach: ${next.map((r) => r.name).join(', ')} (bekommt eine Einladung per E-Mail).` : ''),
+    resend: 'Einladung erneut senden?',
+    delete: 'Stornierte Anmeldung endgültig löschen? Das lässt sich nicht rückgängig machen.',
+  };
   if (!confirm(msg[b.dataset.a])) return;
-  try { await api('POST', { action: b.dataset.a, id: b.dataset.id }); await load(); } catch (err) { alert(err.message); }
+  try {
+    const r = await api('POST', { action: b.dataset.a, id: b.dataset.id });
+    if (r.promoted?.length) return sendInvites(r.promoted);
+    await load();
+  } catch (err) { alert(err.message); }
 };
 
 $('#csv').onclick = () => {

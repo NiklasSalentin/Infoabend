@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { runDigest } from '../lib/digest.mjs';
@@ -40,19 +40,25 @@ async function handle(req, context) {
     case 'settings': {
       const total = Number.parseInt(b.totalSeats, 10);
       const max = Number.parseInt(b.maxPerPerson, 10);
-      if (!(total >= 0) || !(max >= 1)) return json({ error: 'Ungültige Werte' }, 400);
-      await updateSettings({ total_seats: total, max_per_person: max, registration_open: b.open !== false });
-      return json({ ok: true });
+      const displayStart = Number.parseInt(b.displayStart, 10) || 0;
+      const realFrom = Number.parseInt(b.displayRealFrom, 10);
+      if (!(total >= 0) || !(max >= 1) || !(displayStart >= 0) || !(realFrom >= 0)) return json({ error: 'Ungültige Werte' }, 400);
+      const { promoted } = await updateSettings({
+        total_seats: total, max_per_person: max, registration_open: b.open !== false,
+        display_start: displayStart, display_real_from: realFrom,
+      });
+      // Einladungs-Mails an Nachgerückte verschickt /admin danach einzeln (Aktion „resend“)
+      return json({ ok: true, promoted: promoted.map((r) => r.id) });
     }
     case 'promote': {
       const result = await promoteRegistration(b.id);
       if (result !== 'confirmed') return json({ error: result === 'full' ? 'Nicht genug freie Plätze' : 'Eintrag nicht auf Warteliste' }, 409);
-      await sendConfirmation(await getRegistration(b.id)).catch((e) => console.error(e));
-      return json({ ok: true });
+      return json({ ok: true, promoted: [b.id] });
     }
     case 'cancel': {
-      if (!(await cancelRegistration(b.id))) return json({ error: 'Anmeldung nicht gefunden' }, 404);
-      return json({ ok: true });
+      const r = await cancelRegistration(b.id);
+      if (!r) return json({ error: 'Anmeldung nicht gefunden' }, 404);
+      return json({ ok: true, promoted: r.promoted.map((x) => x.id) });
     }
     case 'delete': {
       if (!(await deleteRegistration(b.id))) return json({ error: 'Nur stornierte Anmeldungen können gelöscht werden' }, 400);
@@ -73,6 +79,7 @@ async function handle(req, context) {
       return json({ ok: true });
     }
     case 'resend': {
+      // Bestätigung (erneut) schicken – bei Nachgerückten die Einladung „Gute Nachricht: Platz frei geworden“
       const reg = await getRegistration(b.id);
       if (!reg || reg.status !== 'confirmed') return json({ error: 'Nur für bestätigte Anmeldungen' }, 400);
       try {
@@ -81,6 +88,7 @@ async function handle(req, context) {
         console.error(e);
         return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502);
       }
+      if (reg.invite_pending) await markInvited(b.id);
       return json({ ok: true });
     }
     default:
