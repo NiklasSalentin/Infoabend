@@ -31,7 +31,8 @@ function renderSeats() {
   const max = waitlistMode() ? state.maxPerPerson : Math.max(1, Math.min(state.maxPerPerson, state.free ?? state.maxPerPerson));
   const current = Number(seatsSel.value) || 1;
   seatsSel.innerHTML = '';
-  for (let i = 1; i <= max; i++) seatsSel.add(new Option(i === 1 ? '1 Platz' : `${i} Plätze`, i));
+  // Wert = Plätze (Anmelder + Begleitung), angezeigt wird die Zahl der Begleitpersonen: 4 Plätze → „3 Begleitpersonen“
+  for (let i = 1; i <= max; i++) seatsSel.add(new Option(i === 1 ? 'Keine' : i === 2 ? '1 Begleitperson' : `${i - 1} Begleitpersonen`, i));
   seatsSel.value = Math.min(current, max);
   renderCompanions();
 }
