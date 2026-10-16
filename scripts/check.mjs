@@ -30,7 +30,7 @@ for (const f of readdirSync(root + 'netlify/functions').filter((f) => f.endsWith
 // 3. Formular und Seite: diese Kennungen braucht die Technik (public/app.js)
 const html = read('public/index.html');
 const ids = ['form', 'seats', 'companions', 'error', 'submit', 'success', 'waitlisted', 'gcal',
-  'seat-hint', 'countdown', 'seats-free', 'seats-label', 'social-proof', 'attendees', 'anmeldung'];
+  'seat-hint', 'countdown', 'seats-free', 'seats-label', 'seats-badge', 'seats-prefix', 'social-proof', 'attendees', 'anmeldung'];
 for (const id of ids) if (!html.includes(`id="${id}"`)) fail(`public/index.html: id="${id}" fehlt – bitte wiederherstellen (wird von app.js gebraucht).`);
 const names = ['name', 'email', 'phone', 'street', 'houseNumber', 'zip', 'city', 'privacyConsent', 'questions', 'website'];
 for (const n of names) if (!html.includes(`name="${n}"`)) fail(`public/index.html: Formularfeld name="${n}" fehlt.`);

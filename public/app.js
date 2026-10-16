@@ -84,9 +84,13 @@ async function loadStatus() {
     const s = await (await fetch('/api/status')).json();
     if (s.error) return;
     state = s;
-    // s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) – keine Gesamtzahl auf der Seite
-    $('#seats-free').textContent = s.free;
-    $('#seats-label').textContent = s.free === 1 ? 'freier Platz' : 'freie Plätze';
+    // Schild neben „Jetzt Platz sichern“. s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) –
+    // keine Gesamtzahl auf der Seite
+    const full = s.free === 0;
+    $('#seats-prefix').textContent = full ? 'Ausgebucht –' : 'Nur noch';
+    $('#seats-free').textContent = full ? '' : s.free;
+    $('#seats-label').textContent = full ? 'Warteliste offen' : s.free === 1 ? 'Platz frei' : 'Plätze frei';
+    $('#seats-badge').hidden = !s.open;
     if (s.attendees >= 10) {
       $('#attendees').textContent = s.attendees;
       $('#social-proof').hidden = false;

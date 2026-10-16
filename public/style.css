@@ -132,6 +132,15 @@ p { margin: 0 0 1em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 16px; }
 .button-navy { background: var(--navy); }
 .button-navy .button-icon { background: var(--secondary); }
+/* Freie Plätze direkt neben „Jetzt Platz sichern“: Navy-Schild, Gold-Zahl, blinkender Punkt („live“) */
+.hero-cta { align-items: center; }
+.seats-badge { display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 12px 22px; border-radius: 120px; background: rgba(28,35,80,.55); border: 1px solid rgba(255,255,255,.22); color: var(--white); font-size: 17px; font-weight: 600; line-height: 1.2; }
+.seats-badge[hidden] { display: none; }
+.seats-badge strong { color: var(--gold); font-size: 22px; font-weight: 800; }
+.seats-badge strong:empty { display: none; }
+.live-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(217,181,108,.7); animation: live 1.6s ease-out infinite; }
+@keyframes live { 0% { box-shadow: 0 0 0 0 rgba(217,181,108,.7); } 100% { box-shadow: 0 0 0 10px rgba(217,181,108,0); } }
+@media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
 .pill-gold { display: inline-block; margin: 24px 0 0; padding: 6px 18px; border-radius: 999px; background: var(--gold); color: var(--navy); font-size: 16px; font-weight: 700; }
 
 /* Datumsfeld + Siegel: überlappen den blauen Bereich wie auf dem Plakat, beide gleich hoch */
