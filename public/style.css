@@ -139,6 +139,7 @@ p { margin: 0 0 1em; }
 .seats-badge[hidden] { display: none; }
 .seats-badge strong { color: var(--gold); font-size: 18px; font-weight: 800; }
 .seats-badge strong:empty { display: none; }
+.seats-badge.full #seats-label::before { content: '– '; } /* „Ausgebucht – Warteliste offen“ */
 .live-dot { margin-right: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(217,181,108,.7); animation: live 1.6s ease-out infinite; }
 @keyframes live { 0% { box-shadow: 0 0 0 0 rgba(217,181,108,.7); } 100% { box-shadow: 0 0 0 10px rgba(217,181,108,0); } }
 @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
@@ -175,6 +176,9 @@ p { margin: 0 0 1em; }
 
 /* ---------- Zahlen ---------- */
 .stats-inner { display: flex; justify-content: center; gap: 64px; flex-wrap: wrap; text-align: center; }
+/* Zahlen-Streifen hat nur noch „Personen bereits angemeldet“ (ab 10) – solange der fehlt, keine leere Fläche */
+.eckdaten:has(#social-proof[hidden]) .stats-inner { display: none; }
+.eckdaten:has(#social-proof[hidden]) .eckdaten-row { margin-bottom: 0; }
 .num { display: block; color: var(--primary); font-size: 52px; font-weight: 600; line-height: 1.2em; letter-spacing: -.04em; }
 .lbl { color: var(--muted); font-size: 16px; }
 
@@ -360,6 +364,20 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .date-details { flex-direction: column; gap: 14px; }
   .gradient-box { margin-bottom: 16px; font-size: 14px; }
   .stats-inner { gap: 28px; }
+  /* Freie Plätze kompakt rechts neben „Jetzt Platz sichern“: „Noch 117“ / „Plätze frei“ in zwei Zeilen */
+  .hero-cta { flex-wrap: nowrap; gap: 10px; }
+  .hero-cta .button-main { flex: none; padding: 12px 18px; gap: 12px; }
+  .seats-badge { position: relative; display: inline-grid; grid-template-columns: auto auto; justify-content: center; column-gap: 5px; row-gap: 0; padding: 8px 14px; text-align: center; font-size: 15px; line-height: 1.25; }
+  .seats-badge strong { font-size: 17px; }
+  .seats-badge #seats-label { grid-column: 1 / -1; font-size: 13px; font-weight: 600; }
+  .seats-badge strong:empty + #seats-label { grid-column: 1 / -1; }
+  .live-dot { position: absolute; top: -3px; right: 16px; width: 10px; height: 10px; margin: 0; border: 2px solid var(--poster-blue); box-sizing: content-box; }
+  .seats-badge.full #seats-label::before { content: none; } /* zweizeilig: „Ausgebucht“ / „Warteliste offen“ */
+  /* Siegel klein in der rechten unteren Ecke des Datumsfelds (wie ein Aufkleber), statt allein darunter */
+  .eckdaten-row { display: block; }
+  .seal { position: absolute; right: calc(var(--pad-x) + 16px); bottom: 18px; }
+  .seal img { height: 124px; box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+  .date-details .date-item:last-child { padding-right: 82px; } /* Platz für das Siegel neben der Adresse */
   .footer-links { flex-direction: column; align-items: center; gap: 30px; }
   .footer-menu, .footer-social { width: 100%; align-self: center; align-items: center; text-align: center; }
   .footer-social li { display: flex; justify-content: center; }
@@ -397,3 +415,13 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
 #consent a { color: var(--secondary); }
 .consent-buttons { display: flex; gap: 10px; }
 .consent-buttons button { flex: 1; padding: 11px 16px; border: 2px solid var(--primary); border-radius: 999px; background: var(--white); color: var(--primary); font: inherit; font-weight: 700; cursor: pointer; }
+
+/* Schmale Handys (z. B. iPhone 13/14 mit 390 px): Knopf und Schild etwas kompakter, damit beide nebeneinander passen */
+@media (max-width: 420px) {
+  .hero-cta { flex-wrap: wrap; } /* passt es trotzdem nicht (z. B. „Ausgebucht“ auf sehr schmalen Handys), rutscht das Schild darunter */
+  .hero-cta .button-main { font-size: 15px; padding: 12px 12px 12px 18px; gap: 8px; }
+  .hero-cta .button-main .button-icon { padding: 11px; }
+  .seats-badge { min-height: 60px; padding: 6px 12px; font-size: 14px; }
+  .seats-badge strong { font-size: 16px; }
+  .seats-badge #seats-label { font-size: 12px; }
+}

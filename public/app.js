@@ -14,10 +14,8 @@ try {
   if (!(navigator.sendBeacon && navigator.sendBeacon('/api/visit'))) fetch('/api/visit', { method: 'POST', keepalive: true }).catch(() => {});
 } catch {}
 
-// Countdown bis 9. Dezember 2026
+// Termin des Abends (für das Meta-Pixel-Ereignis unten)
 const eventDate = new Date('2026-12-09T18:00:00+01:00');
-const days = Math.max(0, Math.ceil((eventDate - Date.now()) / 864e5));
-$('#countdown').textContent = days;
 
 // Meta-Pixel: Name des Abends für das Ereignis „Lead“, z. B. „Infoabend 09.12.2026“ (Datum aus eventDate)
 const metaLead = (status) => window.metaTrack?.('Lead', {
@@ -61,8 +59,9 @@ const eckRow = $('.eckdaten-row');
 const dateBox = $('.date-box');
 eckRow.classList.add('js-seal');
 const syncSeal = () => {
-  if (getComputedStyle(eckRow).flexDirection === 'row') eckRow.style.setProperty('--eck-h', dateBox.offsetHeight + 'px');
-  else eckRow.style.removeProperty('--eck-h'); // Handy: Siegel unter dem Datumsfeld, feste Höhe aus dem CSS
+  const cs = getComputedStyle(eckRow);
+  if (cs.display === 'flex' && cs.flexDirection === 'row') eckRow.style.setProperty('--eck-h', dateBox.offsetHeight + 'px');
+  else eckRow.style.removeProperty('--eck-h'); // Handy: Siegel klein im Datumsfeld, feste Höhe aus dem CSS
 };
 new ResizeObserver(syncSeal).observe(dateBox);
 syncSeal();
@@ -87,7 +86,8 @@ async function loadStatus() {
     // Schild neben „Jetzt Platz sichern“. s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) –
     // keine Gesamtzahl auf der Seite
     const full = s.free === 0;
-    $('#seats-prefix').textContent = full ? 'Ausgebucht –' : 'Noch';
+    $('#seats-badge').classList.toggle('full', full);
+    $('#seats-prefix').textContent = full ? 'Ausgebucht' : 'Noch';
     $('#seats-free').textContent = full ? '' : s.free;
     $('#seats-label').textContent = full ? 'Warteliste offen' : s.free === 1 ? 'Platz frei' : 'Plätze frei';
     $('#seats-badge').hidden = !s.open;

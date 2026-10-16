@@ -38,9 +38,9 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 |---|---|
 | **Kopf** | nur Logo (weiß) links und rechts dezent „Persönliche Beratung buchen ↗“ (Rahmen-Knopf, weiß); kein Menü |
 | **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, oranger pulsierender Knopf „Jetzt Platz sichern ↓“, darunter goldene Pill |
-| **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld** |
-| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett), **gleich hoch und gleiche Schrift wie der Knopf** (62 px, 18 px fett); voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
-| **Zahlen-Streifen** | Countdown, Personen angemeldet (erst ab 10) |
+| **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld**; **Handy:** Siegel klein (124 px hoch) in der rechten unteren Ecke im Datumsfeld neben der Adresse (stand vorher allein darunter) |
+| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett), **gleich hoch und gleiche Schrift wie der Knopf** (62 px, 18 px fett); **Handy:** kompakt rechts neben dem Knopf in zwei Zeilen „Noch 117“ / „Plätze frei“, Punkt oben am Rand; unter 420 px Breite Knopf und Schild etwas kleiner (60 px), damit beide in eine Zeile passen; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
+| **Zahlen-Streifen** | nur noch „Personen bereits angemeldet“ (erst ab 10; vorher ausgeblendet ohne Leerfläche). Countdown „Tage bis zum Infoabend“ entfernt (Wunsch) |
 | **Inhaltsblöcke** | weiß, Bild + Text zweispaltig, Eyebrow-Pill (hellgrau, blaue Schrift) über H2 |
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
 | **Anmeldung** | hellgrauer Abschnitt, max. 1200 px breit; Formular als weiße Karte (Radius 24 px, weicher Schatten); Felder 2-spaltig, alle gleich hoch (auch das Auswahlfeld) |
