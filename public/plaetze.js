@@ -5,7 +5,7 @@
 // „weitere Plätze freigegeben“ – die Anzeige springt zurück auf `batch`.
 // Nie mehr als echt frei: Sind nur noch wenige echte Plätze übrig, steht dort die echte Zahl.
 //
-// Beispiel: 400 Plätze gesamt, Kontingent 120, Nachschub bei 30 (Seite: „… von 400 Plätzen frei“)
+// Beispiel: 400 Plätze gesamt, Kontingent 120, Nachschub bei 30 (Seite: „120 freie Plätze“ – die 400 stehen nirgends)
 //   0 belegt   → Anzeige 120
 //   20 belegt  → Anzeige 100         (jede Anmeldung zählt genau mit)
 //   89 belegt  → Anzeige 31

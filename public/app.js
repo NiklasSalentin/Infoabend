@@ -84,9 +84,9 @@ async function loadStatus() {
     const s = await (await fetch('/api/status')).json();
     if (s.error) return;
     state = s;
-    // s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js), s.total die echte Gesamtzahl
+    // s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) – keine Gesamtzahl auf der Seite
     $('#seats-free').textContent = s.free;
-    $('#seats-label').textContent = `von ${s.total} Plätzen frei`;
+    $('#seats-label').textContent = s.free === 1 ? 'freier Platz' : 'freie Plätze';
     if (s.attendees >= 10) {
       $('#attendees').textContent = s.attendees;
       $('#social-proof').hidden = false;
@@ -100,7 +100,7 @@ async function loadStatus() {
       hint.textContent = 'Der Abend ist aktuell ausgebucht. Tragen Sie sich gern auf die Warteliste ein – wird ein Platz frei, melden wir uns.';
       btn.textContent = 'Auf die Warteliste setzen';
     } else {
-      hint.textContent = `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} von ${s.total} Plätzen frei · max. ${s.maxPerPerson} pro Anmeldung`;
+      hint.textContent = `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} ${s.free === 1 ? 'Platz' : 'Plätze'} frei · max. ${s.maxPerPerson} pro Anmeldung`;
       btn.textContent = 'Platz verbindlich reservieren';
     }
     renderSeats();

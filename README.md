@@ -18,7 +18,7 @@ Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“
 
 | Adresse | Für wen | Was passiert dort |
 |---|---|---|
-| `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 von 400 Plätzen frei“ (Kontingent, siehe unten), Anmeldeformular, Knopf **Termin vereinbaren** (→ baufinanz-dueren.de/kontakt) |
+| `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 Plätze frei“ (Kontingent, siehe unten), Anmeldeformular, Knopf **Termin vereinbaren** (→ baufinanz-dueren.de/kontakt) |
 | `…/zeitung`, `…/flyer`, `…/plakat` | QR-Codes | Kurzlinks: leiten auf die Anmeldeseite weiter und merken sich den Werbekanal |
 | `…/admin` | Team (Passwort) | Plätze einstellen, Anmeldeliste, Warteliste, Nachrücken, Stornieren, CSV-Export |
 
@@ -187,7 +187,7 @@ Mit dem `ADMIN_PASSWORD` anmelden. Oben stehen die Einstellungen:
 
 | Wer | bucht | Ergebnis | Anzeige danach |
 |---|---|---|---|
-| Person A | 2 Plätze | ✅ bestätigt, Bestätigungs-Mail | „Noch 118 von 120 Plätzen frei“ |
+| Person A | 2 Plätze | ✅ bestätigt, Bestätigungs-Mail | „Noch 118 Plätze frei“ |
 | Person A nochmal | 1 Platz | ❌ „bereits angemeldet“ | unverändert |
 | Person B | 3 Plätze | geht nicht – Auswahl endet bei 2 | – |
 | … | … | Abend voll | „ausgebucht“ → Knopf „Auf die Warteliste setzen“ |
@@ -202,23 +202,22 @@ Die Seite zeigt nicht alle echten Plätze, sondern ein kleines **Kontingent**. J
 Anzeige um genau die gebuchten Plätze (120 frei, jemand bucht 2 → 118). Steht die Anzeige bei der
 Nachschub-Zahl, springt sie zurück aufs Kontingent und über dem Formular steht kurz
 „Weitere Plätze freigegeben“. Die Anzeige ist nie höher als die echte Zahl – im Endspurt steht dort
-genau die echte Zahl, damit niemand einen freien Platz verpasst. Daneben steht immer die echte
-Gesamtzahl („von 400 Plätzen frei“). Der Zähler „Personen bereits angemeldet“ ist ausgeblendet, solange das
-Kontingent greift (sonst passt er nicht zu „120 von 400 frei“). Unter den Feldern rechnet `/admin` beim
-Tippen ein Beispiel vor.
+genau die echte Zahl, damit niemand einen freien Platz verpasst. Die echte Gesamtzahl (z. B. 400) steht
+nirgends auf der Seite (auch nicht in `/api/status`), nur in `/admin`. Unter den Feldern rechnet `/admin`
+beim Tippen ein Beispiel vor.
 
 **Beispiel: 400 Plätze, Kontingent 120, Nachschub bei 30:**
 
 | belegt | wirklich frei | Seite zeigt |
 |---|---|---|
-| 0 | 400 | 120 von 400 Plätzen frei |
-| 20 | 380 | 100 von 400 |
-| 40 | 360 | 80 von 400 |
-| 89 | 311 | 31 von 400 |
-| 90 | 310 | 120 von 400 – „Weitere Plätze freigegeben“ |
-| 180 | 220 | 120 von 400 – „Weitere Plätze freigegeben“ |
-| 380 | 20 | 20 von 400 (echte Zahl) |
-| 397 | 3 | 3 von 400 (echte Zahl) |
+| 0 | 400 | 120 freie Plätze |
+| 20 | 380 | 100 |
+| 40 | 360 | 80 |
+| 89 | 311 | 31 |
+| 90 | 310 | 120 – „Weitere Plätze freigegeben“ |
+| 180 | 220 | 120 – „Weitere Plätze freigegeben“ |
+| 380 | 20 | 20 (echte Zahl) |
+| 397 | 3 | 3 (echte Zahl) |
 | 400 | 0 | ausgebucht → Knopf „Auf die Warteliste setzen“ |
 
 Die Rechenregel steht in `public/plaetze.js`; `npm run check` prüft, dass die Anzeige nie höher als die
