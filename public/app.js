@@ -67,6 +67,13 @@ const syncSeal = () => {
 new ResizeObserver(syncSeal).observe(dateBox);
 syncSeal();
 
+// „Jetzt Platz sichern“ & Siegel: weich zur Anmeldung scrollen, ohne „#anmeldung“ in die Adresse zu schreiben –
+// sonst springt die Seite nach dem Neuladen wieder dorthin (und landet, solange Bilder noch laden, daneben)
+const toForm = (e) => { e.preventDefault(); $('#anmeldung').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
+document.querySelectorAll('a[href="#anmeldung"]').forEach((a) => a.addEventListener('click', toForm));
+// Kam jemand mit „…/#anmeldung“ (z. B. altes Lesezeichen): Sprung bleibt, aber die Adresse wird bereinigt
+if (location.hash === '#anmeldung') history.replaceState(null, '', location.pathname + location.search);
+
 // Navigations-Auswahl (Google Maps / Apple Karten): schließen bei Klick daneben oder Escape
 const navChoice = $('.nav-choice');
 document.addEventListener('click', (e) => { if (navChoice.open && !navChoice.contains(e.target)) navChoice.open = false; });

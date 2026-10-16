@@ -81,6 +81,11 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - **Favicon:** volle Fläche, keine durchsichtigen Ecken (wurden als weiße Ecken angezeigt) – weiß mit
   blauem Haus, im Browser leicht abgerundet; Datei-Version `?v=2` anhängen, sonst bleibt das alte im Cache.
 - Bewegung (Puls) aus, wenn das Gerät „Bewegung reduzieren“ eingestellt hat.
+- **Bilder immer mit `width`/`height`** im HTML (echte Pixelmaße der Datei): Ohne sie haben nachgeladene Bilder
+  (`loading="lazy"`) erst keine Höhe, die Seite wächst beim Laden um ~1000 px und springt nach dem Neuladen an eine
+  falsche Stelle (z. B. zum Notar-Abschnitt).
+- **Keine `#anmeldung` in der Adresse:** „Jetzt Platz sichern“ und das Siegel scrollen per JavaScript weich zur
+  Anmeldung (`public/app.js`), sonst springt die Seite nach jedem Neuladen dorthin.
 
 ## Arbeitsweise bei Design-Wünschen
 
