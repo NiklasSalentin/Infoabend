@@ -5,14 +5,14 @@
 // „weitere Plätze freigegeben“ – die Anzeige springt zurück auf `batch`.
 // Nie mehr als echt frei: Sind nur noch wenige echte Plätze übrig, steht dort die echte Zahl.
 //
-// Beispiel: 200 Plätze gesamt, Kontingent 30, Nachschub bei 5
-//   0 belegt   → Anzeige 30
-//   3 belegt   → Anzeige 27          (jemand bucht 3 Plätze → genau 3 weniger)
-//   24 belegt  → Anzeige 6
-//   25 belegt  → Anzeige 30          „Weitere Plätze freigegeben“
-//   50 belegt  → Anzeige 30          „Weitere Plätze freigegeben“
-//   190 belegt → Anzeige 10          (echte Zahl)
-//   197 belegt → Anzeige 3           (echte Zahl)
+// Beispiel: 400 Plätze gesamt, Kontingent 120, Nachschub bei 30 (Seite: „… von 400 Plätzen frei“)
+//   0 belegt   → Anzeige 120
+//   20 belegt  → Anzeige 100         (jede Anmeldung zählt genau mit)
+//   89 belegt  → Anzeige 31
+//   90 belegt  → Anzeige 120         „Weitere Plätze freigegeben“
+//   180 belegt → Anzeige 120         „Weitere Plätze freigegeben“
+//   380 belegt → Anzeige 20          (echte Zahl)
+//   397 belegt → Anzeige 3           (echte Zahl)
 //
 // Ergebnis: { free, released } – released = gerade erst neue Plätze freigegeben (für den Hinweis auf der Seite)
 export function shownFree({ total, booked, batch, refillAt }) {

@@ -64,8 +64,9 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Betreff: „Ihr Sitzplatz ist gesichert!“ · keine Ticketnummer.
 - Von der Warteliste nachgerückt: gleiche Mail, Etikett „✓ Platz frei geworden“, erster Satz „gute Nachricht: Für Sie
   ist ein Platz frei geworden!“, Betreff „Gute Nachricht: Ihr Sitzplatz ist gesichert!“.
-- Zahlen-Streifen der Seite: „27 freie Plätze“ – **ohne „von 200“**, damit die echte Gesamtzahl nicht sichtbar ist.
-  Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 29 Plätze frei …“ (gleicher Stil wie der Hinweis).
+- Zahlen-Streifen der Seite: „120 / von 400 Plätzen frei“ (Kontingent von der echten Gesamtzahl); „Personen bereits
+  angemeldet“ nur ohne Kontingent. Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 von
+  400 Plätzen frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
 - Interne Abend-Zusammenfassung (20 Uhr an info@): gleiche Farben, schlicht, Kennzahl-Kästen + Tabelle.
 

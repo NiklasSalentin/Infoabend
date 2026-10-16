@@ -56,7 +56,7 @@ same('public/app.js', app, `'${y}-${m}-${d}T`, hint);
 // 6. Angezeigte freie Plätze (Kontingent): nie mehr als echt frei, nie 0 solange etwas frei ist,
 //    jede Anmeldung senkt die Anzeige um genau die gebuchten Plätze (außer bei Nachschub/echter Zahl)
 const { shownFree } = await import(root + 'public/plaetze.js');
-for (const [total, batch, refillAt] of [[200, 30, 5], [120, 20, 3], [50, 80, 10], [30, 10, 0], [200, 0, 5], [200, 5, 10]]) {
+for (const [total, batch, refillAt] of [[400, 120, 30], [200, 30, 5], [120, 20, 3], [50, 80, 10], [30, 10, 0], [200, 0, 5], [200, 5, 10]]) {
   let prev = null;
   for (let booked = 0; booked <= total; booked++) {
     const free = total - booked;
@@ -70,6 +70,8 @@ for (const [total, batch, refillAt] of [[200, 30, 5], [120, 20, 3], [50, 80, 10]
 }
 const ex = (booked) => shownFree({ total: 200, booked, batch: 30, refillAt: 5 }).free;
 if (ex(0) !== 30 || ex(3) !== 27 || ex(24) !== 6 || ex(25) !== 30 || ex(197) !== 3) fail('public/plaetze.js: Beispiel 200/30/5 stimmt nicht mehr (siehe Kommentar in der Datei).');
+const ex2 = (booked) => shownFree({ total: 400, booked, batch: 120, refillAt: 30 }).free;
+if (ex2(0) !== 120 || ex2(20) !== 100 || ex2(89) !== 31 || ex2(90) !== 120 || ex2(380) !== 20 || ex2(397) !== 3) fail('public/plaetze.js: Beispiel 400/120/30 stimmt nicht mehr (siehe Kommentar in der Datei).');
 
 // 7. Keine Zugangsdaten und keine Anmeldelisten im (öffentlichen!) Repo
 const files = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);

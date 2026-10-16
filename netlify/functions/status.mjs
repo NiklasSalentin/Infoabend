@@ -1,16 +1,18 @@
 import { seatStatus, json } from '../lib/db.mjs';
 
-// GET /api/status – Restplätze für die Anzeige auf der Landingpage.
-// Bewusst nur die angezeigte Zahl (public/plaetze.js) – die echte Gesamtzahl steht nur in /admin.
+// GET /api/status – Restplätze für die Anzeige auf der Landingpage: angezeigte Zahl (Kontingent,
+// public/plaetze.js) „von“ der echten Gesamtzahl.
 export default async () => {
   try {
     const s = await seatStatus();
     return json({
+      total: s.total_seats,
       free: s.shown_free,
       released: s.shown_released,
       maxPerPerson: s.max_per_person,
       open: s.registration_open,
-      attendees: s.booked,
+      // Zähler „Personen bereits angemeldet“ nur ohne Kontingent – sonst widerspräche er „120 von 400 frei“
+      attendees: s.shown_free < s.free ? 0 : s.booked,
     });
   } catch (e) {
     console.error(e);
