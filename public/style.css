@@ -252,7 +252,11 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
 .result-cta { margin-top: 48px; text-align: center; }
 
 /* ---------- Fuß (1:1 Hauptseite) ---------- */
-.site-footer { background: var(--white); }
+.site-footer { position: relative; background: var(--white); }
+/* Verwaltung: kleines Schloss ganz unten rechts, fast unsichtbar (Tippfläche trotzdem 36 px groß) */
+.admin-link { position: absolute; right: calc(8px + env(safe-area-inset-right)); bottom: calc(8px + env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; color: var(--muted); opacity: .15; transition: opacity .3s; }
+.admin-link svg { width: 14px; height: 14px; }
+.admin-link:hover, .admin-link:focus-visible { opacity: .7; }
 .footer-inner { max-width: 1440px; margin: 0 auto; padding: 45px var(--pad-x); }
 .footer-top { display: flex; justify-content: space-between; gap: 20px; }
 .footer-brand { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 24px; flex: 1 1 410px; }
@@ -341,7 +345,7 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .eckdaten-row { gap: 20px; }
   .two-col { grid-template-columns: 1fr; }
   .two-col.reverse > img { order: 0; }
-  .footer-inner { padding: 20px var(--pad-x) 15px; }
+  .footer-inner { padding: 20px var(--pad-x) 52px; } /* unten Platz für das Verwaltungs-Schloss */
   .footer-top { flex-direction: column; gap: 40px; }
   .footer-brand { flex: none; }
   .footer-brand img { width: 235px; }
