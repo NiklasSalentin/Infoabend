@@ -125,10 +125,7 @@
         <div class="grid">
           <label>Name*<input name="name" autocomplete="name" required></label>
           <label>E-Mail*<input name="email" type="email" autocomplete="email" required></label>
-          <label>Telefonnummer*<input name="phone" type="tel" autocomplete="tel" required></label>
-          <label>Anzahl Begleitpersonen*
-            <select name="seats" id="seats"><option value="1">Keine</option></select>
-          </label>
+          <label class="span2">Telefonnummer*<input name="phone" type="tel" autocomplete="tel" required></label>
         </div>
         <details class="address-toggle">
           <summary><span class="address-plus" aria-hidden="true"></span><span class="address-text"><strong>Adresse ergänzen</strong> <span class="optional">optional</span></span></summary>
@@ -142,7 +139,11 @@
           </div>
           <p class="note address-note">Wir nutzen Ihre Adresse, um Sie persönlich zu kontaktieren – auch per Post, z. B. mit Informationen rund um Baufinanzierung. Dem können Sie jederzeit widersprechen, z. B. per E-Mail an info@baufinanz-dueren.de. <a href="/datenschutz" target="_blank" rel="noopener">Mehr dazu</a></p>
         </details>
-
+        <div class="grid">
+          <label class="span2">Anzahl Begleitpersonen*
+            <select name="seats" id="seats"><option value="1">Keine</option></select>
+          </label>
+        </div>
         <div id="companions" class="grid" hidden></div>
 
         <label>Ihre Fragen vorab <span class="optional">optional</span>

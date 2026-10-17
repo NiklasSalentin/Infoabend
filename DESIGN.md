@@ -44,6 +44,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Inhaltsblöcke** | weiß, Bild + Text zweispaltig, Eyebrow-Pill (hellgrau, blaue Schrift) über H2 |
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
 | **Anmeldung** | hellgrauer Abschnitt, max. 1200 px breit; Formular als weiße Karte (Radius 24 px, weicher Schatten); Felder 2-spaltig, alle gleich hoch (auch das Auswahlfeld) |
+| **Formular-Reihenfolge** | Name, E-Mail, Telefon → „Adresse ergänzen“ (Klappfeld) → Anzahl Begleitpersonen mit den Namensfeldern direkt darunter → Fragen vorab → Datenschutz-Häkchen + Aufnahmen-Hinweis → Knopf. Am Computer Name/E-Mail nebeneinander, Telefon und Begleitpersonen-Auswahl je volle Breite |
 | **Begleitung** | Auswahl „Anzahl Begleitpersonen“: Keine / 1 Begleitperson / … (intern Plätze = Anmelder + Begleitung, max. aus `/admin` minus 1), darunter je ein Namensfeld |
 | **Aufnahmen-Hinweis** | unter dem Datenschutz-Häkchen, eingerückt, klein (13 px, Grau-Blau): „Hinweis zu Aufnahmen: …“ mit Link „Mehr dazu“ → `/datenschutz#aufnahmen`; in der Bestätigungs-Mail als Punkt „Fotos & Video“ unter „Gut zu wissen“ |
 | **Adresse** | Klappfeld (hellgrau hinterlegt, kein gestrichelter Rahmen) mit rundem „+“, „Adresse ergänzen“ und daneben klein „optional“ (wie bei „Ihre Fragen vorab“; Erklärsatz auf Wunsch entfernt) |
