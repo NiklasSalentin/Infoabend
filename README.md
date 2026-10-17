@@ -1,6 +1,6 @@
 # Anmeldung Infoabend – anmeldung.baufinanz-dueren.de
 
-Anmeldeseite für den Infoabend **„Wie kaufe ich eigentlich eine Immobilie?“** am
+Anmeldeseite für den Infoabend **„Wie können wir uns heute noch ein Eigenheim leisten?“** am
 **Mittwoch, 9. Dezember 2026** in der Festhalle Birkesdorf.
 
 **So läuft eine Anmeldung ab – ein Beispiel:**

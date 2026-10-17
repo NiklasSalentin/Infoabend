@@ -1,6 +1,6 @@
 // Zentrale Veranstaltungsdaten (Quelle: Inhalts-Checkliste Landingpage, final)
 export const EVENT = {
-  title: 'Wie kaufe ich eigentlich eine Immobilie?',
+  title: 'Wie können wir uns heute noch ein Eigenheim leisten?',
   subtitle: 'Vom ersten Kontakt mit dem Makler bis zum Notartermin – der große Infoabend rund um Ihre Finanzierung',
   dateLabel: 'Mittwoch, 9. Dezember 2026',
   admission: '18:00 Uhr',
