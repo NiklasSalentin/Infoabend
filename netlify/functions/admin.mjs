@@ -1,8 +1,9 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, stopReminders, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { runDigest } from '../lib/digest.mjs';
+import { reminderOverview, sendReminderTest } from '../lib/reminders.mjs';
 
 function authorized(req) {
   const expected = process.env.ADMIN_PASSWORD || '';
@@ -30,7 +31,7 @@ async function handle(req, context) {
       listRegistrations(),
       visitStats().catch((e) => { console.error(e); return null; }),
     ]);
-    return json({ status, registrations, stats });
+    return json({ status, registrations, stats, reminders: reminderOverview(registrations) });
   }
 
   if (req.method !== 'POST') return json({ error: 'Methode nicht erlaubt' }, 405);
@@ -56,7 +57,7 @@ async function handle(req, context) {
       return json({ ok: true, promoted: [b.id] });
     }
     case 'cancel': {
-      const r = await cancelRegistration(b.id);
+      const r = await cancelRegistration(b.id, 'admin');
       if (!r) return json({ error: 'Anmeldung nicht gefunden' }, 404);
       return json({ ok: true, promoted: r.promoted.map((x) => x.id) });
     }
@@ -76,6 +77,16 @@ async function handle(req, context) {
     case 'digest': {
       // Abend-Zusammenfassung sofort an info@ schicken (zum Testen) – ändert nichts am Abend-Versand
       try { await runDigest({ force: true }); } catch (e) { return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502); }
+      return json({ ok: true });
+    }
+    case 'reminder-test': {
+      // Beide Erinnerungen mit Beispiel-Gast an info@ – zum Ansehen vor dem Versand
+      try { await sendReminderTest(); } catch (e) { return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502); }
+      return json({ ok: true });
+    }
+    case 'reminder-off': {
+      // Gast möchte keine Erinnerungen mehr (z. B. per Telefon oder Mail gesagt)
+      if (!(await stopReminders(b.id, 'admin'))) return json({ error: 'Anmeldung nicht gefunden' }, 404);
       return json({ ok: true });
     }
     case 'resend': {

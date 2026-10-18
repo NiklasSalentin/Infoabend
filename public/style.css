@@ -412,6 +412,10 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
 .legal p, .legal li { font-size: 16px; line-height: 1.65; }
 .legal ul { padding-left: 20px; }
 .legal li { margin: 6px 0; }
+/* Seiten /absagen und /erinnerung-abbestellen (Links aus der Erinnerungs-Mail) */
+form.termin-actions, .termin-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 24px 0; padding: 0; background: none; box-shadow: none; border-radius: 0; }
+.termin-page main { min-height: 100vh; }
+.termin .note { margin-top: 32px; }
 .legal-box { margin: 16px 0; padding: 16px 20px; border-left: 4px solid var(--secondary); border-radius: 0 var(--radius) var(--radius) 0; background: var(--light); }
 .legal-box p { margin: 0; }
 .legal-back { margin-top: 40px; }

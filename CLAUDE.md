@@ -31,6 +31,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Countdown, Google-Kalender-Link, Formularlogik | `public/app.js` |
 | Datum/Ort/Uhrzeiten für Mail und Kalenderdatei | `netlify/lib/event.mjs` |
 | Bestätigungs-/Wartelisten-/Team-Mail (Design wie Plakat, Texte teils doppelt zur Seite!) | `netlify/lib/mail.mjs` |
+| Erinnerungs-Mails (Zeitplan, Absage-/Abbestell-Links) | Termine in `netlify/lib/event.mjs` (`reminders`), Logik `netlify/lib/reminders.mjs`, Versand `netlify/functions/reminders.mjs` (alle 10 Min.), Seiten `/absagen` + `/erinnerung-abbestellen` in `netlify/functions/termin.mjs` – nur an Gäste mit Häkchen; Häkchen nie vorausgewählt, bei Textänderung `REMINDER_CONSENT_VERSION` hochzählen |
 | Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
 | QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
 | Besucherzähler & Adressliste in `/admin` | `public/admin.html`/`admin.js`, `netlify/functions/visit.mjs`, `netlify/lib/visitor.mjs` |

@@ -1,20 +1,35 @@
 import nodemailer from 'nodemailer';
 import { EVENT, siteUrl } from './event.mjs';
 
+// Standard: Strato-Postfach info@baufinanz-dueren.de – in Netlify muss nur SMTP_PASS stehen
+function smtpOptions() {
+  const port = Number(process.env.SMTP_PORT || 465);
+  if (!process.env.SMTP_PASS) throw new Error('SMTP_PASS fehlt in Netlify – Mails können nicht verschickt werden');
+  return {
+    host: process.env.SMTP_HOST || 'smtp.strato.de',
+    port,
+    secure: port === 465,
+    auth: { user: process.env.SMTP_USER || EVENT.notifyEmail, pass: process.env.SMTP_PASS },
+  };
+}
+
 let transport;
+let testTransport;
+/** Nur für Tests: Mails nicht verschicken, sondern an diesen Transport geben (z. B. nodemailer jsonTransport) */
+export const useTestTransport = (t) => { testTransport = t; };
 function smtp() {
-  if (!transport) {
-    // Standard: Strato-Postfach info@baufinanz-dueren.de – in Netlify muss nur SMTP_PASS stehen
-    const port = Number(process.env.SMTP_PORT || 465);
-    if (!process.env.SMTP_PASS) throw new Error('SMTP_PASS fehlt in Netlify – Mails können nicht verschickt werden');
-    transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.strato.de',
-      port,
-      secure: port === 465,
-      auth: { user: process.env.SMTP_USER || EVENT.notifyEmail, pass: process.env.SMTP_PASS },
-    });
-  }
+  if (testTransport) return testTransport;
+  if (!transport) transport = nodemailer.createTransport(smtpOptions());
   return transport;
+}
+
+/**
+ * Eine Verbindung für viele Mails nacheinander (Erinnerungen) – schneller als je Mail neu anzumelden.
+ * Nach dem Versand `close()` aufrufen.
+ */
+export function smtpPool() {
+  if (testTransport) return { sendMail: (m) => testTransport.sendMail(m), close() {} };
+  return nodemailer.createTransport({ ...smtpOptions(), pool: true, maxConnections: 1 });
 }
 
 const from = () => process.env.MAIL_FROM || `Baufinanz Düren <${EVENT.notifyEmail}>`;
@@ -80,12 +95,10 @@ const label = (t) => `<p style="margin:0 0 2px;color:#b8c0e6;font-family:${FONT}
 const tip = (title, text) => `<tr><td width="28" style="padding:0 0 12px;vertical-align:top;color:${C.gold};font-size:18px;line-height:1.4">&#9679;</td>
   <td style="padding:0 0 12px;font-family:${FONT};font-size:15px;line-height:1.55"><strong>${title}</strong> – ${text}</td></tr>`;
 
-export function confirmationHtml(reg) {
+// Bestätigungskarte (Navy, Gold-Datum) – wie das Datumsfeld auf Plakat und Seite; auch in den Erinnerungen
+function seatCard(reg) {
   const companions = (reg.companions || []).filter(Boolean);
-  // Von der Warteliste nachgerückt? Dann beginnt die Mail mit der guten Nachricht
-  const promoted = Boolean(reg.promoted_at);
-  // Bestätigungskarte (Navy, Gold-Datum) – wie das Datumsfeld auf Plakat und Seite
-  const card = `
+  return `
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:26px;background:${C.navy};border-radius:16px"><tr><td style="padding:22px 24px 8px">
     ${label('Reserviert für')}
     <p style="margin:0 0 14px;color:#ffffff;font-family:${FONT};font-size:19px;font-weight:700;line-height:1.35">${esc(reg.name)}
@@ -102,6 +115,12 @@ export function confirmationHtml(reg) {
       <a href="${EVENT.mapsGoogle}" style="color:${C.gold};font-weight:700;text-decoration:none">Route mit Google Maps&nbsp;›</a>&nbsp;&nbsp;
       <a href="${EVENT.mapsApple}" style="color:${C.gold};font-weight:700;text-decoration:none">Apple Karten&nbsp;›</a></p>
   </td></tr></table>`;
+}
+
+export function confirmationHtml(reg) {
+  // Von der Warteliste nachgerückt? Dann beginnt die Mail mit der guten Nachricht
+  const promoted = Boolean(reg.promoted_at);
+  const card = seatCard(reg);
 
   return layout({
     preheader: `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
@@ -124,6 +143,7 @@ export function confirmationHtml(reg) {
         ${tip('Kostenlos', 'die Teilnahme kostet nichts.')}
         ${tip('Fotos &amp; Video', 'am Abend fotografieren und filmen wir für unsere Öffentlichkeitsarbeit. Sie möchten nicht erkennbar zu sehen sein? Sagen Sie es uns beim Einlass.')}
         ${tip('Verhindert?', 'antworten Sie kurz auf diese E-Mail, dann geben wir Ihren Platz frei.')}
+        ${reg.reminder_consent ? tip('Erinnerung', `wir erinnern Sie ${reminderWhen()} per E-Mail an den Abend.`) : ''}
       </table>
 
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 22px;background:${C.light};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
@@ -143,6 +163,67 @@ export async function sendConfirmation(reg) {
     replyTo: EVENT.notifyEmail,
     subject: reg.promoted_at ? 'Gute Nachricht: Ihr Sitzplatz ist gesichert!' : 'Ihr Sitzplatz ist gesichert!',
     html: confirmationHtml(reg),
+  });
+}
+
+// „eine Woche vorher und am Vortag“ – aus den Terminen in event.mjs
+const reminderWhen = () => EVENT.reminders.map((r) => r.label.replace(/\s*\(.*\)$/, '')).join(' und ');
+
+/**
+ * Erinnerungs-Mail (nur mit Einwilligung). stage: 'week' | 'day'. Bewusst ohne Werbung (kein „Beratung buchen“) –
+ * die Einwilligung gilt nur für die Erinnerung an den Abend. Unten der Link zum Abbestellen.
+ */
+export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
+  const day = stage === 'day';
+  return layout({
+    preheader: day
+      ? `Morgen ist es so weit: Einlass ${EVENT.admission}, Beginn ${EVENT.start}, ${EVENT.venue}.`
+      : `In einer Woche: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
+    hero: heroTitle(day ? `Morgen ist es so weit, ${firstName(reg.name)}!` : `Nur noch eine Woche, ${firstName(reg.name)}!`,
+      'Erinnerung', `Wir freuen uns, Sie beim Infoabend „${EVENT.title}“ begrüßen zu dürfen.`) + seatCard(reg),
+    body: `
+      <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
+      <p style="margin:0 0 22px">${day ? '<strong>morgen</strong> ist es so weit' : 'in <strong>einer Woche</strong> ist es so weit'}:
+      Für Sie sind <strong>${seatsText(reg.seats)}</strong> reserviert. Sie stehen mit Ihrem Namen auf unserer Gästeliste –
+      ein Ticket brauchen Sie nicht.</p>
+      ${day ? '' : `<p style="margin:0">${btn(siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
+      <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>`}
+
+      <p style="margin:0 0 12px;color:${C.blue};font-size:18px;font-weight:700">Gut zu wissen</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        ${tip('Freie Platzwahl', `Einlass ab ${EVENT.admission}, los geht es um ${EVENT.start}.`)}
+        ${tip('Parken', 'kostenlose Parkplätze direkt an der Festhalle.')}
+        ${tip('Kostenlos', 'die Teilnahme kostet nichts.')}
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 22px;background:${C.light};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
+        <p style="margin:0 0 12px;font-size:16px;line-height:1.5"><strong>Sie können doch nicht kommen?</strong><br>
+        <span style="color:${C.muted}">Dann geben Sie Ihren Platz mit einem Klick frei – so kann jemand von der Warteliste nachrücken.</span></p>
+        ${btn(cancelUrl, 'Termin absagen', { bg: '#ffffff', color: C.blue })}
+      </td></tr></table>
+
+      <p style="margin:0 0 26px">Wir freuen uns auf Sie!<br><strong>Ihr Team der Baufinanz Düren</strong></p>
+      <p style="margin:0 0 22px;font-size:13px;line-height:1.5;color:${C.muted}">Sie erhalten diese Erinnerung, weil Sie bei Ihrer Anmeldung
+      zugestimmt haben. Keine Erinnerungen mehr? <a href="${unsubscribeUrl}" style="color:${C.muted}">Hier abbestellen</a> –
+      Ihr Platz bleibt reserviert.</p>`,
+  });
+}
+
+export const reminderSubject = (stage) => (stage === 'day'
+  ? `Morgen ist es so weit: Infoabend „${EVENT.title}“`
+  : `In einer Woche: Infoabend „${EVENT.title}“`);
+
+/** Erinnerung verschicken – links = { cancelUrl, unsubscribeUrl }; `via` = smtpPool() (viele Mails nacheinander) */
+export async function sendReminder(reg, stage, links, via = smtp(), to = reg.email) {
+  await via.sendMail({
+    from: from(),
+    to,
+    replyTo: EVENT.notifyEmail,
+    subject: reminderSubject(stage),
+    html: reminderHtml(reg, stage, links),
+    // Abbestellen direkt im Mailprogramm (Gmail/Apple Mail zeigen dafür einen Knopf)
+    list: { unsubscribe: { url: links.unsubscribeUrl, comment: 'Keine Erinnerungen mehr' } },
+    headers: { 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
   });
 }
 
@@ -172,7 +253,7 @@ export async function sendWaitlist(reg) {
 }
 
 // Abend-Zusammenfassung an info@ (statt einer Mail pro Anmeldung)
-export function digestHtml({ fresh, status, waitlist, since }) {
+export function digestHtml({ fresh, status, waitlist, since, selfCancelled = [] }) {
   const n = fresh.length;
   const seats = fresh.reduce((a, r) => a + r.seats, 0);
   const sinceText = new Date(since).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -202,6 +283,11 @@ export function digestHtml({ fresh, status, waitlist, since }) {
 </tr></table></td></tr>
 ${n ? `<tr><td style="padding:10px 28px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-family:${FONT}">
   <tr>${th('Name')}${th('Plätze')}${th('Kontakt')}${th('Adresse')}${th('Quelle')}${th('Fragen vorab')}</tr>${rows}</table></td></tr>` : ''}
+${selfCancelled.length ? `<tr><td style="padding:16px 28px 6px;font-family:${FONT}">
+  <div style="color:${C.blue};font-size:16px;font-weight:700;margin-bottom:6px">Selbst abgesagt (Link in der Erinnerung): ${selfCancelled.length}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-family:${FONT}">
+  <tr>${th('Name')}${th('Plätze')}${th('Kontakt')}</tr>${selfCancelled.map((r) => `<tr>${td(`<strong>${esc(r.name)}</strong>`)}${td(r.seats)}${td(`${esc(r.email)}<br>${esc(r.phone)}`)}</tr>`).join('')}
+  </table><div style="color:${C.muted};font-size:13px;margin-top:6px">Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, hat die Einladung automatisch bekommen.</div></td></tr>` : ''}
 <tr><td style="padding:18px 28px 26px;font-family:${FONT};font-size:14px">
   <a href="${siteUrl()}/admin" style="display:inline-block;padding:11px 22px;border-radius:999px;background:${C.blue};color:#fff;font-weight:700;text-decoration:none">Alle Anmeldungen in der Verwaltung</a>
 </td></tr></table></td></tr></table></body></html>`;
@@ -213,7 +299,7 @@ export async function sendDigest(data) {
   await smtp().sendMail({
     from: from(),
     to: EVENT.notifyEmail,
-    subject: `Infoabend: ${n ? `${n} neue Anmeldung${n === 1 ? '' : 'en'} heute` : 'Zusammenfassung'} – ${data.status.booked} von ${data.status.total_seats} Plätzen belegt`,
+    subject: `Infoabend: ${n ? `${n} neue Anmeldung${n === 1 ? '' : 'en'} heute` : 'Zusammenfassung'}${data.selfCancelled?.length ? `, ${data.selfCancelled.length} Absage${data.selfCancelled.length === 1 ? '' : 'n'}` : ''} – ${data.status.booked} von ${data.status.total_seats} Plätzen belegt`,
     html: digestHtml(data),
   });
 }

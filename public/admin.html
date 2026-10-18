@@ -17,6 +17,8 @@
   .confirmed { background: #2e7d32; } .waitlist { background: var(--secondary); } .cancelled { background: #999; }
   .pending { border-left: 6px solid var(--orange, #f0a63a); }
   .invite { display: inline-block; margin-top: 4px; font-size: .78rem; color: #b26b00; }
+  .rem { display: inline-block; margin-top: 4px; font-size: .78rem; color: var(--gray, #7C829A); }
+  .rem.on { color: #2e7d32; }
   .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
   .row label { flex: 1; min-width: 160px; }
   .scroll { overflow-x: auto; }
@@ -65,6 +67,24 @@
     <div class="box pending" id="pending" hidden>
       <p style="margin:0 0 10px"><strong id="pending-text"></strong></p>
       <button class="btn btn-primary" id="pending-send">Einladungen jetzt verschicken</button>
+    </div>
+
+    <div class="box">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Erinnerungs-Mails</h2>
+        <button class="btn btn-outline" id="reminder-test">Test an info@ schicken</button>
+      </div>
+      <div class="tiles">
+        <div class="tile"><b id="rem-consent">–</b><span>möchten erinnert werden (Häkchen gesetzt)</span></div>
+        <div class="tile"><b id="rem-optout">–</b><span>haben Erinnerungen abbestellt</span></div>
+        <div class="tile"><b id="rem-self">–</b><span>haben über den Link selbst abgesagt</span></div>
+      </div>
+      <div class="scroll"><table style="max-width:720px">
+        <thead><tr><th>Erinnerung</th><th class="r">verschickt</th><th class="r">noch offen</th></tr></thead>
+        <tbody id="rem-stages"></tbody></table></div>
+      <p class="note">Geht automatisch raus – nur an bestätigte Gäste mit Häkchen „Ja, erinnern Sie mich …“. In jeder Erinnerung:
+        <strong>„Termin absagen“</strong> (Platz wird frei, die Warteliste rückt nach und bekommt sofort ihre Einladung) und
+        „Erinnerungen abbestellen“. Wer sich weniger als 12 Stunden vorher anmeldet, bekommt diese Erinnerung nicht.</p>
     </div>
 
     <div class="box">

@@ -47,16 +47,18 @@ async function load() {
 
   renderStats();
   renderAddresses();
+  renderReminders();
 
   // Platz auf der Warteliste (1 = als Nächstes dran)
   const rank = new Map(wait.map((r, i) => [r.id, i + 1]));
   $('#rows').innerHTML = data.registrations.map((r) => `
     <tr>
       <td><span class="tag ${r.status}">${LABEL[r.status]}${rank.has(r.id) ? ` ${rank.get(r.id)}.` : ''}</span>
-        ${r.promoted_at && r.status === 'confirmed' ? `<br><span class="invite">nachgerückt${r.invite_pending ? ' · Einladung offen' : ''}</span>` : ''}</td>
+        ${r.promoted_at && r.status === 'confirmed' ? `<br><span class="invite">nachgerückt${r.invite_pending ? ' · Einladung offen' : ''}</span>` : ''}
+        ${r.cancelled_via === 'link' ? '<br><span class="invite">selbst abgesagt</span>' : ''}</td>
       <td>${new Date(r.created_at).toLocaleString('de-DE')}</td>
       <td>${esc(r.name)}</td>
-      <td>${esc(r.email)}<br>${esc(r.phone)}</td>
+      <td>${esc(r.email)}<br>${esc(r.phone)}<br>${reminderState(r)}</td>
       <td>${r.seats}</td>
       <td>${esc(r.companions.join(', '))}</td>
       <td>${esc([r.street, r.zip, r.city].filter(Boolean).join(', '))}${r.address_consent ? '<br>✓ Post' : ''}</td>
@@ -65,10 +67,35 @@ async function load() {
       <td>
         ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
         ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
+        ${r.reminder_consent && r.status !== 'cancelled' ? `<button data-a="reminder-off" data-id="${r.id}">Erinnerung aus</button>` : ''}
         ${r.status !== 'cancelled' ? `<button data-a="cancel" data-id="${r.id}">Stornieren</button>` : `<button data-a="delete" data-id="${r.id}">Löschen</button>`}
       </td>
     </tr>`).join('');
 }
+
+// Erinnerungs-Mails: Häkchen gesetzt? Was ist schon raus?
+const day = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' });
+function reminderState(r) {
+  if (r.reminder_optout_at) return `<span class="rem">✗ Erinnerung abbestellt (${day(r.reminder_optout_at)})</span>`;
+  if (!r.reminder_consent) return '<span class="rem">– keine Erinnerung</span>';
+  const sent = Object.values(r.reminders_sent || {}).map(day);
+  return `<span class="rem on">✓ Erinnerung${sent.length ? ` · verschickt ${sent.join(', ')}` : ''}</span>`;
+}
+
+function renderReminders() {
+  const rm = data.reminders;
+  if (!rm) return;
+  $('#rem-consent').textContent = `${rm.consent} / ${rm.confirmed}`;
+  $('#rem-optout').textContent = rm.optout;
+  $('#rem-self').textContent = rm.selfCancelled;
+  $('#rem-stages').innerHTML = rm.stages.map((s) => `<tr><td>${esc(s.label)}${s.started ? '' : ' <span class="note">– geplant</span>'}</td>
+    <td class="r">${s.sent}</td><td class="r">${s.open}${s.failed ? ` <span class="invite">(${s.failed} fehlgeschlagen)</span>` : ''}</td></tr>`).join('');
+}
+
+$('#reminder-test').onclick = async () => {
+  if (!confirm('Beide Erinnerungen (eine Woche vorher, Vortag) mit Beispiel-Gast „Maria Muster“ an info@ schicken?')) return;
+  try { await api('POST', { action: 'reminder-test' }); alert('Verschickt – bitte im Postfach info@ nachsehen.'); } catch (e) { alert(e.message); }
+};
 
 // Warteliste in der Reihenfolge, in der nachgerückt wird (wer zuerst kam, ist zuerst dran)
 const waitlist = (regs = data.registrations) => regs.filter((r) => r.status === 'waitlist')
@@ -206,6 +233,7 @@ $('#rows').onclick = async (e) => {
     cancel: 'Anmeldung stornieren? Die Plätze werden wieder frei.'
       + (next.length ? `\n\nDafür ${next.length === 1 ? 'rückt' : 'rücken'} von der Warteliste nach: ${next.map((r) => r.name).join(', ')} (${next.length === 1 ? 'bekommt' : 'bekommen'} eine Einladung per E-Mail).` : ''),
     resend: 'Einladung erneut senden?',
+    'reminder-off': 'Diese Person bekommt keine Erinnerungs-Mails mehr (z. B. weil sie es telefonisch gewünscht hat). Fortfahren?',
     delete: 'Stornierte Anmeldung endgültig löschen? Das lässt sich nicht rückgängig machen.',
   };
   if (!confirm(msg[b.dataset.a])) return;
@@ -217,7 +245,8 @@ $('#rows').onclick = async (e) => {
 };
 
 $('#csv').onclick = () => {
-  const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source'];
+  const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source',
+    'reminder_consent', 'reminder_consent_at', 'reminder_optout_at', 'cancelled_via'];
   const cell = (v) => '"' + String(Array.isArray(v) ? v.join(', ') : v ?? '').replace(/"/g, '""') + '"';
   const csv = '﻿' + [cols.join(';'), ...data.registrations.map((r) => cols.map((c) => cell(r[c])).join(';'))].join('\n');
   const a = document.createElement('a');

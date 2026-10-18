@@ -145,14 +145,19 @@ export function promoteRegistration(id) {
   });
 }
 
-/** Stornieren – frei gewordene Plätze gehen sofort der Reihe nach an die Warteliste. Ergebnis: null | { promoted } */
-export function cancelRegistration(id) {
+/**
+ * Stornieren – frei gewordene Plätze gehen sofort der Reihe nach an die Warteliste.
+ * via: 'admin' (Knopf in /admin) | 'link' (Gast sagt über den Link in der Erinnerung selbst ab).
+ * Ergebnis: null (nicht gefunden) | { promoted, already } – already = war schon storniert
+ */
+export function cancelRegistration(id, via = 'admin') {
   return mutate('event', newEvent, (ev) => {
     const r = ev.registrations.find((x) => x.id === id);
     if (!r) return { result: null };
-    r.status = 'cancelled';
+    if (r.status === 'cancelled') return { result: { promoted: [], already: true } };
+    Object.assign(r, { status: 'cancelled', cancelled_at: new Date().toISOString(), cancelled_via: via });
     delete r.invite_pending;
-    return { data: ev, result: { promoted: fillFromWaitlist(ev) } };
+    return { data: ev, result: { promoted: fillFromWaitlist(ev), already: false } };
   });
 }
 
@@ -162,6 +167,32 @@ export function markInvited(id) {
     const r = ev.registrations.find((x) => x.id === id);
     if (!r?.invite_pending) return { result: false };
     delete r.invite_pending;
+    return { data: ev, result: true };
+  });
+}
+
+/** Erinnerungs-Mail `key` ('week' | 'day') ist raus – bzw. ging schief (`error`, nach 3 Fehlversuchen wird nicht mehr versucht) */
+export function markReminder(id, key, error = null) {
+  return mutate('event', newEvent, (ev) => {
+    const r = ev.registrations.find((x) => x.id === id);
+    if (!r) return { result: false };
+    if (error) {
+      r.reminder_errors = { ...r.reminder_errors, [key]: (r.reminder_errors?.[key] || 0) + 1 };
+      r.reminder_last_error = String(error).slice(0, 200);
+    } else {
+      r.reminders_sent = { ...r.reminders_sent, [key]: new Date().toISOString() };
+    }
+    return { data: ev, result: true };
+  });
+}
+
+/** Keine Erinnerungen mehr (Abbestell-Link in der Mail oder Knopf in /admin). Ergebnis: false = nicht gefunden */
+export function stopReminders(id, via) {
+  return mutate('event', newEvent, (ev) => {
+    const r = ev.registrations.find((x) => x.id === id);
+    if (!r) return { result: false };
+    if (!r.reminder_consent) return { result: true };
+    Object.assign(r, { reminder_consent: false, reminder_optout_at: new Date().toISOString(), reminder_optout_via: via });
     return { data: ev, result: true };
   });
 }
