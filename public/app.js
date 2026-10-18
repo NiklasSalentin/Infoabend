@@ -135,7 +135,6 @@ form.addEventListener('submit', async (e) => {
     companions: [...companionBox.querySelectorAll('input')].map((i) => i.value),
     street: f.street.value, houseNumber: f.houseNumber.value, zip: f.zip.value, city: f.city.value,
     privacyConsent: f.privacyConsent.checked,
-    reminderConsent: f.reminderConsent.checked, // freiwillig: Erinnerungs-Mails (netlify/lib/reminders.mjs)
     questions: f.questions.value,
     website: f.website.value,
     waitlist: waitlistMode(),

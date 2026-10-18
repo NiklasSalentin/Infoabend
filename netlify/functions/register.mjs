@@ -2,7 +2,6 @@ import { bookSeats, json } from '../lib/db.mjs';
 import { sendConfirmation, sendWaitlist } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { forwardQuestion, ASKME_MAX } from '../lib/askme.mjs';
-import { REMINDER_CONSENT_VERSION } from '../lib/reminders.mjs';
 
 const str = (v, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,10 +29,6 @@ export default async (req, context) => {
     city: str(b.city, 100) || null,
     address_consent: false,
     questions: str(b.questions, ASKME_MAX) || null,
-    // Einwilligung in Erinnerungs-Mails (freiwilliges Häkchen) – mit Zeitpunkt und Fassung des Textes als Nachweis
-    reminder_consent: b.reminderConsent === true,
-    reminder_consent_at: b.reminderConsent === true ? new Date().toISOString() : null,
-    reminder_consent_text: b.reminderConsent === true ? REMINDER_CONSENT_VERSION : null,
     // Werbekanal aus dem QR-Code, z. B. 'zeitung' (leer = direkt aufgerufen)
     source: str(b.source, 40).toLowerCase().replace(/[^a-z0-9-]/g, '') || null,
   };

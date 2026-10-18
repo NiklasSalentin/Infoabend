@@ -143,7 +143,7 @@ export function confirmationHtml(reg) {
         ${tip('Kostenlos', 'die Teilnahme kostet nichts.')}
         ${tip('Fotos &amp; Video', 'am Abend fotografieren und filmen wir für unsere Öffentlichkeitsarbeit. Sie möchten nicht erkennbar zu sehen sein? Sagen Sie es uns beim Einlass.')}
         ${tip('Verhindert?', 'antworten Sie kurz auf diese E-Mail, dann geben wir Ihren Platz frei.')}
-        ${reg.reminder_consent ? tip('Erinnerung', `wir erinnern Sie ${reminderWhen()} per E-Mail an den Abend.`) : ''}
+        ${tip('Erinnerung', `wir erinnern Sie ${reminderWhen()} kurz per E-Mail an den Abend.`)}
       </table>
 
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 22px;background:${C.light};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
@@ -170,8 +170,9 @@ export async function sendConfirmation(reg) {
 const reminderWhen = () => EVENT.reminders.map((r) => r.label.replace(/\s*\(.*\)$/, '')).join(' und ');
 
 /**
- * Erinnerungs-Mail (nur mit Einwilligung). stage: 'week' | 'day'. Bewusst ohne Werbung (kein „Beratung buchen“) –
- * die Einwilligung gilt nur für die Erinnerung an den Abend. Unten der Link zum Abbestellen.
+ * Erinnerungs-Mail an alle bestätigten Gäste (gehört zur Anmeldung). stage: 'week' | 'day'.
+ * Bewusst kein Newsletter und keine Werbung (kein „Beratung buchen“) – nur die Erinnerung an den Abend.
+ * Unten der Link zum Abbestellen.
  */
 export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
   const day = stage === 'day';
@@ -203,8 +204,8 @@ export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
       </td></tr></table>
 
       <p style="margin:0 0 26px">Wir freuen uns auf Sie!<br><strong>Ihr Team der Baufinanz Düren</strong></p>
-      <p style="margin:0 0 22px;font-size:13px;line-height:1.5;color:${C.muted}">Sie erhalten diese Erinnerung, weil Sie bei Ihrer Anmeldung
-      zugestimmt haben. Keine Erinnerungen mehr? <a href="${unsubscribeUrl}" style="color:${C.muted}">Hier abbestellen</a> –
+      <p style="margin:0 0 22px;font-size:13px;line-height:1.5;color:${C.muted}">Sie erhalten diese Erinnerung, weil Sie sich zum Infoabend
+      angemeldet haben – kein Newsletter. Keine Erinnerungen mehr? <a href="${unsubscribeUrl}" style="color:${C.muted}">Hier abbestellen</a> –
       Ihr Platz bleibt reserviert.</p>`,
   });
 }

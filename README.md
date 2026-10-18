@@ -286,9 +286,9 @@ in `scripts/qr-codes.mjs` eine Zeile hinzufügen und `npm install && npm run qr`
   im Browser landen im Google Kalender mit fertig ausgefülltem Termin
 - Knopf **Persönliche Beratung buchen**
 
-**Erinnerungs-Mails – nur mit Häkchen.** Im Formular steht ein freiwilliges Häkchen *„Ja, erinnern Sie mich bitte per
-E-Mail an den Infoabend …“* (nie vorausgewählt). Gespeichert werden Häkchen, Zeitpunkt und Textfassung als Nachweis.
-Wer es gesetzt hat, bekommt automatisch:
+**Erinnerungs-Mails – gehören zur Anmeldung, kein Newsletter.** Im Formular nennt das Datenschutz-Häkchen die
+Erinnerungs-Mails mit, darunter steht ein kurzer Hinweis „Erinnerung: …“ (kein eigenes Häkchen). Alle bestätigten Gäste
+bekommen automatisch:
 
 | Wann | Mail |
 |---|---|
@@ -299,8 +299,8 @@ In jeder Erinnerung: Knopf **„Termin absagen“** und Link **„Hier abbestell
 „Termin absagen“ → Seite „Termin absagen?“ → „Ja, Platz freigeben“ → ihre 2 Plätze sind frei, die Warteliste rückt
 nach und bekommt sofort die Einladung. In `/admin` steht bei ihr „Storniert · selbst abgesagt“, abends steht sie in der
 Zusammenfassung an info@. Wer sich erst kurz vorher (unter 12 Stunden) anmeldet, bekommt die jeweilige Erinnerung nicht.
-In `/admin` → **Erinnerungs-Mails**: wie viele das Häkchen gesetzt haben, was verschickt ist, **Test an info@ schicken**;
-je Anmeldung „✓ Erinnerung“ und der Knopf **Erinnerung aus** (z. B. wenn jemand am Telefon darum bittet).
+In `/admin` → **Erinnerungs-Mails**: wie viele Gäste sie bekommen, was verschickt ist, **Test an info@ schicken**;
+je Anmeldung „✓ Erinnerung“ bzw. „✗ abbestellt“ und der Knopf **Erinnerung aus** (z. B. wenn jemand am Telefon darum bittet).
 Termine ändern: `netlify/lib/event.mjs` → `reminders`. Versand läuft alle 10 Minuten in kleinen Portionen.
 
 Apple Wallet und Google Wallet sind für später vorgesehen (Apple-Developer-Konto bzw.

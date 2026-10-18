@@ -49,7 +49,7 @@ const booking = (r) => `<div class="legal-box"><p><strong>${esc(r.name)}</strong
   ${EVENT.dateLabel} · Einlass ${EVENT.admission} · ${EVENT.venue}</p></div>`;
 
 // Test-Mail aus /admin: Links zeigen die Seiten, ändern aber nichts
-const SAMPLE = { id: 'test', name: 'Maria Muster', seats: 2, status: 'confirmed', reminder_consent: true };
+const SAMPLE = { id: 'test', name: 'Maria Muster', seats: 2, status: 'confirmed' };
 
 export default async (req, context) => {
   useSite(context);

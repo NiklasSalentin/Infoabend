@@ -191,8 +191,8 @@ export function stopReminders(id, via) {
   return mutate('event', newEvent, (ev) => {
     const r = ev.registrations.find((x) => x.id === id);
     if (!r) return { result: false };
-    if (!r.reminder_consent) return { result: true };
-    Object.assign(r, { reminder_consent: false, reminder_optout_at: new Date().toISOString(), reminder_optout_via: via });
+    if (r.reminder_optout_at) return { result: true };
+    Object.assign(r, { reminder_optout_at: new Date().toISOString(), reminder_optout_via: via });
     return { data: ev, result: true };
   });
 }

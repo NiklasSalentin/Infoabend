@@ -32,7 +32,7 @@ const html = read('public/index.html');
 const ids = ['form', 'seats', 'companions', 'error', 'submit', 'success', 'waitlisted', 'gcal',
   'seat-hint', 'seats-free', 'seats-label', 'seats-badge', 'seats-prefix', 'social-proof', 'attendees', 'anmeldung'];
 for (const id of ids) if (!html.includes(`id="${id}"`)) fail(`public/index.html: id="${id}" fehlt – bitte wiederherstellen (wird von app.js gebraucht).`);
-const names = ['name', 'email', 'phone', 'street', 'houseNumber', 'zip', 'city', 'privacyConsent', 'reminderConsent', 'questions', 'website'];
+const names = ['name', 'email', 'phone', 'street', 'houseNumber', 'zip', 'city', 'privacyConsent', 'questions', 'website'];
 for (const n of names) if (!html.includes(`name="${n}"`)) fail(`public/index.html: Formularfeld name="${n}" fehlt.`);
 
 // 4. Gedruckte QR-Codes müssen weiter funktionieren
@@ -53,7 +53,7 @@ same('public/index.html', html, `${d}.${m}.${y}`, hint);
 same('public/index.html', html, `datetime="${y}-${m}-${d}`, hint);
 same('public/app.js', app, `'${y}-${m}-${d}T`, hint); // eventDate (Meta-Pixel)
 
-// 5b. Erinnerungs-Mails: Termine der Reihe nach und vor Beginn des Abends; Häkchen nie vorausgewählt (Einwilligung!)
+// 5b. Erinnerungs-Mails: Termine der Reihe nach und vor Beginn des Abends
 const startIso = `${y}-${m}-${d}T${EVENT.startUtc.slice(9, 11)}:${EVENT.startUtc.slice(11, 13)}:00Z`;
 let prevRem = '';
 for (const r of EVENT.reminders || []) {
@@ -61,7 +61,6 @@ for (const r of EVENT.reminders || []) {
   if (r.sendUtc <= prevRem) fail('netlify/lib/event.mjs: Erinnerungen müssen zeitlich der Reihe nach stehen (früheste zuerst).');
   prevRem = r.sendUtc;
 }
-if (/name="reminderConsent"[^>]*checked/.test(html)) fail('public/index.html: Häkchen „Erinnerung“ darf nicht vorausgewählt sein (Einwilligung muss freiwillig gesetzt werden).');
 
 // 6. Angezeigte freie Plätze (Kontingent): nie mehr als echt frei, nie 0 solange etwas frei ist,
 //    jede Anmeldung senkt die Anzeige um genau die gebuchten Plätze (außer bei Nachschub/echter Zahl)

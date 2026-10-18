@@ -44,7 +44,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Inhaltsblöcke** | weiß, Bild + Text zweispaltig, Eyebrow-Pill (hellgrau, blaue Schrift) über H2 |
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
 | **Anmeldung** | hellgrauer Abschnitt, max. 1200 px breit; Formular als weiße Karte (Radius 24 px, weicher Schatten); Felder 2-spaltig, alle gleich hoch (auch das Auswahlfeld) |
-| **Formular-Reihenfolge** | Name, E-Mail, Telefon → „Adresse ergänzen“ (Klappfeld) → Anzahl Begleitpersonen mit den Namensfeldern direkt darunter → Fragen vorab → Erinnerungs-Häkchen (freiwillig, nie vorausgewählt) → Datenschutz-Häkchen + Aufnahmen-Hinweis → Knopf. Am Computer Name/E-Mail nebeneinander, Telefon und Begleitpersonen-Auswahl je volle Breite |
+| **Formular-Reihenfolge** | Name, E-Mail, Telefon → „Adresse ergänzen“ (Klappfeld) → Anzahl Begleitpersonen mit den Namensfeldern direkt darunter → Fragen vorab → Datenschutz-Häkchen (nennt auch die Erinnerungs-Mails) + Hinweis „Erinnerung:“ + Aufnahmen-Hinweis → Knopf. Kein eigenes Häkchen für Erinnerungen (Wunsch: alles in einem). Am Computer Name/E-Mail nebeneinander, Telefon und Begleitpersonen-Auswahl je volle Breite |
 | **Begleitung** | Auswahl „Anzahl Begleitpersonen“: Keine / 1 Begleitperson / … (intern Plätze = Anmelder + Begleitung, max. aus `/admin` minus 1), darunter je ein Namensfeld |
 | **Aufnahmen-Hinweis** | unter dem Datenschutz-Häkchen, eingerückt, klein (13 px, Grau-Blau): „Hinweis zu Aufnahmen: …“ mit Link „Mehr dazu“ → `/datenschutz#aufnahmen`; in der Bestätigungs-Mail als Punkt „Fotos & Video“ unter „Gut zu wissen“ |
 | **Adresse** | Klappfeld (hellgrau hinterlegt, kein gestrichelter Rahmen) mit rundem „+“, „Adresse ergänzen“ und daneben klein „optional“ (wie bei „Ihre Fragen vorab“; Erklärsatz auf Wunsch entfernt) |
@@ -72,11 +72,11 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
-- **Erinnerungs-Mails** (eine Woche vorher, Vortag – nur mit Häkchen): gleicher Rahmen und gleiche Navy-Karte wie die
+- **Erinnerungs-Mails** (eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
   Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Nur noch eine Woche, Vorname!“ bzw. „Morgen ist es so weit, Vorname!“,
   Kalender-Knopf nur in der Wochen-Erinnerung, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem
   Knopf „Termin absagen“ (bewusst nicht Orange – Absagen ist nicht die Haupthandlung), ganz unten klein „Hier abbestellen“.
-  **Keine Werbung** (kein „Beratung buchen“) – die Einwilligung gilt nur für Erinnerungen.
+  **Kein Newsletter, keine Werbung** (kein „Beratung buchen“) – nur die Erinnerung an den Abend.
 - Seiten `/absagen` und `/erinnerung-abbestellen`: wie `/datenschutz` (blauer Kopf mit Logo, weiß), Buchung im hellgrauen
   Kasten, Knöpfe ohne Karte; der Link allein ändert nichts, erst der Knopf (Mailprogramme öffnen Links vorab zur Prüfung).
 - Interne Abend-Zusammenfassung (20 Uhr an info@): gleiche Farben, schlicht, Kennzahl-Kästen + Tabelle.

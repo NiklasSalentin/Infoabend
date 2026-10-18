@@ -1,7 +1,8 @@
-// Erinnerungs-Mails vor dem Infoabend – nur an Gäste mit Häkchen „Ja, erinnern Sie mich …“.
+// Erinnerungs-Mails vor dem Infoabend – gehören zur Anmeldung (kein Newsletter, keine Werbung), gehen an alle
+// bestätigten Gäste, außer sie haben abbestellt. Im Formular steht das im Datenschutz-Häkchen + Hinweis darunter.
 //
 // Beispiel (Termine in event.mjs → reminders):
-//   Frau Müller meldet sich am 20.10. an und setzt das Häkchen.
+//   Frau Müller meldet sich am 20.10. an.
 //   → Mi, 2.12. ab 10 Uhr: „Nur noch eine Woche“   → Di, 8.12. ab 10 Uhr: „Morgen ist es so weit“
 //   Herr Weber meldet sich erst am 5.12. an → bekommt nur die Erinnerung am Vortag.
 //   Wer sich weniger als 12 Stunden vor einer Erinnerung anmeldet, bekommt diese nicht (hat ja gerade die Bestätigung).
@@ -12,9 +13,6 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 import { EVENT, siteUrl } from './event.mjs';
 import { listRegistrations, markReminder, secretSalt } from './db.mjs';
 import { sendReminder, smtpPool } from './mail.mjs';
-
-/** Fassung des Einwilligungstextes im Formular (public/index.html) – bei Textänderung hochzählen */
-export const REMINDER_CONSENT_VERSION = 'erinnerung-v1-2026-10';
 
 const GAP_MS = 12 * 3600e3; // Mindestabstand zwischen Anmeldung/Nachrücken und Erinnerung
 const MAX_TRIES = 3; // so oft wird eine Mail an dieselbe Adresse höchstens versucht
@@ -53,7 +51,7 @@ export function dueStage(now = new Date()) {
 
 /** Bekommt diese Anmeldung die Erinnerung `stage` (noch)? */
 export function needsReminder(r, stage) {
-  if (r.status !== 'confirmed' || !r.reminder_consent) return false;
+  if (r.status !== 'confirmed' || r.reminder_optout_at) return false;
   if (r.reminders_sent?.[stage.key]) return false;
   // Spätere Erinnerung schon raus (z. B. nach Ausfall) → frühere nicht mehr nachschicken
   const later = EVENT.reminders.slice(EVENT.reminders.findIndex((s) => s.key === stage.key) + 1);
@@ -65,9 +63,9 @@ export function needsReminder(r, stage) {
 
 /** Überblick für /admin: je Erinnerung Zeitpunkt, verschickt, noch offen */
 export function reminderOverview(regs, now = new Date()) {
-  const withConsent = regs.filter((r) => r.status === 'confirmed' && r.reminder_consent);
+  const active = regs.filter((r) => r.status === 'confirmed' && !r.reminder_optout_at);
   return {
-    consent: withConsent.length,
+    active: active.length,
     confirmed: regs.filter((r) => r.status === 'confirmed').length,
     optout: regs.filter((r) => r.reminder_optout_at).length,
     selfCancelled: regs.filter((r) => r.cancelled_via === 'link').length,
@@ -77,7 +75,7 @@ export function reminderOverview(regs, now = new Date()) {
       sendUtc: s.sendUtc,
       started: now >= new Date(s.sendUtc),
       sent: regs.filter((r) => r.reminders_sent?.[s.key]).length,
-      open: withConsent.filter((r) => needsReminder(r, s)).length,
+      open: active.filter((r) => needsReminder(r, s)).length,
       failed: regs.filter((r) => (r.reminder_errors?.[s.key] || 0) >= MAX_TRIES).length,
     })),
   };

@@ -67,17 +67,17 @@ async function load() {
       <td>
         ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
         ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
-        ${r.reminder_consent && r.status !== 'cancelled' ? `<button data-a="reminder-off" data-id="${r.id}">Erinnerung aus</button>` : ''}
+        ${!r.reminder_optout_at && r.status === 'confirmed' ? `<button data-a="reminder-off" data-id="${r.id}">Erinnerung aus</button>` : ''}
         ${r.status !== 'cancelled' ? `<button data-a="cancel" data-id="${r.id}">Stornieren</button>` : `<button data-a="delete" data-id="${r.id}">Löschen</button>`}
       </td>
     </tr>`).join('');
 }
 
-// Erinnerungs-Mails: Häkchen gesetzt? Was ist schon raus?
+// Erinnerungs-Mails: abbestellt? Was ist schon raus?
 const day = (iso) => new Date(iso).toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' });
 function reminderState(r) {
   if (r.reminder_optout_at) return `<span class="rem">✗ Erinnerung abbestellt (${day(r.reminder_optout_at)})</span>`;
-  if (!r.reminder_consent) return '<span class="rem">– keine Erinnerung</span>';
+  if (r.status !== 'confirmed' && !r.reminders_sent) return '';
   const sent = Object.values(r.reminders_sent || {}).map(day);
   return `<span class="rem on">✓ Erinnerung${sent.length ? ` · verschickt ${sent.join(', ')}` : ''}</span>`;
 }
@@ -85,7 +85,7 @@ function reminderState(r) {
 function renderReminders() {
   const rm = data.reminders;
   if (!rm) return;
-  $('#rem-consent').textContent = `${rm.consent} / ${rm.confirmed}`;
+  $('#rem-consent').textContent = rm.active;
   $('#rem-optout').textContent = rm.optout;
   $('#rem-self').textContent = rm.selfCancelled;
   $('#rem-stages').innerHTML = rm.stages.map((s) => `<tr><td>${esc(s.label)}${s.started ? '' : ' <span class="note">– geplant</span>'}</td>
@@ -246,7 +246,7 @@ $('#rows').onclick = async (e) => {
 
 $('#csv').onclick = () => {
   const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source',
-    'reminder_consent', 'reminder_consent_at', 'reminder_optout_at', 'cancelled_via'];
+    'reminder_optout_at', 'cancelled_via'];
   const cell = (v) => '"' + String(Array.isArray(v) ? v.join(', ') : v ?? '').replace(/"/g, '""') + '"';
   const csv = '﻿' + [cols.join(';'), ...data.registrations.map((r) => cols.map((c) => cell(r[c])).join(';'))].join('\n');
   const a = document.createElement('a');
