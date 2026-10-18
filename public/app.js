@@ -149,6 +149,8 @@ form.addEventListener('submit', async (e) => {
     if (data.status === 'confirmed' || data.status === 'waitlist') {
       // Meta-Pixel (nur mit Einwilligung): erfolgreiche Anmeldung bzw. Warteliste als „Lead“ melden
       metaLead(data.status === 'confirmed' ? 'Anmeldung' : 'Warteliste');
+      // Google Ads (nur mit Einwilligung): Conversion „Anmeldung Infoabend“ – nur bei bestätigter Anmeldung
+      if (data.status === 'confirmed') window.adsConversion?.();
       form.hidden = true;
       $('#seat-hint').hidden = true;
       $(data.status === 'confirmed' ? '#success' : '#waitlisted').hidden = false;

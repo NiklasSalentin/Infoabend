@@ -116,6 +116,23 @@ Nichts einzurichten. In `/admin` im Kasten **Besucher** stehen:
 Gespeichert wird nur ein unumkehrbarer Code der IP-Adresse (keine IP, kein Cookie). Suchmaschinen-Roboter
 zählen nicht. **Zahlen zurücksetzen** setzt alles auf null (z. B. nach eigenen Tests vor dem Start).
 
+### 7a. Google Ads – Conversion „Anmeldung Infoabend“ (eingebaut)
+
+Bereits eingerichtet für das Google-Ads-Konto **AW-17036255610**, Conversion-Aktion „Anmeldung Infoabend“
+(Label `1lhoCPqMrqEdEPrCwrs_`, steht in `netlify/functions/config.mjs`; per Netlify `GOOGLE_ADS_ID` /
+`GOOGLE_ADS_LABEL` änderbar, `GOOGLE_ADS_ID=off` schaltet ab).
+
+- Der Google-Tag lädt **erst nach „Erlauben“** im Hinweis unten (Consent Mode v2, Einwilligung „granted“).
+- Die Conversion wird **nur nach einer bestätigten Anmeldung** gemeldet (Erfolgsmeldung auf derselben Seite,
+  „Variante B“) – nicht beim Öffnen und nicht bei Warteliste.
+- Datenschutzhinweise Abschnitt 7 sind ergänzt.
+
+**Testen:** Seite mit `?gclid=test` öffnen → „Erlauben“ → Testanmeldung absenden → mit der Chrome-Erweiterung
+„Google Tag Assistant“ prüfen, ob `AW-17036255610` und das Conversion-Ereignis feuern → Testanmeldung in
+`/admin` stornieren und löschen. Nach 24–48 Stunden zeigt Google Ads unter **Ziele → Conversions** „Aktiv“.
+
+Wichtig: Google zählt nur Besucher, die „Erlauben“ geklickt haben – die echte Zahl steht in `/admin`.
+
 ### 7. Meta-Pixel (Facebook-/Instagram-Werbung) einrichten
 
 Mit dem Pixel sieht Meta, wer nach einer Anzeige auf die Seite kommt und sich anmeldet – damit lassen sich
