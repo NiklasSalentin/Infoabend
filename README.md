@@ -292,7 +292,8 @@ bekommen automatisch:
 
 | Wann | Mail |
 |---|---|
-| Mi, 2.12., ab 10 Uhr | „In einer Woche: Infoabend …“ (mit Kalender-Knopf) |
+| Mi, 25.11., ab 10 Uhr | „In zwei Wochen: Infoabend …“ (mit Kalender-Knopf, ggf. Zusatzinfo) |
+| Mi, 2.12., ab 10 Uhr | „In einer Woche: Infoabend …“ (mit Kalender-Knopf, ggf. Zusatzinfo) |
 | Di, 8.12., ab 10 Uhr | „Morgen ist es so weit: Infoabend …“ |
 
 In jeder Erinnerung: Knopf **„Termin absagen“** und Link **„Hier abbestellen“**. Beispiel: Frau Müller klickt
@@ -301,7 +302,9 @@ nach und bekommt sofort die Einladung. In `/admin` steht bei ihr „Storniert ·
 Zusammenfassung an info@. Wer sich erst kurz vorher (unter 12 Stunden) anmeldet, bekommt die jeweilige Erinnerung nicht.
 In `/admin` → **Erinnerungs-Mails**: wie viele Gäste sie bekommen, was verschickt ist, **Test an info@ schicken**;
 je Anmeldung „✓ Erinnerung“ bzw. „✗ abbestellt“ und der Knopf **Erinnerung aus** (z. B. wenn jemand am Telefon darum bittet).
-Termine ändern: `netlify/lib/event.mjs` → `reminders`. Versand läuft alle 10 Minuten in kleinen Portionen.
+Termine und **Zusatzinfo** ändern: `netlify/lib/event.mjs` → `reminders`. Beispiel für den Kasten in der
+Zwei-Wochen-Mail: `extra: { title: 'Ihre Fragen', text: 'Antworten Sie auf diese Mail – wir greifen Ihre Frage am Abend auf.' }`
+(leer = kein Kasten; nur Infos zum Abend, keine Werbung). Versand läuft alle 10 Minuten in kleinen Portionen.
 
 Apple Wallet und Google Wallet sind für später vorgesehen (Apple-Developer-Konto bzw.
 Google-Wallet-Ausstellerkonto nötig).

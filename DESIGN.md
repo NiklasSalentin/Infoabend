@@ -72,9 +72,9 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
-- **Erinnerungs-Mails** (eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
-  Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Nur noch eine Woche, Vorname!“ bzw. „Morgen ist es so weit, Vorname!“,
-  Kalender-Knopf nur in der Wochen-Erinnerung, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem
+- **Erinnerungs-Mails** (zwei Wochen, eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
+  Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Noch zwei Wochen, …“ / „Nur noch eine Woche, Vorname!“ / „Morgen ist es so weit, Vorname!“,
+  Kalender-Knopf nicht in der Vortags-Mail, optional **Zusatzinfo-Kasten** (Navy, Gold-Pill mit Titel, weißer Text) vor „Gut zu wissen“, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem
   Knopf „Termin absagen“ (bewusst nicht Orange – Absagen ist nicht die Haupthandlung), ganz unten klein „Hier abbestellen“.
   **Kein Newsletter, keine Werbung** (kein „Beratung buchen“) – nur die Erinnerung an den Abend.
 - Seiten `/absagen` und `/erinnerung-abbestellen`: wie `/datenschutz` (blauer Kopf mit Logo, weiß), Buchung im hellgrauen

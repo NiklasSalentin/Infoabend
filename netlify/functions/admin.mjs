@@ -80,7 +80,7 @@ async function handle(req, context) {
       return json({ ok: true });
     }
     case 'reminder-test': {
-      // Beide Erinnerungen mit Beispiel-Gast an info@ – zum Ansehen vor dem Versand
+      // Alle Erinnerungen mit Beispiel-Gast an info@ – zum Ansehen vor dem Versand
       try { await sendReminderTest(); } catch (e) { return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502); }
       return json({ ok: true });
     }

@@ -93,7 +93,7 @@ function renderReminders() {
 }
 
 $('#reminder-test').onclick = async () => {
-  if (!confirm('Beide Erinnerungen (eine Woche vorher, Vortag) mit Beispiel-Gast „Maria Muster“ an info@ schicken?')) return;
+  if (!confirm('Alle Erinnerungen (zwei Wochen vorher, eine Woche vorher, Vortag) mit Beispiel-Gast „Maria Muster“ an info@ schicken?')) return;
   try { await api('POST', { action: 'reminder-test' }); alert('Verschickt – bitte im Postfach info@ nachsehen.'); } catch (e) { alert(e.message); }
 };
 

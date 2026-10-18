@@ -3,8 +3,9 @@
 //
 // Beispiel (Termine in event.mjs → reminders):
 //   Frau Müller meldet sich am 20.10. an.
-//   → Mi, 2.12. ab 10 Uhr: „Nur noch eine Woche“   → Di, 8.12. ab 10 Uhr: „Morgen ist es so weit“
-//   Herr Weber meldet sich erst am 5.12. an → bekommt nur die Erinnerung am Vortag.
+//   → Mi, 25.11. ab 10 Uhr: „Noch zwei Wochen“ → Mi, 2.12.: „Nur noch eine Woche“ → Di, 8.12.: „Morgen ist es so weit“
+//   Herr Weber meldet sich erst am 28.11. an → bekommt „eine Woche“ und „Vortag“.
+//   Zusatzinfo-Kasten je Erinnerung: event.mjs → reminders → extra.
 //   Wer sich weniger als 12 Stunden vor einer Erinnerung anmeldet, bekommt diese nicht (hat ja gerade die Bestätigung).
 //
 // In jeder Erinnerung: Link „Termin absagen“ (Platz wird frei, Warteliste rückt nach) und „Erinnerungen abbestellen“.
@@ -117,7 +118,7 @@ export async function runReminders({ now = new Date(), budgetMs = 20000 } = {}) 
   return `${stage.key}: ${sent} verschickt, ${due.length - sent} offen`;
 }
 
-/** Test aus /admin: beide Erinnerungen mit Beispiel-Gast an info@ (Links führen auf eine Beispiel-Seite) */
+/** Test aus /admin: alle Erinnerungen mit Beispiel-Gast an info@ (Links führen auf eine Beispiel-Seite) */
 export async function sendReminderTest() {
   const sample = { id: 'test', name: 'Maria Muster', seats: 2, companions: ['Max Muster'] };
   const links = await reminderLinks('test');

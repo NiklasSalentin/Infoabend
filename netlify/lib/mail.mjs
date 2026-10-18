@@ -166,30 +166,50 @@ export async function sendConfirmation(reg) {
   });
 }
 
-// „eine Woche vorher und am Vortag“ – aus den Terminen in event.mjs
-const reminderWhen = () => EVENT.reminders.map((r) => r.label.replace(/\s*\(.*\)$/, '')).join(' und ');
+// „zwei Wochen vorher, eine Woche vorher und am Vortag“ – aus den Terminen in event.mjs
+const reminderWhen = () => EVENT.reminders.map((r) => r.label.replace(/\s*\(.*\)$/, ''))
+  .reduce((a, t, i, all) => (i === 0 ? t : `${a}${i === all.length - 1 ? ' und ' : ', '}${t}`), '');
+
+// Texte je Erinnerung (Schlüssel wie in event.mjs → reminders)
+const REMINDER_TEXT = {
+  twoweeks: { title: 'Noch zwei Wochen', subject: 'In zwei Wochen', when: 'in <strong>zwei Wochen</strong> ist es so weit' },
+  week: { title: 'Nur noch eine Woche', subject: 'In einer Woche', when: 'in <strong>einer Woche</strong> ist es so weit' },
+  day: { title: 'Morgen ist es so weit', subject: 'Morgen ist es so weit', when: '<strong>morgen</strong> ist es so weit' },
+};
+const reminderText = (stage) => REMINDER_TEXT[stage] || REMINDER_TEXT.week;
+
+// Kasten „Zusatzinfo“ aus event.mjs (extra: { title, text }) – leer = kein Kasten
+function extraBox(stage) {
+  const extra = EVENT.reminders.find((r) => r.key === stage)?.extra;
+  if (!extra?.text) return '';
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 24px;background:${C.navy};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
+    <p style="margin:0 0 10px">${pill(esc(extra.title || 'Zusatzinfo'))}</p>
+    <p style="margin:0;color:#ffffff;font-size:15px;line-height:1.6">${esc(extra.text).replace(/\n/g, '<br>')}</p>
+  </td></tr></table>`;
+}
 
 /**
- * Erinnerungs-Mail an alle bestätigten Gäste (gehört zur Anmeldung). stage: 'week' | 'day'.
- * Bewusst kein Newsletter und keine Werbung (kein „Beratung buchen“) – nur die Erinnerung an den Abend.
- * Unten der Link zum Abbestellen.
+ * Erinnerungs-Mail an alle bestätigten Gäste (gehört zur Anmeldung). stage: 'twoweeks' | 'week' | 'day'.
+ * Bewusst kein Newsletter und keine Werbung (kein „Beratung buchen“) – nur die Erinnerung an den Abend
+ * (plus ggf. kleine Zusatzinfo zum Abend aus event.mjs). Unten der Link zum Abbestellen.
  */
 export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
   const day = stage === 'day';
+  const t = reminderText(stage);
   return layout({
     preheader: day
       ? `Morgen ist es so weit: Einlass ${EVENT.admission}, Beginn ${EVENT.start}, ${EVENT.venue}.`
-      : `In einer Woche: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
-    hero: heroTitle(day ? `Morgen ist es so weit, ${firstName(reg.name)}!` : `Nur noch eine Woche, ${firstName(reg.name)}!`,
+      : `${t.subject}: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
+    hero: heroTitle(`${t.title}, ${firstName(reg.name)}!`,
       'Erinnerung', `Wir freuen uns, Sie beim Infoabend „${EVENT.title}“ begrüßen zu dürfen.`) + seatCard(reg),
     body: `
       <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
-      <p style="margin:0 0 22px">${day ? '<strong>morgen</strong> ist es so weit' : 'in <strong>einer Woche</strong> ist es so weit'}:
+      <p style="margin:0 0 22px">${t.when}:
       Für Sie sind <strong>${seatsText(reg.seats)}</strong> reserviert. Sie stehen mit Ihrem Namen auf unserer Gästeliste –
       ein Ticket brauchen Sie nicht.</p>
       ${day ? '' : `<p style="margin:0">${btn(siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
       <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>`}
-
+      ${extraBox(stage)}
       <p style="margin:0 0 12px;color:${C.blue};font-size:18px;font-weight:700">Gut zu wissen</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
         ${tip('Freie Platzwahl', `Einlass ab ${EVENT.admission}, los geht es um ${EVENT.start}.`)}
@@ -210,9 +230,7 @@ export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
   });
 }
 
-export const reminderSubject = (stage) => (stage === 'day'
-  ? `Morgen ist es so weit: Infoabend „${EVENT.title}“`
-  : `In einer Woche: Infoabend „${EVENT.title}“`);
+export const reminderSubject = (stage) => `${reminderText(stage).subject}: Infoabend „${EVENT.title}“`;
 
 /** Erinnerung verschicken – links = { cancelUrl, unsubscribeUrl }; `via` = smtpPool() (viele Mails nacheinander) */
 export async function sendReminder(reg, stage, links, via = smtp(), to = reg.email) {
