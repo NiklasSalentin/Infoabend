@@ -141,10 +141,17 @@ export function confirmationHtml(reg) {
         ${tip('Freie Platzwahl', `Einlass ab ${EVENT.admission}, los geht es um ${EVENT.start}.`)}
         ${tip('Parken', 'kostenlose Parkplätze direkt an der Festhalle.')}
         ${tip('Kostenlos', 'die Teilnahme kostet nichts.')}
-        ${tip('Fotos &amp; Video', 'am Abend fotografieren und filmen wir für unsere Öffentlichkeitsarbeit. Sie möchten nicht erkennbar zu sehen sein? Sagen Sie es uns beim Einlass.')}
         ${tip('Verhindert?', 'antworten Sie kurz auf diese E-Mail, dann geben wir Ihren Platz frei.')}
         ${tip('Erinnerung', `wir erinnern Sie ${reminderWhen()} kurz per E-Mail an den Abend.`)}
       </table>
+
+      <p style="margin:14px 0 8px;color:${C.blue};font-size:18px;font-weight:700">Fotos, Video &amp; Ton am Abend</p>
+      <p style="margin:0 0 10px">Am Infoabend fotografieren und filmen wir und zeichnen Ton auf – zum Beispiel die Vorträge.
+      Die Aufnahmen nutzen wir für unsere Öffentlichkeitsarbeit, etwa auf unserer Website, in sozialen Netzwerken und in Drucksachen.
+      Dabei können auch ${reg.seats > 1 ? 'Sie und Ihre Begleitung' : 'Sie'} als Teil des Publikums zu sehen oder zu hören sein.</p>
+      <p style="margin:0 0 4px"><strong>Sie möchten nicht erkennbar zu sehen sein?</strong> Sagen Sie es uns einfach beim Einlass –
+      oder antworten Sie kurz auf diese E-Mail.</p>
+      <p style="margin:0;font-size:14px"><a href="${EVENT.privacyUrl}#aufnahmen" style="color:${C.blue};font-weight:700;text-decoration:none">Mehr dazu in den Datenschutzhinweisen&nbsp;›</a></p>
 
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 22px;background:${C.light};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
         <p style="margin:0 0 12px;font-size:16px;line-height:1.5"><strong>Sie möchten schon vorher sprechen?</strong><br>
