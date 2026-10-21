@@ -46,7 +46,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Anmeldung** | hellgrauer Abschnitt, max. 1200 px breit; Formular als weiße Karte (Radius 24 px, weicher Schatten); Felder 2-spaltig, alle gleich hoch (auch das Auswahlfeld) |
 | **Formular-Reihenfolge** | Name, E-Mail, Telefon → „Adresse ergänzen“ (Klappfeld) → Anzahl Begleitpersonen mit den Namensfeldern direkt darunter → Fragen vorab → Datenschutz-Häkchen + Aufnahmen-Hinweis → Knopf. Am Computer Name/E-Mail nebeneinander, Telefon und Begleitpersonen-Auswahl je volle Breite |
 | **Begleitung** | Auswahl „Anzahl Begleitpersonen“: Keine / 1 Begleitperson / … (intern Plätze = Anmelder + Begleitung, max. aus `/admin` minus 1), darunter je ein Namensfeld |
-| **Aufnahmen-Hinweis** | unter dem Datenschutz-Häkchen, eingerückt, klein (13 px, Grau-Blau): „Hinweis zu Aufnahmen: …“ mit Link „Mehr dazu“ → `/datenschutz#aufnahmen`; in der Bestätigungs-Mail als Punkt „Fotos & Video“ unter „Gut zu wissen“ |
+| **Aufnahmen-Hinweis** | bewusst zurückhaltend (Wunsch, Okt. 2026): Datenschutz-Häkchen ohne Aufnahmen-Zusatz, darunter eingerückt, klein (13 px, Grau-Blau) nur ein Satz „Übrigens: Am Abend entstehen Fotos und Videos – mehr dazu in Ihrer Bestätigungs-Mail und hier.“ (Link → `/datenschutz#aufnahmen`). Ausführlich steht es in der Bestätigungs-Mail als eigener Abschnitt „Fotos, Video & Ton am Abend“ nach „Gut zu wissen“ |
 | **Adresse** | Klappfeld (hellgrau hinterlegt, kein gestrichelter Rahmen) mit rundem „+“, „Adresse ergänzen“ und daneben klein „optional“ (wie bei „Ihre Fragen vorab“; Erklärsatz auf Wunsch entfernt) |
 | **Erfolgsmeldung** | weiße Karte wie das Formular (Radius 24 px, weicher Schatten), oben runder blauer Kreis mit weißem Häkchen (Warteliste: Gold-Kreis mit Uhr) – **keine farbige Linie links** (bog sich an der runden Ecke krumm), ein Knopf „Termin in den Kalender eintragen“ (`/kalender` erkennt das Gerät) |
 | **Fuß** | 1:1 Hauptseite, ohne Menü; Impressum, Datenschutz, Cookie-Einstellungen |
@@ -63,7 +63,7 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
   **„Herzlich willkommen, Vorname!“** → Zeile „Wir freuen uns, Sie beim Infoabend … begrüßen zu dürfen.“ →
   **Navy-Bestätigungskarte** (Reserviert für · Plätze · Begleitung, gestrichelte Trennlinie, Gold-Datum,
   Einlass/Beginn, Ort, Route-Links in Gold) → weißer Teil: kurzer Dank, ein Knopf „Termin in den Kalender
-  eintragen“, „Gut zu wissen“ mit goldenen Punkten, hellgrauer Kasten mit orangem „Persönliche Beratung buchen“
+  eintragen“, „Gut zu wissen“ mit goldenen Punkten, Abschnitt „Fotos, Video & Ton am Abend“ (was, wofür, Widerspruch beim Einlass oder per Antwort, Link Datenschutz), hellgrauer Kasten mit orangem „Persönliche Beratung buchen“
   → Navy-Fuß mit Adresse, Telefon, Impressum, Datenschutz.
 - **Keine Kopie der Seite** – die Mail ist eine Bestätigung im Design, keine Wiederholung der Seitentexte.
 - Betreff: „Ihr Sitzplatz ist gesichert!“ · keine Ticketnummer.
