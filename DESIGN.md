@@ -51,7 +51,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Erfolgsmeldung** | weiße Karte wie das Formular (Radius 24 px, weicher Schatten), oben runder blauer Kreis mit weißem Häkchen (Warteliste: Gold-Kreis mit Uhr) – **keine farbige Linie links** (bog sich an der runden Ecke krumm), ein Knopf „Termin in den Kalender eintragen“ (`/kalender` erkennt das Gerät) |
 | **Fuß** | 1:1 Hauptseite, ohne Menü; Impressum, Datenschutz, Cookie-Einstellungen |
 | **Einwilligungs-Hinweis** | weiße Karte unten (Google Ads, ggf. Meta-Pixel), „Ablehnen“ und „Erlauben“ **gleich groß und gleich gestaltet** (rechtlich wichtig) |
-| **Zugang Verwaltung** | kein sichtbarer Link auf der öffentlichen Seite – `/admin` direkt aufrufen |
+| **Zugang Verwaltung** | kleines Schloss ganz unten rechts in der Fußzeile, 15 % Deckkraft (beim Darüberfahren 70 %), Tippfläche 36 px → `/admin`. **Bleibt – ausdrücklicher Wunsch von Niklas** (wurde einmal versehentlich entfernt) |
 
 Knöpfe: Pillen-Form (Radius 120 px), fett. Hauptknopf Dunkelblau mit rundem Icon-Kreis; Rahmen-Knopf
 blau umrandet. Orange nur für die eine wichtigste Handlung.
