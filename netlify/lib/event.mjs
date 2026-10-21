@@ -8,6 +8,15 @@ export const EVENT = {
   // Kalenderzeiten (Europe/Berlin, Winterzeit = UTC+1)
   startUtc: '20261209T170000Z',
   endUtc: '20261209T200000Z',
+  // Erinnerungs-Mails an alle bestätigten Gäste (netlify/lib/reminders.mjs) – kein Newsletter, nie Werbung.
+  // Versand ab sendUtc (UTC; im Winter deutsche Zeit minus 1 Stunde: 10:00 Uhr → 09:00Z).
+  // extra: kleiner Kasten „Zusatzinfo“ in dieser Mail – leer lassen ('') = kein Kasten. Beispiel:
+  //   extra: { title: 'Ihre Fragen', text: 'Sie haben eine Frage? Antworten Sie auf diese Mail – wir greifen sie am Abend auf.' }
+  reminders: [
+    { key: 'twoweeks', sendUtc: '2026-11-25T09:00:00Z', label: 'zwei Wochen vorher (Mi, 25.11., ab 10 Uhr)', extra: '' },
+    { key: 'week', sendUtc: '2026-12-02T09:00:00Z', label: 'eine Woche vorher (Mi, 2.12., ab 10 Uhr)', extra: '' },
+    { key: 'day', sendUtc: '2026-12-08T09:00:00Z', label: 'am Vortag (Di, 8.12., ab 10 Uhr)' },
+  ],
   venue: 'Festhalle Birkesdorf',
   address: 'An der Festhalle 3, 52353 Düren-Birkesdorf',
   organizer: 'Baufinanz Düren GmbH & Co. KG',

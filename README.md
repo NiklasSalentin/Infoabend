@@ -141,7 +141,7 @@ nur die Pixel-Nummer.
 
 Rechtlich läuft der Pixel nur mit Einwilligung: Besucher sehen unten einen Hinweis mit **„Erlauben“ /
 „Ablehnen“**; erst nach „Erlauben“ wird der Pixel geladen. Widerruf jederzeit über **Cookie-Einstellungen** im
-Fuß der Seite. Die Datenschutzhinweise (Abschnitt 6) sind schon angepasst.
+Fuß der Seite. Die Datenschutzhinweise (Abschnitt 8) sind schon angepasst.
 
 **Stand 14.10.2026: eingerichtet** mit dem Pixel von baufinanz-dueren.de (ID `1759216724481642`, steht in Netlify
 unter `META_PIXEL_ID`). Die Schritte unten sind zum Nachschlagen, z. B. bei einem Pixel-Wechsel.
@@ -303,6 +303,26 @@ in `scripts/qr-codes.mjs` eine Zeile hinzufügen und `npm install && npm run qr`
   im Browser landen im Google Kalender mit fertig ausgefülltem Termin
 - Knopf **Persönliche Beratung buchen**
 
+**Erinnerungs-Mails – gehören zur Anmeldung, kein Newsletter.** Im Formular nennt das Datenschutz-Häkchen die
+Erinnerungs-Mails mit, darunter steht ein kurzer Hinweis „Erinnerung: …“ (kein eigenes Häkchen). Alle bestätigten Gäste
+bekommen automatisch:
+
+| Wann | Mail |
+|---|---|
+| Mi, 25.11., ab 10 Uhr | „In zwei Wochen: Infoabend …“ (mit Kalender-Knopf, ggf. Zusatzinfo) |
+| Mi, 2.12., ab 10 Uhr | „In einer Woche: Infoabend …“ (mit Kalender-Knopf, ggf. Zusatzinfo) |
+| Di, 8.12., ab 10 Uhr | „Morgen ist es so weit: Infoabend …“ |
+
+In jeder Erinnerung: Knopf **„Termin absagen“** und Link **„Hier abbestellen“**. Beispiel: Frau Müller klickt
+„Termin absagen“ → Seite „Termin absagen?“ → „Ja, Platz freigeben“ → ihre 2 Plätze sind frei, die Warteliste rückt
+nach und bekommt sofort die Einladung. In `/admin` steht bei ihr „Storniert · selbst abgesagt“, abends steht sie in der
+Zusammenfassung an info@. Wer sich erst kurz vorher (unter 12 Stunden) anmeldet, bekommt die jeweilige Erinnerung nicht.
+In `/admin` → **Erinnerungs-Mails**: wie viele Gäste sie bekommen, was verschickt ist, **Test an info@ schicken**;
+je Anmeldung „✓ Erinnerung“ bzw. „✗ abbestellt“ und der Knopf **Erinnerung aus** (z. B. wenn jemand am Telefon darum bittet).
+Termine und **Zusatzinfo** ändern: `netlify/lib/event.mjs` → `reminders`. Beispiel für den Kasten in der
+Zwei-Wochen-Mail: `extra: { title: 'Ihre Fragen', text: 'Antworten Sie auf diese Mail – wir greifen Ihre Frage am Abend auf.' }`
+(leer = kein Kasten; nur Infos zum Abend, keine Werbung). Versand läuft alle 10 Minuten in kleinen Portionen.
+
 Apple Wallet und Google Wallet sind für später vorgesehen (Apple-Developer-Konto bzw.
 Google-Wallet-Ausstellerkonto nötig).
 
@@ -310,6 +330,7 @@ Google-Wallet-Ausstellerkonto nötig).
 
 - [ ] Testanmeldung mit eigener E-Mail: Mail da? Kalendereintrag (iPhone/Outlook und Google) klappt?
 - [ ] Ohne Datenschutz-Häkchen lässt sich nicht absenden
+- [ ] `/admin` → Erinnerungs-Mails → **Test an info@ schicken**: beide Erinnerungen ansehen, „Termin absagen“ anklicken (Test ändert nichts)
 - [ ] Gleiche E-Mail zweimal → wird abgelehnt
 - [ ] `/admin`: Testanmeldung sichtbar → **Stornieren** → **Löschen**, danach **Zahlen zurücksetzen**
 - [ ] QR-Codes mit dem Handy scannen (alle vier)

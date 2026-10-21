@@ -53,6 +53,15 @@ same('public/index.html', html, `${d}.${m}.${y}`, hint);
 same('public/index.html', html, `datetime="${y}-${m}-${d}`, hint);
 same('public/app.js', app, `'${y}-${m}-${d}T`, hint); // eventDate (Meta-Pixel)
 
+// 5b. Erinnerungs-Mails: Termine der Reihe nach und vor Beginn des Abends
+const startIso = `${y}-${m}-${d}T${EVENT.startUtc.slice(9, 11)}:${EVENT.startUtc.slice(11, 13)}:00Z`;
+let prevRem = '';
+for (const r of EVENT.reminders || []) {
+  if (!(new Date(r.sendUtc) < new Date(startIso))) fail(`netlify/lib/event.mjs: Erinnerung „${r.key}“ (${r.sendUtc}) liegt nicht vor dem Beginn des Abends.`);
+  if (r.sendUtc <= prevRem) fail('netlify/lib/event.mjs: Erinnerungen müssen zeitlich der Reihe nach stehen (früheste zuerst).');
+  prevRem = r.sendUtc;
+}
+
 // 6. Angezeigte freie Plätze (Kontingent): nie mehr als echt frei, nie 0 solange etwas frei ist,
 //    jede Anmeldung senkt die Anzeige um genau die gebuchten Plätze (außer bei Nachschub/echter Zahl)
 const { shownFree } = await import(root + 'public/plaetze.js');
