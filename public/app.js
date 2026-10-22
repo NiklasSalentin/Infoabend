@@ -98,7 +98,9 @@ async function loadStatus() {
     $('#seats-prefix').textContent = full ? 'Ausgebucht' : 'Noch';
     $('#seats-free').textContent = full ? '' : s.free;
     $('#seats-label').textContent = full ? 'Warteliste offen' : s.free === 1 ? 'Platz frei' : 'Plätze frei';
-    $('#seats-badge').hidden = !s.open;
+    // Schalter „Freie Plätze anzeigen“ in /admin: aus → kein Schild mit Zahl (nur „Ausgebucht – Warteliste offen“)
+    const showFree = s.showFree !== false;
+    $('#seats-badge').hidden = !s.open || (!showFree && !full);
     if (s.attendees >= 10) {
       $('#attendees').textContent = s.attendees;
       $('#social-proof').hidden = false;
@@ -115,7 +117,9 @@ async function loadStatus() {
       // maxPerPerson zählt den Anmelder mit – angezeigt werden nur die Begleitpersonen (max. 4 Plätze → „max. 3 Begleitpersonen“)
       const companions = s.maxPerPerson - 1;
       const companionText = companions < 1 ? '' : ` · max. ${companions} ${companions === 1 ? 'Begleitperson' : 'Begleitpersonen'}`;
-      hint.textContent = `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} ${s.free === 1 ? 'Platz' : 'Plätze'} frei${companionText}`;
+      hint.textContent = showFree
+        ? `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} ${s.free === 1 ? 'Platz' : 'Plätze'} frei${companionText}`
+        : companionText.replace(' · m', 'M') + (companionText ? ' pro Anmeldung' : '');
       btn.textContent = 'Platz verbindlich reservieren';
     }
     renderSeats();

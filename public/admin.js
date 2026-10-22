@@ -35,11 +35,12 @@ async function load() {
   $('#total').value = s.total_seats;
   $('#max').value = s.max_per_person;
   $('#open').checked = s.registration_open;
+  $('#show-free').checked = s.show_free !== false;
   $('#display-batch').value = s.display_batch;
   $('#display-refill').value = s.display_refill;
   renderPreview();
   const wait = waitlist();
-  $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei (Seite zeigt: ${s.shown_free}${s.shown_released ? ', „weitere freigegeben“' : ''}) · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
+  $('#summary').textContent = `${s.booked} von ${s.total_seats} Plätzen belegt · ${s.free} frei (${s.show_free === false ? 'Seite zeigt keine Zahl' : `Seite zeigt: ${s.shown_free}${s.shown_released ? ', „weitere freigegeben“' : ''}`}) · ${s.attendees} Anmeldungen · ${wait.length} auf Warteliste (${wait.reduce((a, r) => a + r.seats, 0)} Plätze)`;
 
   const pending = data.registrations.filter((r) => r.invite_pending && r.status === 'confirmed');
   $('#pending').hidden = !pending.length;
@@ -214,7 +215,7 @@ $('#save').onclick = async () => {
   try {
     const r = await api('POST', {
       action: 'settings', totalSeats: $('#total').value, maxPerPerson: $('#max').value, open: $('#open').checked,
-      displayBatch: $('#display-batch').value, displayRefill: $('#display-refill').value,
+      displayBatch: $('#display-batch').value, displayRefill: $('#display-refill').value, showFree: $('#show-free').checked,
     });
     if (r.promoted?.length) return sendInvites(r.promoted);
     await load();

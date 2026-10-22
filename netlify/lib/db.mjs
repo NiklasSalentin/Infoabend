@@ -14,7 +14,7 @@ import { shownFree } from '../../public/plaetze.js';
 
 // display_batch: Kontingent – so viele freie Plätze zeigt die Seite höchstens (0 = immer die echte Zahl)
 // display_refill: zeigt die Seite nur noch so wenige, werden weitere Plätze freigegeben (public/plaetze.js)
-const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 4, registration_open: true, display_batch: 120, display_refill: 30 };
+const DEFAULT_SETTINGS = { total_seats: 120, max_per_person: 4, registration_open: true, display_batch: 120, display_refill: 30, show_free: true };
 
 let storeOptions = {};
 /** Nur für Tests: anderen Speicher verwenden (z. B. lokalen BlobsServer). */
@@ -60,6 +60,7 @@ function summarize(ev) {
     shown_released: shown.released, // gerade weitere Plätze freigegeben → Hinweis auf der Seite
     display_batch: s.display_batch,
     display_refill: s.display_refill,
+    show_free: s.show_free !== false, // Schalter in /admin: freie Plätze auf der Seite anzeigen
     max_per_person: s.max_per_person,
     registration_open: s.registration_open,
     attendees: confirmed.length,
@@ -208,9 +209,9 @@ export function deleteRegistration(id) {
 }
 
 /** Einstellungen speichern – mehr Plätze gehen sofort der Reihe nach an die Warteliste. Ergebnis: { promoted } */
-export function updateSettings({ total_seats, max_per_person, registration_open, display_batch, display_refill }) {
+export function updateSettings({ total_seats, max_per_person, registration_open, display_batch, display_refill, show_free = true }) {
   return mutate('event', newEvent, (ev) => {
-    ev.settings = { total_seats, max_per_person, registration_open, display_batch, display_refill, updated_at: new Date().toISOString() };
+    ev.settings = { total_seats, max_per_person, registration_open, display_batch, display_refill, show_free, updated_at: new Date().toISOString() };
     return { data: ev, result: { promoted: fillFromWaitlist(ev) } };
   });
 }

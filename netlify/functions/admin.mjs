@@ -46,7 +46,7 @@ async function handle(req, context) {
       if (!(total >= 0) || !(max >= 1) || !(batch >= 0) || !(refill >= 0)) return json({ error: 'Ungültige Werte' }, 400);
       const { promoted } = await updateSettings({
         total_seats: total, max_per_person: max, registration_open: b.open !== false,
-        display_batch: batch, display_refill: refill,
+        display_batch: batch, display_refill: refill, show_free: b.showFree !== false,
       });
       // Einladungs-Mails an Nachgerückte verschickt /admin danach einzeln (Aktion „resend“)
       return json({ ok: true, promoted: promoted.map((r) => r.id) });
