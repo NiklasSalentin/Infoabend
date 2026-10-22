@@ -317,8 +317,8 @@ bekommen automatisch:
 
 In jeder Erinnerung: Knopf **„Termin absagen“** und Link **„Hier abbestellen“**. Beispiel: Frau Müller klickt
 „Termin absagen“ → Seite „Termin absagen?“ → „Ja, Platz freigeben“ → ihre 2 Plätze sind frei, die Warteliste rückt
-nach und bekommt sofort die Einladung. In `/admin` steht bei ihr „Storniert · selbst abgesagt“, abends steht sie in der
-Zusammenfassung an info@. Wer sich erst kurz vorher (unter 12 Stunden) anmeldet, bekommt die jeweilige Erinnerung nicht.
+nach und bekommt sofort die Einladung. In `/admin` steht bei ihr „Storniert · selbst abgesagt“, außerdem steht sie in der
+nächsten Update-Mail. Wer sich erst kurz vorher (unter 12 Stunden) anmeldet, bekommt die jeweilige Erinnerung nicht.
 In `/admin` → **Erinnerungs-Mails**: wie viele Gäste sie bekommen, was verschickt ist, **Test an info@ schicken**;
 je Anmeldung „✓ Erinnerung“ bzw. „✗ abbestellt“ und der Knopf **Erinnerung aus** (z. B. wenn jemand am Telefon darum bittet).
 Termine und **Zusatzinfo** ändern: `netlify/lib/event.mjs` → `reminders`. Beispiel für den Kasten in der
