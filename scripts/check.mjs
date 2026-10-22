@@ -32,6 +32,7 @@ const html = read('public/index.html');
 const ids = ['form', 'seats', 'companions', 'error', 'submit', 'success', 'waitlisted', 'gcal',
   'seat-hint', 'seats-free', 'seats-label', 'seats-badge', 'seats-prefix', 'social-proof', 'attendees', 'anmeldung'];
 for (const id of ids) if (!html.includes(`id="${id}"`)) fail(`public/index.html: id="${id}" fehlt – bitte wiederherstellen (wird von app.js gebraucht).`);
+if (!html.includes('class="admin-link" href="/admin"')) fail('public/index.html: Schloss-Link ganz unten rechts (class="admin-link") fehlt – bleibt laut CLAUDE.md, Niklas nutzt ihn.');
 const names = ['name', 'email', 'phone', 'street', 'houseNumber', 'zip', 'city', 'privacyConsent', 'questions', 'website'];
 for (const n of names) if (!html.includes(`name="${n}"`)) fail(`public/index.html: Formularfeld name="${n}" fehlt.`);
 

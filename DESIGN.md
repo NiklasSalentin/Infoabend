@@ -39,7 +39,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Kopf** | nur Logo (weiß) links und rechts dezent „Persönliche Beratung buchen ↗“ (Rahmen-Knopf, weiß); kein Menü |
 | **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, oranger pulsierender Knopf „Jetzt Platz sichern ↓“, darunter goldene Pill |
 | **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld**; **Handy:** Siegel klein (124 px hoch) in der rechten unteren Ecke im Datumsfeld neben der Adresse (stand vorher allein darunter) |
-| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett), **gleich hoch und gleiche Schrift wie der Knopf** (62 px, 18 px fett); **Handy:** kompakt rechts neben dem Knopf in zwei Zeilen „Noch 117“ / „Plätze frei“, Punkt oben am Rand; unter 420 px Breite Knopf und Schild etwas kleiner (60 px), damit beide in eine Zeile passen; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
+| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett), **gleich hoch und gleiche Schrift wie der Knopf** (62 px, 18 px fett); **Handy:** kompakt rechts neben dem Knopf in zwei Zeilen „Noch 117“ / „Plätze frei“, Punkt oben am Rand; unter 420 px Breite Knopf und Schild etwas kleiner (60 px), damit beide in eine Zeile passen; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet; **Schalter „Freie Plätze auf der Seite anzeigen“ in `/admin` aus:** Schild weg (außer „Ausgebucht – Warteliste offen“), über dem Formular nur „Max. 3 Begleitpersonen pro Anmeldung“. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
 | **Zahlen-Streifen** | nur noch „Personen bereits angemeldet“ (erst ab 10; vorher ausgeblendet ohne Leerfläche). Countdown „Tage bis zum Infoabend“ entfernt (Wunsch) |
 | **Inhaltsblöcke** | weiß, Bild + Text zweispaltig, Eyebrow-Pill (hellgrau, blaue Schrift) über H2 |
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
@@ -51,7 +51,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Erfolgsmeldung** | weiße Karte wie das Formular (Radius 24 px, weicher Schatten), oben runder blauer Kreis mit weißem Häkchen (Warteliste: Gold-Kreis mit Uhr) – **keine farbige Linie links** (bog sich an der runden Ecke krumm), ein Knopf „Termin in den Kalender eintragen“ (`/kalender` erkennt das Gerät) |
 | **Fuß** | 1:1 Hauptseite, ohne Menü; Impressum, Datenschutz, Cookie-Einstellungen |
 | **Einwilligungs-Hinweis** | weiße Karte unten (Google Ads, ggf. Meta-Pixel), „Ablehnen“ und „Erlauben“ **gleich groß und gleich gestaltet** (rechtlich wichtig) |
-| **Zugang Verwaltung** | kein sichtbarer Link auf der öffentlichen Seite – `/admin` direkt aufrufen |
+| **Zugang Verwaltung** | kleines Schloss ganz unten rechts in der Fußzeile, 15 % Deckkraft (beim Darüberfahren 70 %), Tippfläche 36 px → `/admin`. **Bleibt – ausdrücklicher Wunsch von Niklas** (wurde einmal versehentlich entfernt) |
 
 Knöpfe: Pillen-Form (Radius 120 px), fett. Hauptknopf Dunkelblau mit rundem Icon-Kreis; Rahmen-Knopf
 blau umrandet. Orange nur für die eine wichtigste Handlung.

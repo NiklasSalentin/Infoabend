@@ -8,6 +8,7 @@ export default async () => {
     return json({
       free: s.shown_free,
       released: s.shown_released,
+      showFree: s.show_free, // Schalter in /admin – aus: Seite zeigt keine Platzzahl
       maxPerPerson: s.max_per_person,
       open: s.registration_open,
       attendees: s.booked,

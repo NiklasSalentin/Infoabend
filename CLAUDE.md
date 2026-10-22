@@ -35,7 +35,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
 | QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
 | Besucherzähler & Adressliste in `/admin` | `public/admin.html`/`admin.js`, `netlify/functions/visit.mjs`, `netlify/lib/visitor.mjs` |
-| Google Ads + Meta-Pixel mit Einwilligungs-Hinweis | `public/consent.js`, IDs über `/api/config` (`netlify/functions/config.mjs`: Google Ads `AW-17036255610`, Conversion „Anmeldung Infoabend“; Meta über `META_PIXEL_ID`) – nie ohne Einwilligung laden; kein sichtbarer Link auf `/admin` |
+| Google Ads + Meta-Pixel mit Einwilligungs-Hinweis | `public/consent.js`, IDs über `/api/config` (`netlify/functions/config.mjs`: Google Ads `AW-17036255610`, Conversion „Anmeldung Infoabend“; Meta über `META_PIXEL_ID`) – nie ohne Einwilligung laden |
 | Speicher für Anmeldungen (Netlify Blobs) + Buchungslogik | `netlify/lib/db.mjs` – nur mit Niklas ändern; Speicher „infoabend“ im Netlify-Dashboard nie löschen |
 | Plätze, Max. pro Person, Warteliste, knappe Anzeige | keine Datei – Verwaltung unter `/admin` |
 | Rechenregel „angezeigte freie Plätze“ (Seite + `/admin`) | `public/plaetze.js` |
@@ -56,4 +56,6 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
   (z. B. Canva-Stockfotos).
 - Bilder vor dem Einchecken verkleinern (max. ca. 1600 px, möglichst < 300 KB; WebP/JPG).
 - Die Weiterleitungen `/zeitung`, `/flyer`, `/plakat` nie entfernen – gedruckte QR-Codes zeigen darauf.
+- Das kleine, fast unsichtbare **Schloss ganz unten rechts** (Link auf `/admin`) **bleibt** – Niklas nutzt es; nicht entfernen
+  (`npm run check` prüft das).
 - Einrichtung und Bedienung: `README.md`.

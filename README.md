@@ -197,6 +197,7 @@ Mit dem `ADMIN_PASSWORD` anmelden. Oben stehen die Einstellungen:
 - **Plätze gesamt** – z. B. `120`
 - **Max. Plätze pro Person** – z. B. `2`
 - **Anmeldung geöffnet** – Häkchen weg = Formular verschwindet
+- **Freie Plätze auf der Seite anzeigen** – Häkchen weg = die Seite zeigt keine Platzzahl mehr (nur „Ausgebucht – Warteliste offen“, wenn alles voll ist)
 - **Kontingent** – so viele freie Plätze zeigt die Seite höchstens, Grundeinstellung `120` (`0` = immer die echte Zahl)
 - **Nachschub, wenn nur noch … angezeigt** – Grundeinstellung `30`: dann werden „weitere Plätze freigegeben“
 
