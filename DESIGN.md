@@ -79,7 +79,7 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
   **Kein Newsletter, keine Werbung** (kein „Beratung buchen“) – nur die Erinnerung an den Abend.
 - Seiten `/absagen` und `/erinnerung-abbestellen`: wie `/datenschutz` (blauer Kopf mit Logo, weiß), Buchung im hellgrauen
   Kasten, Knöpfe ohne Karte; der Link allein ändert nichts, erst der Knopf (Mailprogramme öffnen Links vorab zur Prüfung).
-- Interne Abend-Zusammenfassung (20 Uhr an info@): gleiche Farben, schlicht, Kennzahl-Kästen + Tabelle.
+- Interne Update-Mail zu den Anmeldungen (Empfänger/Häufigkeit/Uhrzeit in `/admin`): gleiche Farben, schlicht, Kennzahl-Kästen + Tabellen „Neue Anmeldungen“, „Absagen“, „Von der Warteliste nachgerückt“.
 
 ## Handy & Browser – gelernte Fallstricke
 

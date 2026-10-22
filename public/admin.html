@@ -91,6 +91,38 @@
 
     <div class="box">
       <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Update-Mail zu den Anmeldungen</h2>
+        <button class="btn btn-outline" id="digest-test">Jetzt eine schicken</button>
+      </div>
+      <p class="note">Fasst zusammen, was sich getan hat: neue Anmeldungen, Absagen und wer von der Warteliste nachgerückt ist –
+        dazu der Stand der Plätze. Beispiel: „3 neue Anmeldungen, 1 Absage – 47 von 120 Plätzen belegt“.</p>
+      <label>An diese E-Mail-Adressen (mehrere mit Komma trennen)
+        <input id="digest-recipients" placeholder="info@baufinanz-dueren.de, a.robens@baufinanz-dueren.de"></label>
+      <div class="row" style="margin-top:12px">
+        <label>Wie oft
+          <select id="digest-frequency">
+            <option value="daily">Täglich</option>
+            <option value="2days">Alle 2 Tage</option>
+            <option value="weekly">Einmal pro Woche</option>
+            <option value="off">Aus – keine Update-Mail</option>
+          </select></label>
+        <label id="digest-weekday-wrap">Wochentag
+          <select id="digest-weekday">
+            <option value="1">Montag</option><option value="2">Dienstag</option><option value="3">Mittwoch</option>
+            <option value="4">Donnerstag</option><option value="5">Freitag</option><option value="6">Samstag</option><option value="7">Sonntag</option>
+          </select></label>
+        <label>Uhrzeit<select id="digest-hour"></select></label>
+      </div>
+      <label class="check"><input type="checkbox" id="digest-only-changes"> <span>Nur verschicken, wenn sich etwas geändert hat
+        <span class="note" style="display:block;font-weight:400">Ohne Häkchen kommt die Mail immer – auch mit „Keine Änderungen“.</span></span></label>
+      <div class="row" style="align-items:center">
+        <button class="btn btn-primary" id="digest-save">Speichern</button>
+        <p class="note" id="digest-next" style="margin:0"></p>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="row" style="justify-content:space-between">
         <h2 style="margin:0">Besucher</h2>
         <button class="btn btn-outline" id="reset-stats">Zahlen zurücksetzen</button>
       </div>

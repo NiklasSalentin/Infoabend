@@ -1,8 +1,8 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, stopReminders, json } from '../lib/db.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, stopReminders, readNote, json } from '../lib/db.mjs';
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
-import { runDigest } from '../lib/digest.mjs';
+import { runDigest, digestSettings, saveDigestSettings } from '../lib/digest.mjs';
 import { reminderOverview, sendReminderTest } from '../lib/reminders.mjs';
 
 function authorized(req) {
@@ -26,12 +26,14 @@ export default async (req, context) => {
 
 async function handle(req, context) {
   if (req.method === 'GET') {
-    const [status, registrations, stats] = await Promise.all([
+    const [status, registrations, stats, digest, digestState] = await Promise.all([
       seatStatus(),
       listRegistrations(),
       visitStats().catch((e) => { console.error(e); return null; }),
+      digestSettings(),
+      readNote('digest'),
     ]);
-    return json({ status, registrations, stats, reminders: reminderOverview(registrations) });
+    return json({ status, registrations, stats, reminders: reminderOverview(registrations), digest: { ...digest, lastAt: digestState.lastAt || null } });
   }
 
   if (req.method !== 'POST') return json({ error: 'Methode nicht erlaubt' }, 405);
@@ -74,8 +76,12 @@ async function handle(req, context) {
       await purgePersonalData();
       return json({ ok: true });
     }
+    case 'digest-settings': {
+      // Update-Mail: Empfänger, Häufigkeit, Uhrzeit, nur bei Änderungen
+      try { return json({ ok: true, digest: await saveDigestSettings(b) }); } catch (e) { return json({ error: e.message }, 400); }
+    }
     case 'digest': {
-      // Abend-Zusammenfassung sofort an info@ schicken (zum Testen) – ändert nichts am Abend-Versand
+      // Update-Mail sofort an die eingestellten Empfänger schicken (zum Testen) – ändert nichts am geplanten Versand
       try { await runDigest({ force: true }); } catch (e) { return json({ error: `Mail konnte nicht verschickt werden: ${e.message}` }, 502); }
       return json({ ok: true });
     }

@@ -279,53 +279,65 @@ export async function sendWaitlist(reg) {
 }
 
 // Abend-Zusammenfassung an info@ (statt einer Mail pro Anmeldung)
-export function digestHtml({ fresh, status, waitlist, since, selfCancelled = [] }) {
+export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, waitlist, since }) {
   const n = fresh.length;
   const seats = fresh.reduce((a, r) => a + r.seats, 0);
+  const changes = n + cancelled.length + promoted.length;
   const sinceText = new Date(since).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   const th = (t) => `<th style="text-align:left;padding:8px 10px;background:${C.light};color:${C.blue};font-size:13px">${t}</th>`;
   const td = (t) => `<td style="padding:8px 10px;border-bottom:1px solid #e3e7f3;font-size:14px;vertical-align:top">${t}</td>`;
   const stat = (num, text) => `<td width="33%" style="padding:14px 12px;background:${C.light};border-radius:12px;font-family:${FONT}">
     <div style="color:${C.blue};font-size:28px;font-weight:700;line-height:1.1">${num}</div><div style="color:${C.muted};font-size:13px">${text}</div></td>`;
-  const rows = fresh.map((r) => `<tr>
-    ${td(`<strong>${esc(r.name)}</strong>${r.status === 'waitlist' ? ' <span style="color:#b26b00">(Warteliste)</span>' : ''}${(r.companions || []).length ? `<br><span style="color:${C.muted}">mit ${esc(r.companions.join(', '))}</span>` : ''}`)}
-    ${td(r.seats)}
-    ${td(`${esc(r.email)}<br>${esc(r.phone)}`)}
+  const section = (title, head, rows, note = '') => `<tr><td style="padding:16px 28px 6px;font-family:${FONT}">
+    <div style="color:${C.blue};font-size:16px;font-weight:700;margin-bottom:6px">${title}</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-family:${FONT}">
+    <tr>${head.map(th).join('')}</tr>${rows}</table>${note ? `<div style="color:${C.muted};font-size:13px;margin-top:6px">${note}</div>` : ''}</td></tr>`;
+  const person = (r) => `<strong>${esc(r.name)}</strong>${(r.companions || []).length ? `<br><span style="color:${C.muted}">mit ${esc(r.companions.join(', '))}</span>` : ''}`;
+  const contact = (r) => `${esc(r.email)}<br>${esc(r.phone)}`;
+  const freshRows = fresh.map((r) => `<tr>
+    ${td(person(r) + (r.status === 'waitlist' ? ' <span style="color:#b26b00">(Warteliste)</span>' : ''))}
+    ${td(r.seats)}${td(contact(r))}
     ${td(esc([r.street, r.zip, r.city].filter(Boolean).join(', ') || '–'))}
     ${td(esc(r.source || 'direkt'))}
     ${td(esc(r.questions || '–'))}</tr>`).join('');
+  const cancelRows = cancelled.map((r) => `<tr>${td(person(r))}${td(r.seats)}${td(contact(r))}${td(r.cancelled_via === 'link' ? 'selbst (Link in der Mail)' : 'in der Verwaltung')}</tr>`).join('');
+  const promoRows = promoted.map((r) => `<tr>${td(person(r))}${td(r.seats)}${td(contact(r))}</tr>`).join('');
+  const headline = changes
+    ? [n && `${n} neue Anmeldung${n === 1 ? '' : 'en'} (${seats} ${seats === 1 ? 'Platz' : 'Plätze'})`,
+      cancelled.length && `${cancelled.length} Absage${cancelled.length === 1 ? '' : 'n'}`,
+      promoted.length && `${promoted.length} nachgerückt`].filter(Boolean).join(' · ')
+    : 'Keine Änderungen';
 
-  const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+  return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:${C.light};font-family:${FONT};color:${C.text}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="760" cellpadding="0" cellspacing="0" style="width:100%;max-width:760px;background:#fff;border-radius:16px;overflow:hidden">
 <tr><td style="background:${C.blue};padding:22px 28px;color:#fff;font-family:${FONT}">
-  <div style="font-size:13px;color:${C.gold};font-weight:700;letter-spacing:1px;text-transform:uppercase">Abend-Zusammenfassung</div>
-  <div style="font-size:24px;font-weight:700;margin-top:4px">${n ? `${n} neue Anmeldung${n === 1 ? '' : 'en'} (${seats} ${seats === 1 ? 'Platz' : 'Plätze'})` : 'Keine neuen Anmeldungen'}</div>
+  <div style="font-size:13px;color:${C.gold};font-weight:700;letter-spacing:1px;text-transform:uppercase">Update zu den Anmeldungen</div>
+  <div style="font-size:24px;font-weight:700;margin-top:4px">${headline}</div>
   <div style="font-size:14px;color:#dfe3f5;margin-top:2px">seit ${sinceText} Uhr</div>
 </td></tr>
 <tr><td style="padding:22px 28px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="8"><tr>
   ${stat(`${status.booked} / ${status.total_seats}`, 'Plätze belegt')}${stat(status.free, 'Plätze frei')}${stat(waitlist.length, 'auf der Warteliste')}
 </tr></table></td></tr>
-${n ? `<tr><td style="padding:10px 28px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-family:${FONT}">
-  <tr>${th('Name')}${th('Plätze')}${th('Kontakt')}${th('Adresse')}${th('Quelle')}${th('Fragen vorab')}</tr>${rows}</table></td></tr>` : ''}
-${selfCancelled.length ? `<tr><td style="padding:16px 28px 6px;font-family:${FONT}">
-  <div style="color:${C.blue};font-size:16px;font-weight:700;margin-bottom:6px">Selbst abgesagt (Link in der Erinnerung): ${selfCancelled.length}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-family:${FONT}">
-  <tr>${th('Name')}${th('Plätze')}${th('Kontakt')}</tr>${selfCancelled.map((r) => `<tr>${td(`<strong>${esc(r.name)}</strong>`)}${td(r.seats)}${td(`${esc(r.email)}<br>${esc(r.phone)}`)}</tr>`).join('')}
-  </table><div style="color:${C.muted};font-size:13px;margin-top:6px">Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, hat die Einladung automatisch bekommen.</div></td></tr>` : ''}
+${n ? section('Neue Anmeldungen', ['Name', 'Plätze', 'Kontakt', 'Adresse', 'Quelle', 'Fragen vorab'], freshRows) : ''}
+${cancelled.length ? section('Absagen', ['Name', 'Plätze', 'Kontakt', 'abgesagt'], cancelRows, 'Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, steht unten.') : ''}
+${promoted.length ? section('Von der Warteliste nachgerückt', ['Name', 'Plätze', 'Kontakt'], promoRows) : ''}
 <tr><td style="padding:18px 28px 26px;font-family:${FONT};font-size:14px">
   <a href="${siteUrl()}/admin" style="display:inline-block;padding:11px 22px;border-radius:999px;background:${C.blue};color:#fff;font-weight:700;text-decoration:none">Alle Anmeldungen in der Verwaltung</a>
+  <div style="color:${C.muted};font-size:12px;margin-top:14px">Empfänger, Häufigkeit und Uhrzeit dieser Mail stellen Sie in der Verwaltung unter „Update-Mail“ ein.</div>
 </td></tr></table></td></tr></table></body></html>`;
-  return html;
 }
 
 export async function sendDigest(data) {
   const n = data.fresh.length;
+  const c = data.cancelled.length;
+  const p = data.promoted.length;
+  const parts = [n && `${n} neue Anmeldung${n === 1 ? '' : 'en'}`, c && `${c} Absage${c === 1 ? '' : 'n'}`, p && `${p} nachgerückt`].filter(Boolean);
   await smtp().sendMail({
     from: from(),
-    to: EVENT.notifyEmail,
-    subject: `Infoabend: ${n ? `${n} neue Anmeldung${n === 1 ? '' : 'en'} heute` : 'Zusammenfassung'}${data.selfCancelled?.length ? `, ${data.selfCancelled.length} Absage${data.selfCancelled.length === 1 ? '' : 'n'}` : ''} – ${data.status.booked} von ${data.status.total_seats} Plätzen belegt`,
+    to: (data.recipients?.length ? data.recipients : [EVENT.notifyEmail]).join(', '),
+    subject: `Infoabend: ${parts.length ? parts.join(', ') : 'keine Änderungen'} – ${data.status.booked} von ${data.status.total_seats} Plätzen belegt`,
     html: digestHtml(data),
   });
 }

@@ -49,6 +49,7 @@ async function load() {
   renderStats();
   renderAddresses();
   renderReminders();
+  renderDigest();
 
   // Platz auf der Warteliste (1 = als Nächstes dran)
   const rank = new Map(wait.map((r, i) => [r.id, i + 1]));
@@ -92,6 +93,56 @@ function renderReminders() {
   $('#rem-stages').innerHTML = rm.stages.map((s) => `<tr><td>${esc(s.label)}${s.started ? '' : ' <span class="note">– geplant</span>'}</td>
     <td class="r">${s.sent}</td><td class="r">${s.open}${s.failed ? ` <span class="invite">(${s.failed} fehlgeschlagen)</span>` : ''}</td></tr>`).join('');
 }
+
+// Update-Mail zu den Anmeldungen: Empfänger, Häufigkeit, Uhrzeit, nur bei Änderungen
+const WEEKDAYS = ['', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+for (let h = 0; h < 24; h++) $('#digest-hour').add(new Option(`${String(h).padStart(2, '0')}:00 Uhr`, h));
+
+function digestForm() {
+  return {
+    recipients: $('#digest-recipients').value, frequency: $('#digest-frequency').value,
+    weekday: Number($('#digest-weekday').value), hour: Number($('#digest-hour').value), onlyChanges: $('#digest-only-changes').checked,
+  };
+}
+
+function renderDigestNext() {
+  const d = digestForm();
+  $('#digest-weekday-wrap').hidden = d.frequency !== 'weekly';
+  const time = `${String(d.hour).padStart(2, '0')}:00 Uhr`;
+  const when = { daily: `jeden Tag um ${time}`, '2days': `alle 2 Tage um ${time}`, weekly: `jeden ${WEEKDAYS[d.weekday]} um ${time}` }[d.frequency];
+  const last = data.digest?.lastAt ? ` · zuletzt geprüft: ${new Date(data.digest.lastAt).toLocaleString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })} Uhr` : '';
+  $('#digest-next').textContent = d.frequency === 'off'
+    ? 'Aus – es wird keine Update-Mail verschickt.'
+    : `Kommt ${when}${d.onlyChanges ? ', aber nur wenn sich etwas geändert hat' : ''}${last}`;
+}
+
+function renderDigest() {
+  const d = data.digest;
+  if (!d) return;
+  $('#digest-recipients').value = (d.recipients || []).join(', ');
+  $('#digest-frequency').value = d.frequency;
+  $('#digest-weekday').value = d.weekday;
+  $('#digest-hour').value = d.hour;
+  $('#digest-only-changes').checked = d.onlyChanges !== false;
+  renderDigestNext();
+}
+
+for (const id of ['#digest-frequency', '#digest-weekday', '#digest-hour', '#digest-only-changes']) $(id).addEventListener('change', renderDigestNext);
+
+$('#digest-save').onclick = async () => {
+  try {
+    const r = await api('POST', { action: 'digest-settings', ...digestForm() });
+    data.digest = { ...data.digest, ...r.digest };
+    renderDigest();
+    alert('Gespeichert');
+  } catch (e) { alert(e.message); }
+};
+
+$('#digest-test').onclick = async () => {
+  const to = $('#digest-recipients').value.trim();
+  if (!confirm(`Jetzt eine Update-Mail mit dem aktuellen Stand an die gespeicherten Empfänger schicken?\n\n(${to || 'keine Empfänger'})\n\nDer geplante Versand ändert sich dadurch nicht.`)) return;
+  try { await api('POST', { action: 'digest' }); alert('Verschickt – bitte im Postfach nachsehen.'); } catch (e) { alert(e.message); }
+};
 
 $('#reminder-test').onclick = async () => {
   if (!confirm('Alle Erinnerungen (zwei Wochen vorher, eine Woche vorher, Vortag) mit Beispiel-Gast „Maria Muster“ an info@ schicken?')) return;

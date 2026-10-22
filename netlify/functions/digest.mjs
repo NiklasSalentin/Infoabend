@@ -1,17 +1,16 @@
-import { runDigest, berlinHour } from '../lib/digest.mjs';
+import { runDigest } from '../lib/digest.mjs';
 import { useSite } from '../lib/event.mjs';
 
-// Läuft stündlich (Netlify-Zeitplan) und verschickt um 20 Uhr deutscher Zeit die Abend-Zusammenfassung –
-// so stimmt die Uhrzeit auch nach der Zeitumstellung.
+// Läuft stündlich (Netlify-Zeitplan) und verschickt die Update-Mail zu den Anmeldungen, wenn sie laut
+// Einstellung in /admin fällig ist (Empfänger, Häufigkeit, Uhrzeit in deutscher Zeit, nur bei Änderungen).
 export default async (req, context) => {
   useSite(context);
-  if (berlinHour() !== 20) return new Response('nicht 20 Uhr');
   try {
     const result = await runDigest();
-    console.log('Abend-Zusammenfassung:', result);
+    if (result !== 'not-due') console.log('Update-Mail:', result);
     return new Response(result);
   } catch (e) {
-    console.error('Abend-Zusammenfassung fehlgeschlagen', e);
+    console.error('Update-Mail fehlgeschlagen', e);
     return new Response('Fehler', { status: 500 });
   }
 };
