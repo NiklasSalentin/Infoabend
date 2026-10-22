@@ -279,9 +279,23 @@ export async function sendWaitlist(reg) {
 }
 
 // Abend-Zusammenfassung an info@ (statt einer Mail pro Anmeldung)
+// Update-Mail zählt immer in PLÄTZEN (Anmelder + Begleitung), nicht in Anmeldungen/Personen
+const sumSeats = (list) => list.reduce((a, r) => a + (r.seats || 0), 0);
+const plaetze = (n) => `${n} ${n === 1 ? 'Platz' : 'Plätze'}`;
+function digestSeats({ fresh = [], cancelled = [], promoted = [], waitlist = [] }) {
+  const bookedNew = sumSeats(fresh.filter((r) => r.status === 'confirmed'));
+  const waitNew = sumSeats(fresh.filter((r) => r.status === 'waitlist'));
+  const parts = [
+    bookedNew && `${plaetze(bookedNew)} neu gebucht`,
+    waitNew && `${plaetze(waitNew)} neu auf der Warteliste`,
+    cancelled.length && `${plaetze(sumSeats(cancelled))} abgesagt`,
+    promoted.length && `${plaetze(sumSeats(promoted))} nachgerückt`,
+  ].filter(Boolean);
+  return { bookedNew, waitSeats: sumSeats(waitlist), parts };
+}
+
 export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, waitlist, since }) {
   const n = fresh.length;
-  const seats = fresh.reduce((a, r) => a + r.seats, 0);
   const changes = n + cancelled.length + promoted.length;
   const sinceText = new Date(since).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   const th = (t) => `<th style="text-align:left;padding:8px 10px;background:${C.light};color:${C.blue};font-size:13px">${t}</th>`;
@@ -302,11 +316,8 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
     ${td(esc(r.questions || '–'))}</tr>`).join('');
   const cancelRows = cancelled.map((r) => `<tr>${td(person(r))}${td(r.seats)}${td(contact(r))}${td(r.cancelled_via === 'link' ? 'selbst (Link in der Mail)' : 'in der Verwaltung')}</tr>`).join('');
   const promoRows = promoted.map((r) => `<tr>${td(person(r))}${td(r.seats)}${td(contact(r))}</tr>`).join('');
-  const headline = changes
-    ? [n && `${n} neue Anmeldung${n === 1 ? '' : 'en'} (${seats} ${seats === 1 ? 'Platz' : 'Plätze'})`,
-      cancelled.length && `${cancelled.length} Absage${cancelled.length === 1 ? '' : 'n'}`,
-      promoted.length && `${promoted.length} nachgerückt`].filter(Boolean).join(' · ')
-    : 'Keine Änderungen';
+  const sum = digestSeats({ fresh, cancelled, promoted, waitlist });
+  const headline = changes ? sum.parts.join(' · ') : 'Keine Änderungen';
 
   return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:${C.light};font-family:${FONT};color:${C.text}">
@@ -318,7 +329,7 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
   <div style="font-size:14px;color:#dfe3f5;margin-top:2px">seit ${sinceText} Uhr</div>
 </td></tr>
 <tr><td style="padding:22px 28px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="8"><tr>
-  ${stat(status.booked, 'gebuchte Plätze')}${stat(fresh.filter((r) => r.status === 'confirmed').length, 'neue Buchungen')}${stat(waitlist.length, 'auf der Warteliste')}
+  ${stat(status.booked, 'gebuchte Plätze')}${stat(sum.bookedNew, 'neu gebuchte Plätze')}${stat(sum.waitSeats, 'Plätze auf der Warteliste')}
 </tr></table></td></tr>
 ${n ? section('Neue Anmeldungen', ['Name', 'Plätze', 'Kontakt', 'Adresse', 'Quelle', 'Fragen vorab'], freshRows) : ''}
 ${cancelled.length ? section('Absagen', ['Name', 'Plätze', 'Kontakt', 'abgesagt'], cancelRows, 'Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, steht unten.') : ''}
@@ -330,10 +341,7 @@ ${promoted.length ? section('Von der Warteliste nachgerückt', ['Name', 'Plätze
 }
 
 export async function sendDigest(data) {
-  const n = data.fresh.length;
-  const c = data.cancelled.length;
-  const p = data.promoted.length;
-  const parts = [n && `${n} neue Anmeldung${n === 1 ? '' : 'en'}`, c && `${c} Absage${c === 1 ? '' : 'n'}`, p && `${p} nachgerückt`].filter(Boolean);
+  const { parts } = digestSeats(data);
   await smtp().sendMail({
     from: from(),
     to: (data.recipients?.length ? data.recipients : [EVENT.notifyEmail]).join(', '),

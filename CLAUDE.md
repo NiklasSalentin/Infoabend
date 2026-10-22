@@ -14,6 +14,8 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 
 - Deutsch, einfache Worte, keine Fachbegriffe ohne Erklärung; mit Beispielen erklären.
 - Rückfragen als Auswahl (Multiple Choice), eine pro Nachricht.
+- **Zahlen immer in Plätzen:** Niklas meint mit „Buchungen“, „Anmeldungen“, „Warteliste“ usw. immer **Plätze**
+  (Anmelder + Begleitung), nicht die Zahl der Anmeldungen/Personen – in Mails, Kacheln und `/admin` so zählen.
 - **Design:** vor jeder Design-Änderung `DESIGN.md` lesen (Farben, Bausteine, Mail-Aufbau, Fallstricke) und neue
   Entscheidungen dort nachtragen.
 - Bei Design-/Farbfragen vorher/nachher als Screenshot zeigen (Playwright, Chromium unter
