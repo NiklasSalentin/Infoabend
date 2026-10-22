@@ -286,7 +286,7 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
   const sinceText = new Date(since).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   const th = (t) => `<th style="text-align:left;padding:8px 10px;background:${C.light};color:${C.blue};font-size:13px">${t}</th>`;
   const td = (t) => `<td style="padding:8px 10px;border-bottom:1px solid #e3e7f3;font-size:14px;vertical-align:top">${t}</td>`;
-  const stat = (num, text) => `<td width="33%" style="padding:14px 12px;background:${C.light};border-radius:12px;font-family:${FONT}">
+  const stat = (num, text) => `<td width="33%" style="padding:14px 12px;background:${C.light};border-radius:12px;font-family:${FONT};vertical-align:top">
     <div style="color:${C.blue};font-size:28px;font-weight:700;line-height:1.1">${num}</div><div style="color:${C.muted};font-size:13px">${text}</div></td>`;
   const section = (title, head, rows, note = '') => `<tr><td style="padding:16px 28px 6px;font-family:${FONT}">
     <div style="color:${C.blue};font-size:16px;font-weight:700;margin-bottom:6px">${title}</div>
@@ -318,7 +318,7 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
   <div style="font-size:14px;color:#dfe3f5;margin-top:2px">seit ${sinceText} Uhr</div>
 </td></tr>
 <tr><td style="padding:22px 28px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="8"><tr>
-  ${stat(`${status.booked} / ${status.total_seats}`, 'Plätze belegt')}${stat(status.free, 'Plätze frei')}${stat(waitlist.length, 'auf der Warteliste')}
+  ${stat(status.attendees, 'Anmeldungen gesamt')}${stat(n, 'neue Anmeldungen')}${stat(waitlist.length, 'auf der Warteliste')}
 </tr></table></td></tr>
 ${n ? section('Neue Anmeldungen', ['Name', 'Plätze', 'Kontakt', 'Adresse', 'Quelle', 'Fragen vorab'], freshRows) : ''}
 ${cancelled.length ? section('Absagen', ['Name', 'Plätze', 'Kontakt', 'abgesagt'], cancelRows, 'Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, steht unten.') : ''}
@@ -337,7 +337,7 @@ export async function sendDigest(data) {
   await smtp().sendMail({
     from: from(),
     to: (data.recipients?.length ? data.recipients : [EVENT.notifyEmail]).join(', '),
-    subject: `Infoabend: ${parts.length ? parts.join(', ') : 'keine Änderungen'} – ${data.status.booked} von ${data.status.total_seats} Plätzen belegt`,
+    subject: `Infoabend: ${parts.length ? parts.join(', ') : 'keine Änderungen'} – ${data.status.attendees} Anmeldung${data.status.attendees === 1 ? '' : 'en'} gesamt`,
     html: digestHtml(data),
   });
 }
