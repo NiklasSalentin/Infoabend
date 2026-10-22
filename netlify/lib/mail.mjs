@@ -318,7 +318,7 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
   <div style="font-size:14px;color:#dfe3f5;margin-top:2px">seit ${sinceText} Uhr</div>
 </td></tr>
 <tr><td style="padding:22px 28px 6px"><table role="presentation" width="100%" cellpadding="0" cellspacing="8"><tr>
-  ${stat(status.attendees, 'Anmeldungen gesamt')}${stat(n, 'neue Anmeldungen')}${stat(waitlist.length, 'auf der Warteliste')}
+  ${stat(status.booked, 'gebuchte Plätze')}${stat(fresh.filter((r) => r.status === 'confirmed').length, 'neue Buchungen')}${stat(waitlist.length, 'auf der Warteliste')}
 </tr></table></td></tr>
 ${n ? section('Neue Anmeldungen', ['Name', 'Plätze', 'Kontakt', 'Adresse', 'Quelle', 'Fragen vorab'], freshRows) : ''}
 ${cancelled.length ? section('Absagen', ['Name', 'Plätze', 'Kontakt', 'abgesagt'], cancelRows, 'Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, steht unten.') : ''}
@@ -337,7 +337,7 @@ export async function sendDigest(data) {
   await smtp().sendMail({
     from: from(),
     to: (data.recipients?.length ? data.recipients : [EVENT.notifyEmail]).join(', '),
-    subject: `Infoabend: ${parts.length ? parts.join(', ') : 'keine Änderungen'} – ${data.status.attendees} Anmeldung${data.status.attendees === 1 ? '' : 'en'} gesamt`,
+    subject: `Infoabend: ${parts.length ? parts.join(', ') : 'keine Änderungen'} – ${data.status.booked} von ${data.status.total_seats} Plätzen belegt`,
     html: digestHtml(data),
   });
 }
