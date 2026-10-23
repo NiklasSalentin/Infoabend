@@ -101,6 +101,8 @@ async function loadStatus() {
     // Schalter „Freie Plätze anzeigen“ in /admin: aus → kein Schild mit Zahl (nur „Ausgebucht – Warteliste offen“)
     const showFree = s.showFree !== false;
     $('#seats-badge').hidden = !s.open || (!showFree && !full);
+    // Geheimer Zähler unten rechts neben dem Schloss: echte gebuchte Plätze (Anmelder + Begleitung)
+    $('#seat-counter').textContent = s.attendees ?? '';
     if (s.attendees >= 10) {
       $('#attendees').textContent = s.attendees;
       $('#social-proof').hidden = false;
