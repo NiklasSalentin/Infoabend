@@ -52,7 +52,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | **Fuß** | 1:1 Hauptseite, ohne Menü; Impressum, Datenschutz, Cookie-Einstellungen |
 | **Einwilligungs-Hinweis** | weiße Karte unten (Google Ads, ggf. Meta-Pixel), „Ablehnen“ und „Erlauben“ **gleich groß und gleich gestaltet** (rechtlich wichtig) |
 | **Zugang Verwaltung** | kleines Schloss ganz unten rechts in der Fußzeile, 15 % Deckkraft (beim Darüberfahren 70 %), Tippfläche 36 px → `/admin`. **Bleibt – ausdrücklicher Wunsch von Niklas** (wurde einmal versehentlich entfernt) |
-| **Geheimer Zähler** | winzige Zahl (11 px, 15 % Deckkraft) direkt links neben dem Schloss: echte gebuchte Plätze, ohne Beschriftung – nur für Eingeweihte |
+| **Geheimer Zähler** | kleine Zahl (13 px halbfett, 45 % Deckkraft – etwas deutlicher als das Schloss) direkt links neben dem Schloss: echte gebuchte Plätze, ohne Beschriftung – nur für Eingeweihte |
 
 Knöpfe: Pillen-Form (Radius 120 px), fett. Hauptknopf Dunkelblau mit rundem Icon-Kreis; Rahmen-Knopf
 blau umrandet. Orange nur für die eine wichtigste Handlung.
