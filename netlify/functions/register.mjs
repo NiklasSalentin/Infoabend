@@ -1,5 +1,6 @@
 import { bookSeats, json } from '../lib/db.mjs';
 import { sendConfirmation, sendWaitlist } from '../lib/mail.mjs';
+import { calendarUrl } from '../lib/links.mjs';
 import { useSite } from '../lib/event.mjs';
 import { forwardQuestion, ASKME_MAX } from '../lib/askme.mjs';
 
@@ -56,7 +57,9 @@ export default async (req, context) => {
   };
   if (messages[r.status]) return json({ status: r.status, free: r.free, error: messages[r.status] }, 409);
 
-  const full = { ...reg, status: r.status, ticket_code: r.ticket_code };
+  const full = { ...reg, id: r.id, status: r.status, ticket_code: r.ticket_code };
+  // persönlicher Kalender-Link für den Knopf nach der Anmeldung (so sieht /admin, wer den Termin eingetragen hat)
+  const calendarLink = r.status === 'confirmed' ? await calendarUrl(r.id, 'seite', { absolute: false }) : null;
   // Frage vorab gleich an die AskMeSomething-App weitergeben (Fehler dort stoppen die Anmeldung nicht)
   const asked = reg.questions ? forwardQuestion({ text: reg.questions, name: reg.name, ticket: r.ticket_code }) : null;
   try {
@@ -66,10 +69,10 @@ export default async (req, context) => {
     // Buchung ist gespeichert – Mail-Fehler nur loggen, Nachversand über /admin möglich
     console.error('Mailversand fehlgeschlagen', e);
     await asked;
-    return json({ status: r.status, free: r.free, mailError: true });
+    return json({ status: r.status, free: r.free, mailError: true, calendarUrl: calendarLink });
   }
   await asked;
-  return json({ status: r.status, free: r.free });
+  return json({ status: r.status, free: r.free, calendarUrl: calendarLink });
 };
 
 export const config = { path: '/api/register' };

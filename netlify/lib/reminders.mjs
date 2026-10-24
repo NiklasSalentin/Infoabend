@@ -10,9 +10,9 @@
 //
 // In jeder Erinnerung: Link „Termin absagen“ (Platz wird frei, Warteliste rückt nach) und „Erinnerungen abbestellen“.
 // Die Links enthalten einen Prüfcode – ohne ihn kann niemand fremde Anmeldungen absagen.
-import { createHmac, timingSafeEqual } from 'node:crypto';
 import { EVENT, siteUrl } from './event.mjs';
-import { listRegistrations, markReminder, secretSalt } from './db.mjs';
+import { listRegistrations, markReminder } from './db.mjs';
+import { sign, validToken, calendarUrl } from './links.mjs';
 import { sendReminder, smtpPool } from './mail.mjs';
 
 const GAP_MS = 12 * 3600e3; // Mindestabstand zwischen Anmeldung/Nachrücken und Erinnerung
@@ -22,22 +22,14 @@ const eventStart = () => new Date(EVENT.startUtc.replace(/^(\d{4})(\d{2})(\d{2})
 // ---------------------------------------------------------------------------
 // Links mit Prüfcode
 // ---------------------------------------------------------------------------
-const sign = async (purpose, id) =>
-  createHmac('sha256', await secretSalt()).update(`${purpose}:${id}`).digest('base64url').slice(0, 22);
-
-/** Prüft den Code aus einem Link. purpose: 'absagen' | 'abbestellen' */
-export async function validToken(purpose, id, token) {
-  if (typeof id !== 'string' || typeof token !== 'string' || !id || !token) return false;
-  const expected = Buffer.from(await sign(purpose, id));
-  const given = Buffer.from(token);
-  return given.length === expected.length && timingSafeEqual(given, expected);
-}
+export { validToken }; // Prüfcodes stehen in links.mjs
 
 export async function reminderLinks(id) {
   const q = async (purpose) => `?id=${encodeURIComponent(id)}&t=${await sign(purpose, id)}`;
   return {
     cancelUrl: `${siteUrl()}/absagen${await q('absagen')}`,
     unsubscribeUrl: `${siteUrl()}/erinnerung-abbestellen${await q('abbestellen')}`,
+    calendarUrl: await calendarUrl(id, 'erinnerung'),
   };
 }
 

@@ -155,8 +155,12 @@
         <h2 style="margin:0">Anmeldungen</h2>
         <button class="btn btn-outline" id="csv">CSV exportieren</button>
       </div>
+      <div class="row" style="align-items:center;margin:10px 0">
+        <p class="note" id="cal-summary" style="margin:0"></p>
+        <label class="check" style="margin:0"><input type="checkbox" id="cal-filter"> Nur zeigen: ohne Kalendereintrag</label>
+      </div>
       <div class="scroll"><table>
-        <thead><tr><th>Status</th><th>Datum</th><th>Name</th><th>Kontakt</th><th>Plätze</th><th>Begleitung</th><th>Adresse</th><th>Fragen</th><th>Quelle</th><th></th></tr></thead>
+        <thead><tr><th>Status</th><th>Datum</th><th>Name</th><th>Kontakt</th><th>Plätze</th><th>Begleitung</th><th>Adresse</th><th>Fragen</th><th>Quelle</th><th>Kalender</th><th></th></tr></thead>
         <tbody id="rows"></tbody>
       </table></div>
     </div>

@@ -265,6 +265,10 @@ In der Liste in `/admin` je Zeile:
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
 - **Alle Anmeldungen löschen** (unten in `/admin`, nach dem Abend) – für die Speicherfrist aus den
   Datenschutzhinweisen; zur Bestätigung `LÖSCHEN` eintippen.
+- **Kalender** – Spalte zeigt, wer den Termin über den Knopf „Termin in den Kalender eintragen“ geholt hat
+  (📅 + Datum; Maus drüber: über Bestätigungs-Mail, Seite oder Erinnerung) bzw. „nicht eingetragen“.
+  Häkchen **„Nur zeigen: ohne Kalendereintrag“** filtert die Liste – z. B. um diese Gäste gezielt zu erinnern.
+  Hinweis: Wer den Termin von Hand einträgt, steht trotzdem als „nicht eingetragen“ da.
 - **Löschen** (nur bei stornierten) – entfernt den Eintrag endgültig, z. B. Testanmeldungen.
 - **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder).
 

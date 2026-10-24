@@ -128,10 +128,11 @@ export function bookSeats(reg, waitlistOk) {
     const codes = new Set(ev.registrations.map((r) => r.ticket_code));
     let ticket_code;
     do ticket_code = randomBytes(4).toString('hex').toUpperCase(); while (codes.has(ticket_code));
+    const id = randomUUID();
     ev.registrations.push({
-      id: randomUUID(), created_at: new Date().toISOString(), status, ...reg, privacy_consent: true, ticket_code,
+      id, created_at: new Date().toISOString(), status, ...reg, privacy_consent: true, ticket_code,
     });
-    return { data: ev, result: { status, ticket_code, free: Math.max(free - (status === 'confirmed' ? reg.seats : 0), 0) } };
+    return { data: ev, result: { id, status, ticket_code, free: Math.max(free - (status === 'confirmed' ? reg.seats : 0), 0) } };
   });
 }
 
@@ -183,6 +184,20 @@ export function markReminder(id, key, error = null) {
     } else {
       r.reminders_sent = { ...r.reminders_sent, [key]: new Date().toISOString() };
     }
+    return { data: ev, result: true };
+  });
+}
+
+/**
+ * Gast hat den persönlichen Kalender-Knopf benutzt (Bestätigungs-Mail, Seite oder Erinnerung).
+ * Gespeichert: erster Klick (Zeit + wo) und Anzahl Klicks – /admin zeigt so, wer den Termin eingetragen hat.
+ */
+export function markCalendar(id, via) {
+  return mutate('event', newEvent, (ev) => {
+    const r = ev.registrations.find((x) => x.id === id);
+    if (!r) return { result: false };
+    if (!r.calendar_at) Object.assign(r, { calendar_at: new Date().toISOString(), calendar_via: via });
+    r.calendar_clicks = (r.calendar_clicks || 0) + 1;
     return { data: ev, result: true };
   });
 }

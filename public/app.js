@@ -153,6 +153,7 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch('/api/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     const data = await res.json();
     if (data.status === 'confirmed' || data.status === 'waitlist') {
+      if (data.calendarUrl) $('#gcal').href = data.calendarUrl; // persönlicher Kalender-Link (für /admin)
       // Meta-Pixel (nur mit Einwilligung): erfolgreiche Anmeldung bzw. Warteliste als „Lead“ melden
       metaLead(data.status === 'confirmed' ? 'Anmeldung' : 'Warteliste');
       // Google Ads (nur mit Einwilligung): Conversion „Anmeldung Infoabend“ – nur bei bestätigter Anmeldung

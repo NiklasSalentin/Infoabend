@@ -52,27 +52,7 @@ async function load() {
   renderDigest();
 
   // Platz auf der Warteliste (1 = als Nächstes dran)
-  const rank = new Map(wait.map((r, i) => [r.id, i + 1]));
-  $('#rows').innerHTML = data.registrations.map((r) => `
-    <tr>
-      <td><span class="tag ${r.status}">${LABEL[r.status]}${rank.has(r.id) ? ` ${rank.get(r.id)}.` : ''}</span>
-        ${r.promoted_at && r.status === 'confirmed' ? `<br><span class="invite">nachgerückt${r.invite_pending ? ' · Einladung offen' : ''}</span>` : ''}
-        ${r.cancelled_via === 'link' ? '<br><span class="invite">selbst abgesagt</span>' : ''}</td>
-      <td>${new Date(r.created_at).toLocaleString('de-DE')}</td>
-      <td>${esc(r.name)}</td>
-      <td>${esc(r.email)}<br>${esc(r.phone)}<br>${reminderState(r)}</td>
-      <td>${r.seats}</td>
-      <td>${esc(r.companions.join(', '))}</td>
-      <td>${esc([r.street, r.zip, r.city].filter(Boolean).join(', '))}${r.address_consent ? '<br>✓ Post' : ''}</td>
-      <td>${esc(r.questions)}</td>
-      <td>${esc(r.source || 'direkt')}</td>
-      <td>
-        ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
-        ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
-        ${!r.reminder_optout_at && r.status === 'confirmed' ? `<button data-a="reminder-off" data-id="${r.id}">Erinnerung aus</button>` : ''}
-        ${r.status !== 'cancelled' ? `<button data-a="cancel" data-id="${r.id}">Stornieren</button>` : `<button data-a="delete" data-id="${r.id}">Löschen</button>`}
-      </td>
-    </tr>`).join('');
+  renderRows();
 }
 
 // Erinnerungs-Mails: abbestellt? Was ist schon raus?
@@ -296,9 +276,51 @@ $('#rows').onclick = async (e) => {
   } catch (err) { alert(err.message); }
 };
 
+// Anmeldeliste (mit Kalender-Spalte und Filter „ohne Kalendereintrag“)
+function renderRows() {
+  const rank = new Map(waitlist().map((r, i) => [r.id, i + 1]));
+  // Kalender-Knopf: wer hat den Termin über den persönlichen Knopf eingetragen? (Zählung in Plätzen)
+  const confirmedRegs = data.registrations.filter((r) => r.status === 'confirmed');
+  const withCal = confirmedRegs.filter((r) => r.calendar_at);
+  const noCal = confirmedRegs.filter((r) => !r.calendar_at);
+  const seatSum = (l) => l.reduce((a, r) => a + r.seats, 0);
+  $('#cal-summary').textContent = `Kalender-Knopf genutzt: ${seatSum(withCal)} Plätze (${withCal.length} Anmeldungen) · `
+    + `ohne Kalendereintrag: ${seatSum(noCal)} Plätze (${noCal.length} Anmeldungen)`;
+  const onlyNoCal = $('#cal-filter').checked;
+  const VIA = { mail: 'Bestätigungs-Mail', seite: 'nach der Anmeldung', erinnerung: 'Erinnerungs-Mail' };
+  const calCell = (r) => r.status !== 'confirmed' ? ''
+    : r.calendar_at
+      ? `<span title="über ${VIA[r.calendar_via] || 'Knopf'}${r.calendar_clicks > 1 ? `, ${r.calendar_clicks}× geklickt` : ''}">📅 ${new Date(r.calendar_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</span>`
+      : '<span class="invite">nicht eingetragen</span>';
+
+  $('#rows').innerHTML = data.registrations.filter((r) => !onlyNoCal || (r.status === 'confirmed' && !r.calendar_at)).map((r) => `
+    <tr>
+      <td><span class="tag ${r.status}">${LABEL[r.status]}${rank.has(r.id) ? ` ${rank.get(r.id)}.` : ''}</span>
+        ${r.promoted_at && r.status === 'confirmed' ? `<br><span class="invite">nachgerückt${r.invite_pending ? ' · Einladung offen' : ''}</span>` : ''}
+        ${r.cancelled_via === 'link' ? '<br><span class="invite">selbst abgesagt</span>' : ''}</td>
+      <td>${new Date(r.created_at).toLocaleString('de-DE')}</td>
+      <td>${esc(r.name)}</td>
+      <td>${esc(r.email)}<br>${esc(r.phone)}<br>${reminderState(r)}</td>
+      <td>${r.seats}</td>
+      <td>${esc(r.companions.join(', '))}</td>
+      <td>${esc([r.street, r.zip, r.city].filter(Boolean).join(', '))}${r.address_consent ? '<br>✓ Post' : ''}</td>
+      <td>${esc(r.questions)}</td>
+      <td>${esc(r.source || 'direkt')}</td>
+      <td>${calCell(r)}</td>
+      <td>
+        ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
+        ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
+        ${!r.reminder_optout_at && r.status === 'confirmed' ? `<button data-a="reminder-off" data-id="${r.id}">Erinnerung aus</button>` : ''}
+        ${r.status !== 'cancelled' ? `<button data-a="cancel" data-id="${r.id}">Stornieren</button>` : `<button data-a="delete" data-id="${r.id}">Löschen</button>`}
+      </td>
+    </tr>`).join('');
+}
+
+$('#cal-filter').addEventListener('change', () => renderRows());
+
 $('#csv').onclick = () => {
   const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source',
-    'reminder_optout_at', 'cancelled_via'];
+    'reminder_optout_at', 'cancelled_via', 'calendar_at', 'calendar_via'];
   const cell = (v) => '"' + String(Array.isArray(v) ? v.join(', ') : v ?? '').replace(/"/g, '""') + '"';
   const csv = '﻿' + [cols.join(';'), ...data.registrations.map((r) => cols.map((c) => cell(r[c])).join(';'))].join('\n');
   const a = document.createElement('a');

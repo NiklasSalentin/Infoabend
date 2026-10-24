@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { EVENT, siteUrl } from './event.mjs';
+import { calendarUrl } from './links.mjs';
 
 // Standard: Strato-Postfach info@baufinanz-dueren.de – in Netlify muss nur SMTP_PASS stehen
 function smtpOptions() {
@@ -117,7 +118,7 @@ function seatCard(reg) {
   </td></tr></table>`;
 }
 
-export function confirmationHtml(reg) {
+export function confirmationHtml(reg, { calendarUrl: calUrl } = {}) {
   // Von der Warteliste nachgerückt? Dann beginnt die Mail mit der guten Nachricht
   const promoted = Boolean(reg.promoted_at);
   const card = seatCard(reg);
@@ -133,7 +134,7 @@ export function confirmationHtml(reg) {
     : 'vielen Dank für Ihre Anmeldung! Wir haben'} <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
       Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
 
-      <p style="margin:0">${btn(siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
+      <p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
       <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>
 
       <p style="margin:0 0 12px;color:${C.blue};font-size:18px;font-weight:700">Gut zu wissen</p>
@@ -169,7 +170,7 @@ export async function sendConfirmation(reg) {
     to: reg.email,
     replyTo: EVENT.notifyEmail,
     subject: reg.promoted_at ? 'Gute Nachricht: Ihr Sitzplatz ist gesichert!' : 'Ihr Sitzplatz ist gesichert!',
-    html: confirmationHtml(reg),
+    html: confirmationHtml(reg, { calendarUrl: reg.id ? await calendarUrl(reg.id, 'mail') : null }),
   });
 }
 
@@ -200,7 +201,7 @@ function extraBox(stage) {
  * Bewusst kein Newsletter und keine Werbung (kein „Beratung buchen“) – nur die Erinnerung an den Abend
  * (plus ggf. kleine Zusatzinfo zum Abend aus event.mjs). Unten der Link zum Abbestellen.
  */
-export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
+export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl, calendarUrl: calUrl }) {
   const day = stage === 'day';
   const t = reminderText(stage);
   return layout({
@@ -214,7 +215,7 @@ export function reminderHtml(reg, stage, { cancelUrl, unsubscribeUrl }) {
       <p style="margin:0 0 22px">${t.when}:
       Für Sie sind <strong>${seatsText(reg.seats)}</strong> reserviert. Sie stehen mit Ihrem Namen auf unserer Gästeliste –
       ein Ticket brauchen Sie nicht.</p>
-      ${day ? '' : `<p style="margin:0">${btn(siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
+      ${day ? '' : `<p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
       <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>`}
       ${extraBox(stage)}
       <p style="margin:0 0 12px;color:${C.blue};font-size:18px;font-weight:700">Gut zu wissen</p>

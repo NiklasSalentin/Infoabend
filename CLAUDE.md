@@ -35,6 +35,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Bestätigungs-/Wartelisten-/Team-Mail (Design wie Plakat, Texte teils doppelt zur Seite!) | `netlify/lib/mail.mjs` |
 | Update-Mail zu den Anmeldungen (Empfänger, Häufigkeit, Uhrzeit, nur bei Änderungen) | Einstellung in `/admin` (gespeichert als `notes/digest-settings`), Logik `netlify/lib/digest.mjs`, Mail `digestHtml` in `netlify/lib/mail.mjs`, Zeitplan `netlify/functions/digest.mjs` (stündlich) |
 | Erinnerungs-Mails (Zeitplan, Absage-/Abbestell-Links) | Termine in `netlify/lib/event.mjs` (`reminders`), Logik `netlify/lib/reminders.mjs`, Versand `netlify/functions/reminders.mjs` (alle 10 Min.), Seiten `/absagen` + `/erinnerung-abbestellen` in `netlify/functions/termin.mjs` – gehen an alle bestätigten Gäste (Teil der Anmeldung, kein Newsletter, **nie Werbung** hineinschreiben), abbestellbar |
+| Kalender-Knopf mit persönlichem Link (wer hat den Termin eingetragen) | Links/Prüfcodes `netlify/lib/links.mjs`, Vermerk `markCalendar` in `netlify/lib/db.mjs`, Auswertung `netlify/functions/kalender.mjs`, Spalte „Kalender“ in `/admin` |
 | Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
 | QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
 | Besucherzähler & Adressliste in `/admin` | `public/admin.html`/`admin.js`, `netlify/functions/visit.mjs`, `netlify/lib/visitor.mjs` |
