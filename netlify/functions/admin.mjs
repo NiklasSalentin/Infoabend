@@ -3,7 +3,8 @@ import { seatStatus, listRegistrations, getRegistration, promoteRegistration, ca
 import { sendConfirmation } from '../lib/mail.mjs';
 import { useSite } from '../lib/event.mjs';
 import { runDigest, digestSettings, saveDigestSettings } from '../lib/digest.mjs';
-import { reminderOverview, sendReminderTest } from '../lib/reminders.mjs';
+import { reminderOverview, sendReminderTest, runCalendarReminder } from '../lib/reminders.mjs';
+import { mailCatalog, previewMail } from '../lib/previews.mjs';
 
 function authorized(req) {
   const expected = process.env.ADMIN_PASSWORD || '';
@@ -33,7 +34,7 @@ async function handle(req, context) {
       digestSettings(),
       readNote('digest'),
     ]);
-    return json({ status, registrations, stats, reminders: reminderOverview(registrations), digest: { ...digest, lastAt: digestState.lastAt || null } });
+    return json({ status, registrations, stats, reminders: reminderOverview(registrations), mails: mailCatalog(), digest: { ...digest, lastAt: digestState.lastAt || null } });
   }
 
   if (req.method !== 'POST') return json({ error: 'Methode nicht erlaubt' }, 405);
@@ -75,6 +76,15 @@ async function handle(req, context) {
       if (b.confirm !== 'LÖSCHEN') return json({ error: 'Bitte zur Bestätigung LÖSCHEN eingeben' }, 400);
       await purgePersonalData();
       return json({ ok: true });
+    }
+    case 'preview': {
+      // Vorschau einer Mail mit Beispiel-Gast (auch Entwürfe)
+      const p = previewMail(String(b.key || ''));
+      return p ? json(p) : json({ error: 'Unbekannte Mail' }, 404);
+    }
+    case 'calendar-reminder': {
+      // Kalender-Erinnerung an alle ohne Kalendereintrag – in Portionen, /admin ruft erneut auf, bis open = 0
+      try { return json({ ok: true, ...(await runCalendarReminder()) }); } catch (e) { return json({ error: e.message }, 409); }
     }
     case 'digest-settings': {
       // Update-Mail: Empfänger, Häufigkeit, Uhrzeit, nur bei Änderungen

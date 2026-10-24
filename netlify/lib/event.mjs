@@ -12,6 +12,9 @@ export const EVENT = {
   // Versand ab sendUtc (UTC; im Winter deutsche Zeit minus 1 Stunde: 10:00 Uhr → 09:00Z).
   // extra: kleiner Kasten „Zusatzinfo“ in dieser Mail – leer lassen ('') = kein Kasten. Beispiel:
   //   extra: { title: 'Ihre Fragen', text: 'Sie haben eine Frage? Antworten Sie auf diese Mail – wir greifen sie am Abend auf.' }
+  // Freigabe der Gäste-Mails, die noch abgestimmt werden: 'entwurf' = wird NICHT verschickt (nur Vorschau in /admin),
+  // 'freigegeben' = geht raus. Erst umstellen, wenn Niklas/Alex den Text abgesegnet haben.
+  mailStatus: { erinnerungen: 'entwurf', kalender: 'entwurf' },
   reminders: [
     { key: 'twoweeks', sendUtc: '2026-11-25T09:00:00Z', label: 'zwei Wochen vorher (Mi, 25.11., ab 10 Uhr)', extra: '' },
     { key: 'week', sendUtc: '2026-12-02T09:00:00Z', label: 'eine Woche vorher (Mi, 2.12., ab 10 Uhr)', extra: '' },

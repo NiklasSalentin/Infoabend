@@ -269,6 +269,11 @@ In der Liste in `/admin` je Zeile:
   (📅 + Datum; Maus drüber: über Bestätigungs-Mail, Seite oder Erinnerung) bzw. „nicht eingetragen“.
   Häkchen **„Nur zeigen: ohne Kalendereintrag“** filtert die Liste – z. B. um diese Gäste gezielt zu erinnern.
   Hinweis: Wer den Termin von Hand einträgt, steht trotzdem als „nicht eingetragen“ da.
+- **E-Mails ansehen** – Liste aller Mails mit Anlass und Status, **Ansehen** zeigt die Mail mit Beispiel-Gast.
+  Status **„Entwurf – wird nicht verschickt“**: Erinnerungs-Mails und Kalender-Erinnerung gehen erst raus, wenn der
+  Text abgestimmt und in `netlify/lib/event.mjs` → `mailStatus` auf „freigegeben“ gestellt ist.
+- **Kalender-Erinnerung** – Knopf „Jetzt verschicken“: einmalig an alle bestätigten Gäste ohne Kalendereintrag
+  (nicht an Abbesteller, niemand doppelt). Gesperrt, solange Entwurf.
 - **Löschen** (nur bei stornierten) – entfernt den Eintrag endgültig, z. B. Testanmeldungen.
 - **CSV exportieren** – Liste für Excel (Stuhlplanung, Namensschilder).
 

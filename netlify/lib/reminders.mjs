@@ -11,9 +11,9 @@
 // In jeder Erinnerung: Link „Termin absagen“ (Platz wird frei, Warteliste rückt nach) und „Erinnerungen abbestellen“.
 // Die Links enthalten einen Prüfcode – ohne ihn kann niemand fremde Anmeldungen absagen.
 import { EVENT, siteUrl } from './event.mjs';
-import { listRegistrations, markReminder } from './db.mjs';
+import { listRegistrations, markReminder, markCalendarReminder } from './db.mjs';
 import { sign, validToken, calendarUrl } from './links.mjs';
-import { sendReminder, smtpPool } from './mail.mjs';
+import { sendReminder, sendCalendarReminder, smtpPool } from './mail.mjs';
 
 const GAP_MS = 12 * 3600e3; // Mindestabstand zwischen Anmeldung/Nachrücken und Erinnerung
 const MAX_TRIES = 3; // so oft wird eine Mail an dieselbe Adresse höchstens versucht
@@ -58,6 +58,7 @@ export function needsReminder(r, stage) {
 export function reminderOverview(regs, now = new Date()) {
   const active = regs.filter((r) => r.status === 'confirmed' && !r.reminder_optout_at);
   return {
+    released: EVENT.mailStatus?.erinnerungen === 'freigegeben',
     active: active.length,
     confirmed: regs.filter((r) => r.status === 'confirmed').length,
     optout: regs.filter((r) => r.reminder_optout_at).length,
@@ -80,6 +81,8 @@ export function reminderOverview(regs, now = new Date()) {
  * Ergebnis: Text für das Protokoll.
  */
 export async function runReminders({ now = new Date(), budgetMs = 20000 } = {}) {
+  // Noch Entwurf (event.mjs → mailStatus.erinnerungen): nichts verschicken
+  if (EVENT.mailStatus?.erinnerungen !== 'freigegeben') return 'Erinnerungen noch nicht freigegeben (Entwurf)';
   const stage = dueStage(now);
   if (!stage) return 'nichts fällig';
   const due = (await listRegistrations()).filter((r) => needsReminder(r, stage));
@@ -115,4 +118,42 @@ export async function sendReminderTest() {
   const sample = { id: 'test', name: 'Maria Muster', seats: 2, companions: ['Max Muster'] };
   const links = await reminderLinks('test');
   for (const s of EVENT.reminders) await sendReminder(sample, s.key, links, undefined, EVENT.notifyEmail);
+}
+
+// ---------------------------------------------------------------------------
+// Kalender-Erinnerung (Knopf in /admin): an bestätigte Gäste ohne Kalendereintrag über den Knopf
+// ---------------------------------------------------------------------------
+/** Wer bekommt sie? Bestätigt, Kalender-Knopf nicht genutzt, Erinnerungen nicht abbestellt, noch nicht bekommen */
+export const needsCalendarReminder = (r) =>
+  r.status === 'confirmed' && !r.calendar_at && !r.reminder_optout_at && !r.calendar_reminder_at && !r.calendar_reminder_error;
+
+/**
+ * Verschickt so viele wie in `budgetMs` passen – /admin ruft so lange erneut auf, bis `open` 0 ist.
+ * Ergebnis: { sent, failed, open }. Gesperrt, solange event.mjs → mailStatus.kalender nicht 'freigegeben' ist.
+ */
+export async function runCalendarReminder({ budgetMs = 7000 } = {}) {
+  if (EVENT.mailStatus?.kalender !== 'freigegeben') throw new Error('Die Kalender-Erinnerung ist noch ein Entwurf und kann noch nicht verschickt werden.');
+  const due = (await listRegistrations()).filter(needsCalendarReminder);
+  const started = Date.now();
+  const pool = smtpPool();
+  let sent = 0;
+  let failed = 0;
+  try {
+    for (const r of due) {
+      if (Date.now() - started > budgetMs) break;
+      try {
+        await sendCalendarReminder(r, await reminderLinks(r.id), pool);
+        await markCalendarReminder(r.id);
+        sent++;
+      } catch (e) {
+        console.error(`Kalender-Erinnerung an ${r.id} fehlgeschlagen`, e);
+        await markCalendarReminder(r.id, e.message || e);
+        failed++;
+        if (failed >= 3) break;
+      }
+    }
+  } finally {
+    pool.close();
+  }
+  return { sent, failed, open: (await listRegistrations()).filter(needsCalendarReminder).length };
 }

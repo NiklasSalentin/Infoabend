@@ -50,6 +50,7 @@ async function load() {
   renderAddresses();
   renderReminders();
   renderDigest();
+  renderMails();
 
   // Platz auf der Warteliste (1 = als Nächstes dran)
   renderRows();
@@ -122,6 +123,55 @@ $('#digest-test').onclick = async () => {
   const to = $('#digest-recipients').value.trim();
   if (!confirm(`Jetzt eine Update-Mail mit dem aktuellen Stand an die gespeicherten Empfänger schicken?\n\n(${to || 'keine Empfänger'})\n\nDer geplante Versand ändert sich dadurch nicht.`)) return;
   try { await api('POST', { action: 'digest' }); alert('Verschickt – bitte im Postfach nachsehen.'); } catch (e) { alert(e.message); }
+};
+
+// E-Mails ansehen (Vorschau aller Mails) + Kalender-Erinnerung
+function renderMails() {
+  const mails = data.mails || [];
+  const isDraft = (key) => mails.find((m) => m.key === key)?.status === 'entwurf';
+  $('#rem-draft').hidden = !mails.some((m) => m.key.startsWith('erinnerung-') && m.status === 'entwurf');
+  $('#cal-draft').hidden = !isDraft('kalender');
+  $('#cal-send').disabled = isDraft('kalender');
+  const targets = data.registrations.filter((r) => r.status === 'confirmed' && !r.calendar_at && !r.reminder_optout_at && !r.calendar_reminder_at && !r.calendar_reminder_error);
+  const got = data.registrations.filter((r) => r.calendar_reminder_at);
+  const seatSum = (l) => l.reduce((a, r) => a + r.seats, 0);
+  $('#cal-targets').textContent = `Würde jetzt gehen an: ${seatSum(targets)} Plätze (${targets.length} Anmeldungen)`
+    + (got.length ? ` · schon bekommen: ${seatSum(got)} Plätze (${got.length} Anmeldungen)` : '');
+  $('#mail-list').innerHTML = mails.map((m) => `<tr>
+    <td><strong>${esc(m.name)}</strong></td><td>${esc(m.when)}</td>
+    <td><span class="status-tag ${m.status}">${m.status === 'aktiv' ? 'aktiv' : 'Entwurf – wird nicht verschickt'}</span></td>
+    <td><button data-preview="${esc(m.key)}">Ansehen</button></td></tr>`).join('');
+}
+
+$('#mail-list').onclick = async (e) => {
+  const b = e.target.closest('button[data-preview]');
+  if (!b) return;
+  try {
+    const p = await api('POST', { action: 'preview', key: b.dataset.preview });
+    $('#mail-subject').textContent = p.subject;
+    $('#mail-frame').srcdoc = p.html;
+    $('#mail-preview').hidden = false;
+    $('#mail-preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) { alert(err.message); }
+};
+
+$('#cal-send').onclick = async () => {
+  if (!confirm($('#cal-targets').textContent + '\n\nKalender-Erinnerung jetzt an diese Gäste verschicken?')) return;
+  const btnEl = $('#cal-send');
+  btnEl.disabled = true;
+  let total = 0;
+  let failed = 0;
+  try {
+    for (;;) {
+      btnEl.textContent = `Wird verschickt … ${total}`;
+      const r = await api('POST', { action: 'calendar-reminder' });
+      total += r.sent; failed += r.failed;
+      if (!r.open || (!r.sent && !r.failed)) break;
+    }
+    alert(`Verschickt: ${total}${failed ? ` · fehlgeschlagen: ${failed}` : ''}`);
+  } catch (err) { alert(err.message); }
+  btnEl.textContent = 'Jetzt verschicken';
+  await load();
 };
 
 $('#reminder-test').onclick = async () => {

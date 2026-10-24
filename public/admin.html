@@ -30,6 +30,9 @@
   .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
   .two h3 { font-size: 1rem; margin: 12px 0 6px; }
   td.r, th.r { text-align: right; }
+  .draft-note { margin: 10px 0; padding: 10px 14px; border-radius: 10px; background: #fff4e0; color: #7a4a00; }
+  .status-tag { padding: 2px 10px; border-radius: 10px; font-size: .8rem; color: #fff; }
+  .status-tag.aktiv { background: #2e7d32; } .status-tag.entwurf { background: #b26b00; }
   #login p { margin: 18px 0 0; } /* Abstand zwischen Passwortfeld und Knopf */
   #login .error:empty { display: none; }
 </style>
@@ -76,6 +79,8 @@
         <h2 style="margin:0">Erinnerungs-Mails</h2>
         <button class="btn btn-outline" id="reminder-test">Test an info@ schicken</button>
       </div>
+      <p class="draft-note" id="rem-draft" hidden><strong>Entwurf – die Erinnerungen werden noch nicht verschickt.</strong>
+        Erst wenn die Texte abgestimmt sind, werden sie freigeschaltet. Ansehen: unten bei „E-Mails ansehen“.</p>
       <div class="tiles">
         <div class="tile"><b id="rem-consent">–</b><span>bekommen die Erinnerungen (bestätigte Gäste)</span></div>
         <div class="tile"><b id="rem-optout">–</b><span>haben Erinnerungen abbestellt</span></div>
@@ -87,6 +92,30 @@
       <p class="note">Geht automatisch an alle bestätigten Gäste (kein Newsletter, keine Werbung – nur die Erinnerung). In jeder Erinnerung:
         <strong>„Termin absagen“</strong> (Platz wird frei, die Warteliste rückt nach und bekommt sofort ihre Einladung) und
         „Erinnerungen abbestellen“. Wer sich weniger als 12 Stunden vorher anmeldet, bekommt diese Erinnerung nicht.</p>
+    </div>
+
+    <div class="box">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">Kalender-Erinnerung</h2>
+        <button class="btn btn-primary" id="cal-send">Jetzt verschicken</button>
+      </div>
+      <p class="draft-note" id="cal-draft" hidden><strong>Entwurf – kann noch nicht verschickt werden.</strong>
+        Erst wenn der Text abgestimmt ist, wird der Knopf freigeschaltet. Ansehen: unten bei „E-Mails ansehen“.</p>
+      <p>Geht <strong>einmalig</strong> an alle bestätigten Gäste, die den Kalender-Knopf noch nicht genutzt haben (Spalte „Kalender“:
+        „nicht eingetragen“) – nicht an Gäste, die Erinnerungen abbestellt haben. Wer sie schon bekommen hat, bekommt sie nicht noch einmal.</p>
+      <p class="seat-hint" id="cal-targets"></p>
+    </div>
+
+    <div class="box">
+      <h2>E-Mails ansehen</h2>
+      <p class="note">So sehen die Mails gerade aus – mit Beispiel-Gast „Maria Muster“ (2 Plätze). Links in der Vorschau sind ausgeschaltet.</p>
+      <div class="scroll"><table>
+        <thead><tr><th>Mail</th><th>Wann</th><th>Status</th><th></th></tr></thead>
+        <tbody id="mail-list"></tbody></table></div>
+      <div id="mail-preview" hidden>
+        <p style="margin:18px 0 6px"><strong>Betreff:</strong> <span id="mail-subject"></span></p>
+        <iframe id="mail-frame" title="Vorschau der E-Mail" sandbox="" style="width:100%;height:900px;border:1px solid #d5daea;border-radius:12px;background:#fff"></iframe>
+      </div>
     </div>
 
     <div class="box">

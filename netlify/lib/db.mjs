@@ -202,6 +202,17 @@ export function markCalendar(id, via) {
   });
 }
 
+/** Kalender-Erinnerung verschickt (Knopf in /admin) – damit niemand sie doppelt bekommt */
+export function markCalendarReminder(id, error = null) {
+  return mutate('event', newEvent, (ev) => {
+    const r = ev.registrations.find((x) => x.id === id);
+    if (!r) return { result: false };
+    if (error) r.calendar_reminder_error = String(error).slice(0, 200);
+    else r.calendar_reminder_at = new Date().toISOString();
+    return { data: ev, result: true };
+  });
+}
+
 /** Keine Erinnerungen mehr (Abbestell-Link in der Mail oder Knopf in /admin). Ergebnis: false = nicht gefunden */
 export function stopReminders(id, via) {
   return mutate('event', newEvent, (ev) => {

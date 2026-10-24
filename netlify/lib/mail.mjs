@@ -254,6 +254,50 @@ export async function sendReminder(reg, stage, links, via = smtp(), to = reg.ema
   });
 }
 
+// ---------------------------------------------------------------------------
+// Kalender-Erinnerung (ENTWURF – Text noch nicht abgestimmt): geht nur per Knopf in /admin an bestätigte Gäste,
+// die den Kalender-Knopf noch nicht genutzt haben. Freigabe: event.mjs → mailStatus.kalender = 'freigegeben'.
+// ---------------------------------------------------------------------------
+export const calendarReminderSubject = () => `Schon im Kalender? Infoabend am ${EVENT.dateLabel}`;
+
+export function calendarReminderHtml(reg, { cancelUrl, unsubscribeUrl, calendarUrl: calUrl }) {
+  return layout({
+    preheader: `Damit der Abend nicht untergeht: Termin mit einem Klick eintragen – ${EVENT.dateLabel}, Einlass ${EVENT.admission}.`,
+    hero: heroTitle(`Schon im Kalender, ${firstName(reg.name)}?`, 'Erinnerung',
+      `Ihr Platz beim Infoabend „${EVENT.title}“ ist reserviert.`) + seatCard(reg),
+    body: `
+      <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
+      <p style="margin:0 0 22px">für Sie sind <strong>${seatsText(reg.seats)}</strong> beim Infoabend reserviert. Damit der Termin
+      im Alltag nicht untergeht, tragen Sie ihn am besten gleich in Ihren Kalender ein – mit einem Klick, inklusive Adresse
+      und Erinnerung am Vortag.</p>
+      <p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
+      <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google.</p>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 22px;background:${C.light};border-radius:14px"><tr><td style="padding:20px 22px;font-family:${FONT}">
+        <p style="margin:0 0 12px;font-size:16px;line-height:1.5"><strong>Sie können doch nicht kommen?</strong><br>
+        <span style="color:${C.muted}">Dann geben Sie Ihren Platz mit einem Klick frei – so kann jemand von der Warteliste nachrücken.</span></p>
+        ${btn(cancelUrl, 'Termin absagen', { bg: '#ffffff', color: C.blue })}
+      </td></tr></table>
+
+      <p style="margin:0 0 26px">Wir freuen uns auf Sie!<br><strong>Ihr Team der Baufinanz Düren</strong></p>
+      <p style="margin:0 0 22px;font-size:13px;line-height:1.5;color:${C.muted}">Sie erhalten diese Erinnerung, weil Sie sich zum Infoabend
+      angemeldet haben – kein Newsletter. Keine Erinnerungen mehr? <a href="${unsubscribeUrl}" style="color:${C.muted}">Hier abbestellen</a> –
+      Ihr Platz bleibt reserviert.</p>`,
+  });
+}
+
+export async function sendCalendarReminder(reg, links, via = smtp(), to = reg.email) {
+  await via.sendMail({
+    from: from(),
+    to,
+    replyTo: EVENT.notifyEmail,
+    subject: calendarReminderSubject(),
+    html: calendarReminderHtml(reg, links),
+    list: { unsubscribe: { url: links.unsubscribeUrl, comment: 'Keine Erinnerungen mehr' } },
+    headers: { 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
+  });
+}
+
 export const waitlistHtml = (reg) => layout({
   preheader: 'Der Infoabend ist ausgebucht – wir melden uns, sobald ein Platz frei wird.',
   hero: heroTitle(`Sie stehen auf der Warteliste, ${firstName(reg.name)}`, 'Warteliste'),
