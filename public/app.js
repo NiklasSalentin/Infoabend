@@ -103,10 +103,6 @@ async function loadStatus() {
     $('#seats-badge').hidden = !s.open || (!showFree && !full);
     // Geheimer Zähler unten rechts neben dem Schloss: echte gebuchte Plätze (Anmelder + Begleitung)
     $('#seat-counter').textContent = s.attendees ?? '';
-    if (s.attendees >= 10) {
-      $('#attendees').textContent = s.attendees;
-      $('#social-proof').hidden = false;
-    }
     const hint = $('#seat-hint');
     const btn = $('#submit');
     if (!s.open) {

@@ -148,7 +148,7 @@ p { margin: 0 0 1em; }
 /* Datumsfeld + Siegel: überlappen den blauen Bereich wie auf dem Plakat, beide gleich hoch */
 .eckdaten { background: var(--light); padding-bottom: 36px; font-variant-numeric: lining-nums; }
 /* --eck-h = gemeinsame Höhe von Datumsfeld und Siegel (natürliche Höhe des Datumsfelds, gemessen je Umbruchpunkt) */
-.eckdaten-row { --eck-h: 340px; position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 32px; margin-top: -140px; margin-bottom: 36px; }
+.eckdaten-row { --eck-h: 340px; position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 32px; margin-top: -140px; margin-bottom: 0; }
 .date-box { flex: 1; min-height: var(--eck-h); display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 36px 48px; border-radius: 28px; background: var(--navy); box-shadow: 0 24px 60px rgba(28,35,80,.28); color: var(--white); }
 .date-top { display: flex; flex-direction: column; gap: 8px; }
 .weekday { color: var(--navy-label); font-size: 20px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
@@ -173,14 +173,6 @@ p { margin: 0 0 1em; }
 .seal { flex: none; display: block; }
 .js-seal .date-box { min-height: 0; } /* mit JavaScript übernimmt das Siegel die echte Höhe */
 .seal img { display: block; height: var(--eck-h); width: auto; box-shadow: 0 20px 50px rgba(28,35,80,.3); }
-
-/* ---------- Zahlen ---------- */
-.stats-inner { display: flex; justify-content: center; gap: 64px; flex-wrap: wrap; text-align: center; }
-/* Zahlen-Streifen hat nur noch „Personen bereits angemeldet“ (ab 10) – solange der fehlt, keine leere Fläche */
-.eckdaten:has(#social-proof[hidden]) .stats-inner { display: none; }
-.eckdaten:has(#social-proof[hidden]) .eckdaten-row { margin-bottom: 0; }
-.num { display: block; color: var(--primary); font-size: 52px; font-weight: 600; line-height: 1.2em; letter-spacing: -.04em; }
-.lbl { color: var(--muted); font-size: 16px; }
 
 /* ---------- Inhalt ---------- */
 .block { padding-top: 90px; padding-bottom: 90px; }
@@ -331,7 +323,6 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .date { font-size: 64px; }
   .date-strong { font-size: 20px; }
   .date-sub { font-size: 16px; }
-  .num { font-size: 40px; }
   .block, .venue, .signup { padding-top: 70px; padding-bottom: 70px; }
   .two-col { gap: 40px; }
   .footer-top { gap: 20px; }
@@ -374,7 +365,6 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .date { font-size: 52px; }
   .date-details { flex-direction: column; gap: 14px; }
   .gradient-box { margin-bottom: 16px; font-size: 14px; }
-  .stats-inner { gap: 28px; }
   /* Freie Plätze kompakt rechts neben „Jetzt Platz sichern“: „Noch 117“ / „Plätze frei“ in zwei Zeilen */
   .hero-cta { flex-wrap: nowrap; gap: 10px; }
   .hero-cta .button-main { flex: none; padding: 12px 18px; gap: 12px; }
