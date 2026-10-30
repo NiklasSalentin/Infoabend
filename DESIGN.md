@@ -78,8 +78,8 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
   Vorname!“, Zeile „Infoabend am Mittwoch, 9. Dezember 2026 · Festhalle Birkesdorf“, dann zwei Sätze („wir haben Ihrer Anmeldung einen
   weiteren Platz hinzugefügt. Reserviert sind jetzt **3 Plätze** – für Sie mit Peter Muster und Lena Muster.“) und der Gruß.
   **Keine** Navy-Karte, kein Kalender-Knopf, kein „Gut zu wissen“. Betreff „Ein weiterer Platz für Sie – Infoabend Baufinanz Düren“
-  (2 Plätze mehr: „2 weitere Plätze für Sie“, weniger: „Ihre Anmeldung ist aktualisiert“). Funktion `seatChangeHtml`; geht erst raus,
-  wenn `mailStatus.aenderung` auf „freigegeben“ steht.
+  (2 Plätze mehr: „2 weitere Plätze für Sie“, weniger: „Ihre Anmeldung ist aktualisiert“). Funktion `seatChangeHtml`; von Niklas freigegeben
+  am 30.10. (`mailStatus.aenderung`).
 - **Erinnerungs-Mails** (zwei Wochen, eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
   Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Noch zwei Wochen, …“ / „Nur noch eine Woche, Vorname!“ / „Morgen ist es so weit, Vorname!“,
   Kalender-Knopf nicht in der Vortags-Mail, optional **Zusatzinfo-Kasten** (Navy, Gold-Pill mit Titel, weißer Text) vor „Gut zu wissen“, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem

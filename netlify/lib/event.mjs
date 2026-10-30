@@ -15,7 +15,7 @@ export const EVENT = {
   // Freigabe der Gäste-Mails, die noch abgestimmt werden: 'entwurf' = wird NICHT verschickt (nur Vorschau in /admin),
   // 'freigegeben' = geht raus. Erst umstellen, wenn Niklas/Alex den Text abgesegnet haben.
   // aenderung = Mail „Ihre Anmeldung wurde aktualisiert“ nach „Plätze ändern“ in /admin.
-  mailStatus: { erinnerungen: 'entwurf', kalender: 'entwurf', aenderung: 'entwurf' },
+  mailStatus: { erinnerungen: 'entwurf', kalender: 'entwurf', aenderung: 'freigegeben' }, // aenderung freigegeben von Niklas am 30.10.
   reminders: [
     { key: 'twoweeks', sendUtc: '2026-11-25T09:00:00Z', label: 'zwei Wochen vorher (Mi, 25.11., ab 10 Uhr)', extra: '' },
     { key: 'week', sendUtc: '2026-12-02T09:00:00Z', label: 'eine Woche vorher (Mi, 2.12., ab 10 Uhr)', extra: '' },

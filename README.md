@@ -268,8 +268,8 @@ In der Liste in `/admin` je Zeile:
   die Warteliste (wie beim Stornieren). Auf der Warteliste bleibt der Platz in der Reihe. Das Maximum pro Person gilt
   hier nicht (Entscheidung des Teams). In der Spalte **Plätze** steht danach z. B. „geändert: 2 → 3 (30.10.)“, in der
   Update-Mail „1 Platz nachgebucht“. Häkchen **Gast per E-Mail informieren** schickt die kurze Mail „Ein weiterer Platz
-  für Sie“ (nur die Änderung: neue Platzzahl und Namen) – erst nach Freigabe (`mailStatus.aenderung`); bis dahin danach **Mail erneut** drücken (normale
-  Bestätigung mit neuer Platzzahl).
+  für Sie“ (nur die Änderung: neue Platzzahl und Namen). Das Häkchen ist vorausgewählt; abwählen = keine Mail.
+  Freigegeben seit 30.10. (`mailStatus.aenderung`).
 - **Stornieren** – die Plätze werden sofort wieder frei und gehen der Reihe nach an die Warteliste.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
 - **Alle Anmeldungen löschen** (unten in `/admin`, nach dem Abend) – für die Speicherfrist aus den
