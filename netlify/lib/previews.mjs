@@ -2,7 +2,7 @@
 // So sieht man jederzeit, wie jede Mail gerade aussieht, auch Entwürfe, die noch nicht verschickt werden.
 import { EVENT } from './event.mjs';
 import {
-  confirmationHtml, seatChangeSubject, waitlistHtml, reminderHtml, reminderSubject, calendarReminderHtml, calendarReminderSubject, digestHtml,
+  confirmationHtml, seatChangeHtml, seatChangeSubject, waitlistHtml, reminderHtml, reminderSubject, calendarReminderHtml, calendarReminderSubject, digestHtml,
 } from './mail.mjs';
 
 const SAMPLE = { id: 'beispiel', name: 'Maria Muster', seats: 2, companions: ['Peter Muster'] };
@@ -34,7 +34,7 @@ export function previewMail(key) {
     return { subject: 'Gute Nachricht: Ihr Sitzplatz ist gesichert!', html: confirmationHtml({ ...SAMPLE, promoted_at: new Date().toISOString() }, LINKS) };
   }
   if (key === 'aenderung') {
-    return { subject: seatChangeSubject(), html: confirmationHtml({ ...SAMPLE, seats: 3, companions: ['Peter Muster', 'Lena Muster'] }, { ...LINKS, changedFrom: 2 }) };
+    return { subject: seatChangeSubject(), html: seatChangeHtml({ ...SAMPLE, seats: 3, companions: ['Peter Muster', 'Lena Muster'] }, { ...LINKS, changedFrom: 2 }) };
   }
   if (key === 'warteliste') return { subject: 'Sie stehen auf der Warteliste – Infoabend Baufinanz Düren', html: waitlistHtml(SAMPLE) };
   if (key.startsWith('erinnerung-')) {

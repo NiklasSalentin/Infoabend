@@ -118,33 +118,21 @@ function seatCard(reg) {
   </td></tr></table>`;
 }
 
-/**
- * Bestätigung. changedFrom (Zahl) = Variante „Anmeldung aktualisiert“ nach „Plätze ändern“ in /admin,
- * mit der bisherigen Platzzahl (gleiche Zahl = nur Namen der Begleitung geändert).
- */
-export function confirmationHtml(reg, { calendarUrl: calUrl, changedFrom } = {}) {
+export function confirmationHtml(reg, { calendarUrl: calUrl } = {}) {
   // Von der Warteliste nachgerückt? Dann beginnt die Mail mit der guten Nachricht
-  const changed = changedFrom !== undefined;
-  const promoted = !changed && Boolean(reg.promoted_at);
+  const promoted = Boolean(reg.promoted_at);
   const card = seatCard(reg);
-  const intro = changed
-    ? `gern haben wir Ihre Anmeldung angepasst: Für Sie sind jetzt <strong>${seatsText(reg.seats)}</strong> reserviert${changedFrom !== reg.seats ? ` (bisher ${changedFrom})` : ''}.
-      ${reg.seats > 1 ? 'Sie und Ihre Begleitung stehen' : 'Sie stehen mit Ihrem Namen'} auf unserer Gästeliste – ein Ticket brauchen Sie nicht.`
-    : `${promoted
-      ? 'gute Nachricht: Für Sie ist ein Platz frei geworden! Sie sind von der Warteliste nachgerückt – wir haben'
-      : 'vielen Dank für Ihre Anmeldung! Wir haben'} <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
-      Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.`;
 
   return layout({
-    preheader: changed
-      ? `Ihre Anmeldung ist aktualisiert: ${seatsText(reg.seats)} am ${EVENT.dateLabel}, ${EVENT.venue}.`
-      : `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
-    hero: heroTitle(changed ? `Alles notiert, ${firstName(reg.name)}!` : `Herzlich willkommen, ${firstName(reg.name)}!`,
-      changed ? '✓ Anmeldung aktualisiert' : promoted ? '✓ Platz frei geworden' : '✓ Anmeldung bestätigt',
+    preheader: `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
+    hero: heroTitle(`Herzlich willkommen, ${firstName(reg.name)}!`, promoted ? '✓ Platz frei geworden' : '✓ Anmeldung bestätigt',
       `Wir freuen uns, Sie beim Infoabend „${EVENT.title}“ begrüßen zu dürfen.`) + card,
     body: `
       <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
-      <p style="margin:0 0 22px">${intro}</p>
+      <p style="margin:0 0 22px">${promoted
+    ? 'gute Nachricht: Für Sie ist ein Platz frei geworden! Sie sind von der Warteliste nachgerückt – wir haben'
+    : 'vielen Dank für Ihre Anmeldung! Wir haben'} <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
+      Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
 
       <p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
       <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>
@@ -188,14 +176,37 @@ export async function sendConfirmation(reg) {
 
 export const seatChangeSubject = () => 'Ihre Anmeldung wurde aktualisiert – Infoabend Baufinanz Düren';
 
-/** Nach „Plätze ändern“ in /admin: neue Platzzahl/Begleitung bestätigen. Freigabe: event.mjs → mailStatus.aenderung */
+/**
+ * Kurze Mail nach „Plätze ändern“ in /admin: neue Platzzahl + Begleitung bestätigen.
+ * Gleicher Rahmen und gleiche Navy-Karte wie die Bestätigung, aber nur das Nötigste (kein „Gut zu wissen“, keine Werbung).
+ * changedFrom = bisherige Platzzahl (gleiche Zahl = nur Namen der Begleitung geändert).
+ */
+export function seatChangeHtml(reg, { calendarUrl: calUrl, changedFrom } = {}) {
+  const more = changedFrom !== undefined && changedFrom !== reg.seats ? ` (bisher ${changedFrom})` : '';
+  return layout({
+    preheader: `Ihre Anmeldung ist aktualisiert: ${seatsText(reg.seats)} am ${EVENT.dateLabel}, ${EVENT.venue}.`,
+    hero: heroTitle(`Alles notiert, ${firstName(reg.name)}!`, '✓ Anmeldung aktualisiert') + seatCard(reg),
+    body: `
+      <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
+      <p style="margin:0 0 22px">gern haben wir Ihre Anmeldung angepasst: Für Sie sind jetzt <strong>${seatsText(reg.seats)}</strong> reserviert${more}.
+      ${reg.seats > 1 ? 'Sie und Ihre Begleitung stehen' : 'Sie stehen'} auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
+      <p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
+      <p style="margin:0 0 22px;font-size:13px;color:${C.muted}">Falls noch nicht geschehen – für iPhone, Android, Outlook und Google.</p>
+      <p style="margin:0 0 22px">Es ändert sich noch etwas? Antworten Sie einfach auf diese E-Mail.</p>
+      <p style="margin:0 0 18px">Wir freuen uns auf Sie!<br><strong>Ihr Team der Baufinanz Düren</strong></p>
+      <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Übrigens: Am Abend entstehen Fotos und Videos –
+      <a href="${EVENT.privacyUrl}#aufnahmen" style="color:${C.muted}">mehr dazu in den Datenschutzhinweisen</a>.</p>`,
+  });
+}
+
+/** Versand der kurzen Mail. Freigabe: event.mjs → mailStatus.aenderung */
 export async function sendSeatChange(reg, changedFrom) {
   await smtp().sendMail({
     from: from(),
     to: reg.email,
     replyTo: EVENT.notifyEmail,
     subject: seatChangeSubject(),
-    html: confirmationHtml(reg, { calendarUrl: await calendarUrl(reg.id, 'mail'), changedFrom }),
+    html: seatChangeHtml(reg, { calendarUrl: await calendarUrl(reg.id, 'mail'), changedFrom }),
   });
 }
 

@@ -73,10 +73,12 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
-- **Anmeldung aktualisiert** (nach „Plätze ändern“ in `/admin`, Häkchen „Gast per E-Mail informieren“): gleiche Mail wie die
-  Bestätigung, Etikett „✓ Anmeldung aktualisiert“, Überschrift „Alles notiert, Vorname!“, erster Satz „gern haben wir Ihre
-  Anmeldung angepasst: Für Sie sind jetzt **3 Plätze** reserviert (bisher 2).“, Betreff „Ihre Anmeldung wurde aktualisiert – Infoabend
-  Baufinanz Düren“. Entwurf, bis Niklas den Text freigibt (`mailStatus.aenderung`).
+- **Anmeldung aktualisiert** (nach „Plätze ändern“ in `/admin`, Häkchen „Gast per E-Mail informieren“): **kurz** (Wunsch Niklas) –
+  gleicher Rahmen und gleiche Navy-Karte wie die Bestätigung, Etikett „✓ Anmeldung aktualisiert“, Überschrift „Alles notiert, Vorname!“,
+  ein Absatz „gern haben wir Ihre Anmeldung angepasst: Für Sie sind jetzt **3 Plätze** reserviert (bisher 2). …“, Kalender-Knopf,
+  „Es ändert sich noch etwas? Antworten Sie einfach auf diese E-Mail.“, Gruß, ganz klein der Satz zu Fotos/Videos (neue Begleitung kennt ihn
+  sonst nicht). **Kein** „Gut zu wissen“, keine Beratungs-Werbung. Betreff „Ihre Anmeldung wurde aktualisiert – Infoabend Baufinanz Düren“.
+  Funktion `seatChangeHtml`; geht erst raus, wenn `mailStatus.aenderung` auf „freigegeben“ steht.
 - **Erinnerungs-Mails** (zwei Wochen, eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
   Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Noch zwei Wochen, …“ / „Nur noch eine Woche, Vorname!“ / „Morgen ist es so weit, Vorname!“,
   Kalender-Knopf nicht in der Vortags-Mail, optional **Zusatzinfo-Kasten** (Navy, Gold-Pill mit Titel, weißer Text) vor „Gut zu wissen“, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem
