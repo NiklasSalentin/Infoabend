@@ -35,6 +35,19 @@
   .status-tag.aktiv { background: #2e7d32; } .status-tag.entwurf { background: #b26b00; }
   #login p { margin: 18px 0 0; } /* Abstand zwischen Passwortfeld und Knopf */
   #login .error:empty { display: none; }
+  /* Fenster „Plätze ändern“ */
+  #seat-dialog { width: min(520px, calc(100vw - 32px)); border: none; border-radius: var(--radius); padding: 24px; box-shadow: 0 20px 60px rgba(28,35,80,.35); }
+  #seat-dialog::backdrop { background: rgba(28,35,80,.45); }
+  #seat-dialog h2 { margin: 0 0 4px; font-size: 1.4rem; }
+  .stepper { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .stepper input { width: 90px; margin: 0; text-align: center; font-weight: 700; }
+  .stepper button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #d5daea; background: var(--light); color: var(--primary); font-size: 1.4rem; font-weight: 700; cursor: pointer; }
+  #seat-companions label { margin-top: 10px; font-weight: 400; font-size: .95rem; }
+  #seat-check { margin: 14px 0 0; padding: 10px 14px; border-radius: 10px; background: var(--light); }
+  #seat-check.bad { background: #fde8e8; color: #9b1c1c; }
+  #seat-check.warn { background: #fff4e0; color: #7a4a00; }
+  .dialog-buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
+  .seat-change { display: inline-block; margin-top: 4px; font-size: .78rem; color: var(--secondary); }
 </style>
 </head>
 <body>
@@ -193,6 +206,21 @@
         <tbody id="rows"></tbody>
       </table></div>
     </div>
+    <dialog id="seat-dialog">
+      <h2>Plätze ändern</h2>
+      <p class="note" id="seat-who" style="margin:0 0 14px"></p>
+      <label for="seat-count">Plätze gesamt (Anmelder + Begleitung)</label>
+      <div class="stepper"><button type="button" id="seat-minus" aria-label="einen Platz weniger">−</button>
+        <input type="number" min="1" max="20" id="seat-count"><button type="button" id="seat-plus" aria-label="einen Platz mehr">+</button></div>
+      <div id="seat-companions"></div>
+      <p id="seat-check"></p>
+      <label class="check" id="seat-notify-wrap"><input type="checkbox" id="seat-notify"> <span>Gast per E-Mail informieren
+        <span class="note" id="seat-notify-note" style="display:block;font-weight:400"></span></span></label>
+      <div class="dialog-buttons">
+        <button class="btn btn-outline" id="seat-cancel" type="button">Abbrechen</button>
+        <button class="btn btn-primary" id="seat-save" type="button">Speichern</button>
+      </div>
+    </dialog>
     <div class="box">
       <h2>Nach dem Abend: Daten löschen</h2>
       <p class="note">Laut Datenschutzhinweisen löschen wir Anmeldungen spätestens <strong>3 Monate nach dem Infoabend</strong>

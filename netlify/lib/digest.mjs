@@ -55,7 +55,11 @@ export function changesSince(regs, since) {
   const fresh = regs.filter((r) => r.created_at > since && r.status !== 'cancelled');
   const cancelled = regs.filter((r) => r.status === 'cancelled' && r.cancelled_at > since && !(r.created_at > since));
   const promoted = regs.filter((r) => r.status === 'confirmed' && r.promoted_at > since && !(r.created_at > since));
-  return { fresh, cancelled, promoted, count: fresh.length + cancelled.length + promoted.length };
+  // Plätze nachträglich geändert („Plätze ändern“ in /admin): Stand vor der ersten Änderung seit `since` → jetzt
+  const changed = regs.filter((r) => r.status !== 'cancelled' && !(r.created_at > since))
+    .map((r) => ({ ...r, seats_before: (r.seat_changes || []).find((c) => c.at > since)?.from }))
+    .filter((r) => r.seats_before !== undefined && r.seats_before !== r.seats);
+  return { fresh, cancelled, promoted, changed, count: fresh.length + cancelled.length + promoted.length + changed.length };
 }
 
 /**

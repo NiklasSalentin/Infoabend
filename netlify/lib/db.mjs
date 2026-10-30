@@ -163,6 +163,31 @@ export function cancelRegistration(id, via = 'admin') {
   });
 }
 
+/**
+ * Plätze einer Anmeldung nachträglich ändern (Knopf „Plätze ändern“ in /admin) – z. B. Gast ruft an:
+ * „Mein Bruder kommt auch mit“ → 2 statt 1 Platz, Name der Begleitung dazu.
+ * seats = Plätze gesamt (Anmelder + Begleitung), companions = Namen der Begleitung.
+ * - Bestätigt + mehr Plätze: nur, wenn genug frei sind (nie überbucht) – sonst 'full'.
+ * - Weniger Plätze: die frei gewordenen gehen sofort der Reihe nach an die Warteliste.
+ * - Warteliste: Platzzahl ändert sich, der Platz in der Reihe bleibt.
+ * Max. pro Person gilt hier nicht – das entscheidet das Team.
+ * Ergebnis: { status: 'ok' | 'unchanged' | 'full' | 'invalid', from, free, promoted }
+ */
+export function changeSeats(id, seats, companions) {
+  return mutate('event', newEvent, (ev) => {
+    const r = ev.registrations.find((x) => x.id === id);
+    if (!r || r.status === 'cancelled') return { result: { status: 'invalid' } };
+    const from = r.seats;
+    const free = summarize(ev).free;
+    if (r.status === 'confirmed' && seats - from > free) return { result: { status: 'full', from, free } };
+    if (seats === from && JSON.stringify(r.companions || []) === JSON.stringify(companions)) return { result: { status: 'unchanged', from } };
+    r.seats = seats;
+    r.companions = companions;
+    if (seats !== from) r.seat_changes = [...(r.seat_changes || []), { at: new Date().toISOString(), from, to: seats }];
+    return { data: ev, result: { status: 'ok', from, promoted: fillFromWaitlist(ev) } };
+  });
+}
+
 /** Einladungs-Mail an einen Nachgerückten ist raus */
 export function markInvited(id) {
   return mutate('event', newEvent, (ev) => {

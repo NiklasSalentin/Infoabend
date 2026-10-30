@@ -1,7 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
-import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, stopReminders, readNote, json } from '../lib/db.mjs';
-import { sendConfirmation } from '../lib/mail.mjs';
-import { useSite } from '../lib/event.mjs';
+import { seatStatus, listRegistrations, getRegistration, promoteRegistration, cancelRegistration, changeSeats, markInvited, deleteRegistration, updateSettings, resetStats, purgePersonalData, visitStats, stopReminders, readNote, json } from '../lib/db.mjs';
+import { sendConfirmation, sendSeatChange } from '../lib/mail.mjs';
+import { useSite, EVENT } from '../lib/event.mjs';
 import { runDigest, digestSettings, saveDigestSettings } from '../lib/digest.mjs';
 import { reminderOverview, sendReminderTest, runCalendarReminder } from '../lib/reminders.mjs';
 import { mailCatalog, previewMail } from '../lib/previews.mjs';
@@ -63,6 +63,35 @@ async function handle(req, context) {
       const r = await cancelRegistration(b.id, 'admin');
       if (!r) return json({ error: 'Anmeldung nicht gefunden' }, 404);
       return json({ ok: true, promoted: r.promoted.map((x) => x.id) });
+    }
+    case 'seats': {
+      // Plätze nachbuchen / ändern (z. B. Gast meldet sich: „Wir kommen zu dritt“)
+      const seats = Number.parseInt(b.seats, 10);
+      if (!(seats >= 1 && seats <= 20)) return json({ error: 'Bitte 1 bis 20 Plätze angeben' }, 400);
+      const companions = (Array.isArray(b.companions) ? b.companions : [])
+        .map((c) => (typeof c === 'string' ? c.trim().slice(0, 120) : '')).filter(Boolean).slice(0, seats - 1);
+      const r = await changeSeats(b.id, seats, companions);
+      if (r.status === 'invalid') return json({ error: 'Anmeldung nicht gefunden oder storniert' }, 404);
+      if (r.status === 'full') {
+        return json({ error: `Nicht genug freie Plätze: ${r.free} frei, gebraucht ${seats - r.from}. Erst oben „Plätze gesamt“ erhöhen.` }, 409);
+      }
+      const promoted = (r.promoted || []).map((x) => x.id);
+      // Gast über die Änderung informieren – nur wenn die Mail freigegeben ist und er nicht gerade selbst nachgerückt ist
+      // (dann bekommt er ohnehin die Einladung mit der neuen Platzzahl)
+      let mailed = false;
+      if (r.status === 'ok' && b.notify === true && EVENT.mailStatus?.aenderung === 'freigegeben' && !promoted.includes(b.id)) {
+        const reg = await getRegistration(b.id);
+        if (reg?.status === 'confirmed') {
+          try {
+            await sendSeatChange(reg, r.from);
+            mailed = true;
+          } catch (e) {
+            console.error(e);
+            return json({ ok: true, promoted, mailed, mailError: `Gespeichert, aber die Mail konnte nicht verschickt werden: ${e.message}` });
+          }
+        }
+      }
+      return json({ ok: true, promoted, mailed, unchanged: r.status === 'unchanged' });
     }
     case 'delete': {
       if (!(await deleteRegistration(b.id))) return json({ error: 'Nur stornierte Anmeldungen können gelöscht werden' }, 400);

@@ -118,21 +118,33 @@ function seatCard(reg) {
   </td></tr></table>`;
 }
 
-export function confirmationHtml(reg, { calendarUrl: calUrl } = {}) {
+/**
+ * Bestätigung. changedFrom (Zahl) = Variante „Anmeldung aktualisiert“ nach „Plätze ändern“ in /admin,
+ * mit der bisherigen Platzzahl (gleiche Zahl = nur Namen der Begleitung geändert).
+ */
+export function confirmationHtml(reg, { calendarUrl: calUrl, changedFrom } = {}) {
   // Von der Warteliste nachgerückt? Dann beginnt die Mail mit der guten Nachricht
-  const promoted = Boolean(reg.promoted_at);
+  const changed = changedFrom !== undefined;
+  const promoted = !changed && Boolean(reg.promoted_at);
   const card = seatCard(reg);
+  const intro = changed
+    ? `gern haben wir Ihre Anmeldung angepasst: Für Sie sind jetzt <strong>${seatsText(reg.seats)}</strong> reserviert${changedFrom !== reg.seats ? ` (bisher ${changedFrom})` : ''}.
+      ${reg.seats > 1 ? 'Sie und Ihre Begleitung stehen' : 'Sie stehen mit Ihrem Namen'} auf unserer Gästeliste – ein Ticket brauchen Sie nicht.`
+    : `${promoted
+      ? 'gute Nachricht: Für Sie ist ein Platz frei geworden! Sie sind von der Warteliste nachgerückt – wir haben'
+      : 'vielen Dank für Ihre Anmeldung! Wir haben'} <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
+      Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.`;
 
   return layout({
-    preheader: `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
-    hero: heroTitle(`Herzlich willkommen, ${firstName(reg.name)}!`, promoted ? '✓ Platz frei geworden' : '✓ Anmeldung bestätigt',
+    preheader: changed
+      ? `Ihre Anmeldung ist aktualisiert: ${seatsText(reg.seats)} am ${EVENT.dateLabel}, ${EVENT.venue}.`
+      : `Ihr Platz ist reserviert: ${EVENT.dateLabel}, Einlass ${EVENT.admission}, ${EVENT.venue}.`,
+    hero: heroTitle(changed ? `Alles notiert, ${firstName(reg.name)}!` : `Herzlich willkommen, ${firstName(reg.name)}!`,
+      changed ? '✓ Anmeldung aktualisiert' : promoted ? '✓ Platz frei geworden' : '✓ Anmeldung bestätigt',
       `Wir freuen uns, Sie beim Infoabend „${EVENT.title}“ begrüßen zu dürfen.`) + card,
     body: `
       <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
-      <p style="margin:0 0 22px">${promoted
-    ? 'gute Nachricht: Für Sie ist ein Platz frei geworden! Sie sind von der Warteliste nachgerückt – wir haben'
-    : 'vielen Dank für Ihre Anmeldung! Wir haben'} <strong>${seatsText(reg.seats)}</strong> für Sie reserviert.
-      Sie stehen mit Ihrem Namen auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
+      <p style="margin:0 0 22px">${intro}</p>
 
       <p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
       <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Für iPhone, Android, Outlook und Google – mit Adresse und Erinnerung am Vortag.</p>
@@ -171,6 +183,19 @@ export async function sendConfirmation(reg) {
     replyTo: EVENT.notifyEmail,
     subject: reg.promoted_at ? 'Gute Nachricht: Ihr Sitzplatz ist gesichert!' : 'Ihr Sitzplatz ist gesichert!',
     html: confirmationHtml(reg, { calendarUrl: reg.id ? await calendarUrl(reg.id, 'mail') : null }),
+  });
+}
+
+export const seatChangeSubject = () => 'Ihre Anmeldung wurde aktualisiert – Infoabend Baufinanz Düren';
+
+/** Nach „Plätze ändern“ in /admin: neue Platzzahl/Begleitung bestätigen. Freigabe: event.mjs → mailStatus.aenderung */
+export async function sendSeatChange(reg, changedFrom) {
+  await smtp().sendMail({
+    from: from(),
+    to: reg.email,
+    replyTo: EVENT.notifyEmail,
+    subject: seatChangeSubject(),
+    html: confirmationHtml(reg, { calendarUrl: await calendarUrl(reg.id, 'mail'), changedFrom }),
   });
 }
 
@@ -327,21 +352,27 @@ export async function sendWaitlist(reg) {
 // Update-Mail zählt immer in PLÄTZEN (Anmelder + Begleitung), nicht in Anmeldungen/Personen
 const sumSeats = (list) => list.reduce((a, r) => a + (r.seats || 0), 0);
 const plaetze = (n) => `${n} ${n === 1 ? 'Platz' : 'Plätze'}`;
-function digestSeats({ fresh = [], cancelled = [], promoted = [], waitlist = [] }) {
+function digestSeats({ fresh = [], cancelled = [], promoted = [], changed = [], waitlist = [] }) {
   const bookedNew = sumSeats(fresh.filter((r) => r.status === 'confirmed'));
   const waitNew = sumSeats(fresh.filter((r) => r.status === 'waitlist'));
+  // nachträglich geändert (nur bestätigte zählen als gebucht): + = nachgebucht, − = zurückgegeben
+  const diff = changed.filter((r) => r.status === 'confirmed').map((r) => r.seats - r.seats_before);
+  const added = diff.filter((n) => n > 0).reduce((a, n) => a + n, 0);
+  const returned = -diff.filter((n) => n < 0).reduce((a, n) => a + n, 0);
   const parts = [
     bookedNew && `${plaetze(bookedNew)} neu gebucht`,
     waitNew && `${plaetze(waitNew)} neu auf der Warteliste`,
     cancelled.length && `${plaetze(sumSeats(cancelled))} abgesagt`,
     promoted.length && `${plaetze(sumSeats(promoted))} nachgerückt`,
+    added && `${plaetze(added)} nachgebucht`,
+    returned && `${plaetze(returned)} zurückgegeben`,
   ].filter(Boolean);
   return { bookedNew, waitSeats: sumSeats(waitlist), parts };
 }
 
-export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, waitlist, since }) {
+export function digestHtml({ fresh = [], cancelled = [], promoted = [], changed = [], status, waitlist, since }) {
   const n = fresh.length;
-  const changes = n + cancelled.length + promoted.length;
+  const changes = n + cancelled.length + promoted.length + changed.length;
   const sinceText = new Date(since).toLocaleString('de-DE', { timeZone: 'Europe/Berlin', weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   const th = (t) => `<th style="text-align:left;padding:8px 10px;background:${C.light};color:${C.blue};font-size:13px">${t}</th>`;
   const td = (t) => `<td style="padding:8px 10px;border-bottom:1px solid #e3e7f3;font-size:14px;vertical-align:top">${t}</td>`;
@@ -361,8 +392,10 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
     ${td(esc(r.questions || '–'))}</tr>`).join('');
   const cancelRows = cancelled.map((r) => `<tr>${td(person(r))}${td(r.seats)}${td(contact(r))}${td(r.cancelled_via === 'link' ? 'selbst (Link in der Mail)' : 'in der Verwaltung')}</tr>`).join('');
   const promoRows = promoted.map((r) => `<tr>${td(person(r))}${td(r.seats)}${td(contact(r))}</tr>`).join('');
-  const sum = digestSeats({ fresh, cancelled, promoted, waitlist });
-  const headline = changes ? sum.parts.join(' · ') : 'Keine Änderungen';
+  const changeRows = changed.map((r) => `<tr>${td(person(r) + (r.status === 'waitlist' ? ' <span style="color:#b26b00">(Warteliste)</span>' : ''))}
+    ${td(`${r.seats_before} → <strong>${r.seats}</strong>`)}${td(contact(r))}</tr>`).join('');
+  const sum = digestSeats({ fresh, cancelled, promoted, changed, waitlist });
+  const headline = changes ? (sum.parts.join(' · ') || 'Plätze auf der Warteliste geändert') : 'Keine Änderungen';
 
   return `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:${C.light};font-family:${FONT};color:${C.text}">
@@ -379,6 +412,7 @@ export function digestHtml({ fresh = [], cancelled = [], promoted = [], status, 
 ${n ? section('Neue Anmeldungen', ['Name', 'Plätze', 'Kontakt', 'Adresse', 'Quelle', 'Fragen vorab'], freshRows) : ''}
 ${cancelled.length ? section('Absagen', ['Name', 'Plätze', 'Kontakt', 'abgesagt'], cancelRows, 'Die Plätze sind wieder frei; wer von der Warteliste nachgerückt ist, steht unten.') : ''}
 ${promoted.length ? section('Von der Warteliste nachgerückt', ['Name', 'Plätze', 'Kontakt'], promoRows) : ''}
+${changed.length ? section('Plätze nachgebucht / geändert', ['Name', 'Plätze vorher → jetzt', 'Kontakt'], changeRows) : ''}
 <tr><td style="padding:18px 28px 26px;font-family:${FONT};font-size:14px">
   <a href="${siteUrl()}/admin" style="display:inline-block;padding:11px 22px;border-radius:999px;background:${C.blue};color:#fff;font-weight:700;text-decoration:none">Alle Anmeldungen in der Verwaltung</a>
   <div style="color:${C.muted};font-size:12px;margin-top:14px">Empfänger, Häufigkeit und Uhrzeit dieser Mail stellen Sie in der Verwaltung unter „Update-Mail“ ein.</div>

@@ -21,7 +21,7 @@ Anmeldeseite für den Infoabend **„Wie können wir uns heute noch ein Eigenhei
 |---|---|---|
 | `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 Plätze frei“ (Kontingent, siehe unten), Anmeldeformular, Knopf **Termin vereinbaren** (→ baufinanz-dueren.de/kontakt) |
 | `…/zeitung`, `…/flyer`, `…/plakat` | QR-Codes | Kurzlinks: leiten auf die Anmeldeseite weiter und merken sich den Werbekanal |
-| `…/admin` | Team (Passwort) | Plätze einstellen, Anmeldeliste, Warteliste, Nachrücken, Stornieren, CSV-Export |
+| `…/admin` | Team (Passwort) | Plätze einstellen, Anmeldeliste, Warteliste, Nachrücken, Plätze nachbuchen/ändern, Stornieren, CSV-Export |
 
 ## Einrichtung in 7 Schritten
 
@@ -261,6 +261,15 @@ In der Liste in `/admin` je Zeile:
 
 - **Nachrücken** (bei Warteliste) – zieht genau diese Person vor (außer der Reihe), nur wenn genug
   Plätze frei sind; sie bekommt ihre Einladung per Mail.
+- **Plätze ändern** – Plätze nachbuchen oder zurückgeben und Namen der Begleitung ändern, z. B. Gast ruft an:
+  „Mein Bruder kommt auch mit“ → mit **+** von 2 auf 3 Plätze, Namen eintragen, Speichern. Das Fenster rechnet vor,
+  was passiert („1 Platz nachbuchen → 3 Plätze. Danach noch 5 Plätze frei.“). Mehr Plätze gehen nur, wenn genug frei
+  sind – sonst erst oben **Plätze gesamt** erhöhen. Weniger Plätze: die frei gewordenen gehen sofort der Reihe nach an
+  die Warteliste (wie beim Stornieren). Auf der Warteliste bleibt der Platz in der Reihe. Das Maximum pro Person gilt
+  hier nicht (Entscheidung des Teams). In der Spalte **Plätze** steht danach z. B. „geändert: 2 → 3 (30.10.)“, in der
+  Update-Mail „1 Platz nachgebucht“. Häkchen **Gast per E-Mail informieren** schickt „Ihre Anmeldung wurde
+  aktualisiert“ – erst nach Freigabe (`mailStatus.aenderung`); bis dahin danach **Mail erneut** drücken (normale
+  Bestätigung mit neuer Platzzahl).
 - **Stornieren** – die Plätze werden sofort wieder frei und gehen der Reihe nach an die Warteliste.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
 - **Alle Anmeldungen löschen** (unten in `/admin`, nach dem Abend) – für die Speicherfrist aus den
@@ -270,7 +279,7 @@ In der Liste in `/admin` je Zeile:
   Häkchen **„Nur zeigen: ohne Kalendereintrag“** filtert die Liste – z. B. um diese Gäste gezielt zu erinnern.
   Hinweis: Wer den Termin von Hand einträgt, steht trotzdem als „nicht eingetragen“ da.
 - **E-Mails ansehen** – Liste aller Mails mit Anlass und Status, **Ansehen** zeigt die Mail mit Beispiel-Gast.
-  Status **„Entwurf – wird nicht verschickt“**: Erinnerungs-Mails und Kalender-Erinnerung gehen erst raus, wenn der
+  Status **„Entwurf – wird nicht verschickt“**: Erinnerungs-Mails, Kalender-Erinnerung und „Anmeldung aktualisiert“ gehen erst raus, wenn der
   Text abgestimmt und in `netlify/lib/event.mjs` → `mailStatus` auf „freigegeben“ gestellt ist.
 - **Kalender-Erinnerung** – Knopf „Jetzt verschicken“: einmalig an alle bestätigten Gäste ohne Kalendereintrag
   (nicht an Abbesteller, niemand doppelt). Gesperrt, solange Entwurf.

@@ -73,6 +73,10 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
+- **Anmeldung aktualisiert** (nach „Plätze ändern“ in `/admin`, Häkchen „Gast per E-Mail informieren“): gleiche Mail wie die
+  Bestätigung, Etikett „✓ Anmeldung aktualisiert“, Überschrift „Alles notiert, Vorname!“, erster Satz „gern haben wir Ihre
+  Anmeldung angepasst: Für Sie sind jetzt **3 Plätze** reserviert (bisher 2).“, Betreff „Ihre Anmeldung wurde aktualisiert – Infoabend
+  Baufinanz Düren“. Entwurf, bis Niklas den Text freigibt (`mailStatus.aenderung`).
 - **Erinnerungs-Mails** (zwei Wochen, eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
   Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Noch zwei Wochen, …“ / „Nur noch eine Woche, Vorname!“ / „Morgen ist es so weit, Vorname!“,
   Kalender-Knopf nicht in der Vortags-Mail, optional **Zusatzinfo-Kasten** (Navy, Gold-Pill mit Titel, weißer Text) vor „Gut zu wissen“, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem
@@ -80,7 +84,14 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
   **Kein Newsletter, keine Werbung** (kein „Beratung buchen“) – nur die Erinnerung an den Abend.
 - Seiten `/absagen` und `/erinnerung-abbestellen`: wie `/datenschutz` (blauer Kopf mit Logo, weiß), Buchung im hellgrauen
   Kasten, Knöpfe ohne Karte; der Link allein ändert nichts, erst der Knopf (Mailprogramme öffnen Links vorab zur Prüfung).
-- Interne Update-Mail zu den Anmeldungen (Empfänger/Häufigkeit/Uhrzeit in `/admin`): gleiche Farben, schlicht, Kacheln „gebuchte Plätze“, „neu gebuchte Plätze“, „Plätze auf der Warteliste“ (alles in Plätzen, auch Überschrift und Betreff) + Tabellen „Neue Anmeldungen“, „Absagen“, „Von der Warteliste nachgerückt“.
+- Interne Update-Mail zu den Anmeldungen (Empfänger/Häufigkeit/Uhrzeit in `/admin`): gleiche Farben, schlicht, Kacheln „gebuchte Plätze“, „neu gebuchte Plätze“, „Plätze auf der Warteliste“ (alles in Plätzen, auch Überschrift und Betreff, z. B. „1 Platz nachgebucht“) + Tabellen „Neue Anmeldungen“, „Absagen“, „Von der Warteliste nachgerückt“, „Plätze nachgebucht / geändert“ (vorher → jetzt).
+
+## Verwaltung `/admin`
+
+- **Fenster „Plätze ändern“** (Knopf in jeder Zeile der Anmeldeliste): weißes Fenster (Radius wie die Kästen, Navy-Schleier dahinter),
+  Platzzahl mit runden **−**/**+**-Knöpfen, darunter je Begleitperson ein Namensfeld, darunter ein Kasten, der live vorrechnet
+  (hellgrau = in Ordnung, Orange-Ton = über dem Maximum pro Person, Rot-Ton = nicht genug frei → Speichern gesperrt).
+  Unter der Platzzahl in der Liste klein in Blau „geändert: 2 → 3 (30.10.)“.
 
 ## Handy & Browser – gelernte Fallstricke
 

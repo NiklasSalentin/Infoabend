@@ -36,7 +36,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Update-Mail zu den Anmeldungen (Empfänger, Häufigkeit, Uhrzeit, nur bei Änderungen) | Einstellung in `/admin` (gespeichert als `notes/digest-settings`), Logik `netlify/lib/digest.mjs`, Mail `digestHtml` in `netlify/lib/mail.mjs`, Zeitplan `netlify/functions/digest.mjs` (stündlich) |
 | Erinnerungs-Mails (Zeitplan, Absage-/Abbestell-Links) | Termine in `netlify/lib/event.mjs` (`reminders`), Logik `netlify/lib/reminders.mjs`, Versand `netlify/functions/reminders.mjs` (alle 10 Min.), Seiten `/absagen` + `/erinnerung-abbestellen` in `netlify/functions/termin.mjs` – gehen an alle bestätigten Gäste (Teil der Anmeldung, kein Newsletter, **nie Werbung** hineinschreiben), abbestellbar |
 | Kalender-Knopf mit persönlichem Link (wer hat den Termin eingetragen) | Links/Prüfcodes `netlify/lib/links.mjs`, Vermerk `markCalendar` in `netlify/lib/db.mjs`, Auswertung `netlify/functions/kalender.mjs`, Spalte „Kalender“ in `/admin` |
-| Freigabe von Gäste-Mails (Entwurf / freigegeben) | `netlify/lib/event.mjs` → `mailStatus` (`erinnerungen`, `kalender`) – **nur auf „freigegeben“ stellen, wenn Niklas den Text abgesegnet hat**; vorher wird nichts verschickt |
+| Freigabe von Gäste-Mails (Entwurf / freigegeben) | `netlify/lib/event.mjs` → `mailStatus` (`erinnerungen`, `kalender`, `aenderung`) – **nur auf „freigegeben“ stellen, wenn Niklas den Text abgesegnet hat**; vorher wird nichts verschickt |
 | Kalender-Erinnerung (Knopf in `/admin`) und Vorschau aller Mails | Text `calendarReminderHtml` in `netlify/lib/mail.mjs`, Versand `runCalendarReminder` in `netlify/lib/reminders.mjs`, Vorschau-Liste `netlify/lib/previews.mjs` (neue Mail → dort eintragen) |
 | Bilder | `public/assets/` (Schriften lokal in `public/assets/fonts/`) |
 | QR-Kurzlinks `/zeitung`, `/flyer`, `/plakat` | `netlify.toml` + `scripts/qr-codes.mjs` → `druck/qr-codes/` |
@@ -44,6 +44,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Google Ads + Meta-Pixel mit Einwilligungs-Hinweis | `public/consent.js`, IDs über `/api/config` (`netlify/functions/config.mjs`: Google Ads `AW-17036255610`, Conversion „Anmeldung Infoabend“; Meta über `META_PIXEL_ID`) – nie ohne Einwilligung laden |
 | Speicher für Anmeldungen (Netlify Blobs) + Buchungslogik | `netlify/lib/db.mjs` – nur mit Niklas ändern; Speicher „infoabend“ im Netlify-Dashboard nie löschen |
 | Plätze, Max. pro Person, Warteliste, knappe Anzeige | keine Datei – Verwaltung unter `/admin` |
+| Plätze nachbuchen / ändern („Plätze ändern“ je Anmeldung in `/admin`) | Logik `changeSeats` in `netlify/lib/db.mjs` (Verlauf `seat_changes`), Aktion `seats` in `netlify/functions/admin.mjs`, Fenster in `public/admin.html`/`admin.js`, Mail „Anmeldung aktualisiert“ = `sendSeatChange` in `netlify/lib/mail.mjs` |
 | Rechenregel „angezeigte freie Plätze“ (Seite + `/admin`) | `public/plaetze.js` |
 
 ## Regeln

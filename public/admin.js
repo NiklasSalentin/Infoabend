@@ -183,14 +183,18 @@ $('#reminder-test').onclick = async () => {
 const waitlist = (regs = data.registrations) => regs.filter((r) => r.status === 'waitlist')
   .sort((a, b) => a.created_at.localeCompare(b.created_at));
 
-/** Wer würde bei so vielen freien Plätzen nachrücken? (gleiche Regel wie netlify/lib/db.mjs fillFromWaitlist) */
-function wouldPromote(free) {
+/**
+ * Wer würde bei so vielen freien Plätzen nachrücken? (gleiche Regel wie netlify/lib/db.mjs fillFromWaitlist)
+ * override = { id, seats }: so rechnen, als hätte dieser Eintrag schon die neue Platzzahl („Plätze ändern“)
+ */
+function wouldPromote(free, override = null) {
   const out = [];
   for (const r of waitlist()) {
+    const seats = r.id === override?.id ? override.seats : r.seats;
     if (free <= 0) break;
-    if (r.seats > free) continue;
+    if (seats > free) continue;
     out.push(r);
-    free -= r.seats;
+    free -= seats;
   }
   return out;
 }
@@ -308,6 +312,7 @@ $('#rows').onclick = async (e) => {
   const b = e.target.closest('button');
   if (!b) return;
   const reg = data.registrations.find((r) => r.id === b.dataset.id);
+  if (b.dataset.a === 'seats') return openSeatDialog(reg);
   // Stornieren einer bestätigten Anmeldung: wer rückt dafür von der Warteliste nach?
   const next = b.dataset.a === 'cancel' && reg?.status === 'confirmed' ? wouldPromote(data.status.free + reg.seats) : [];
   const msg = {
@@ -351,13 +356,14 @@ function renderRows() {
       <td>${new Date(r.created_at).toLocaleString('de-DE')}</td>
       <td>${esc(r.name)}</td>
       <td>${esc(r.email)}<br>${esc(r.phone)}<br>${reminderState(r)}</td>
-      <td>${r.seats}</td>
+      <td>${r.seats}${seatChangeNote(r)}</td>
       <td>${esc(r.companions.join(', '))}</td>
       <td>${esc([r.street, r.zip, r.city].filter(Boolean).join(', '))}${r.address_consent ? '<br>✓ Post' : ''}</td>
       <td>${esc(r.questions)}</td>
       <td>${esc(r.source || 'direkt')}</td>
       <td>${calCell(r)}</td>
       <td>
+        ${r.status !== 'cancelled' ? `<button data-a="seats" data-id="${r.id}">Plätze ändern</button>` : ''}
         ${r.status === 'waitlist' ? `<button data-a="promote" data-id="${r.id}">Nachrücken</button>` : ''}
         ${r.status === 'confirmed' ? `<button data-a="resend" data-id="${r.id}">Mail erneut</button>` : ''}
         ${!r.reminder_optout_at && r.status === 'confirmed' ? `<button data-a="reminder-off" data-id="${r.id}">Erinnerung aus</button>` : ''}
@@ -367,6 +373,107 @@ function renderRows() {
 }
 
 $('#cal-filter').addEventListener('change', () => renderRows());
+
+// ---------------------------------------------------------------------------
+// Plätze ändern / nachbuchen – z. B. Gast ruft an: „Mein Bruder kommt auch mit“ → 2 statt 1 Platz
+// ---------------------------------------------------------------------------
+const plaetze = (n) => `${n} ${n === 1 ? 'Platz' : 'Plätze'}`;
+
+// kleiner Vermerk unter der Platzzahl: „geändert: 2 → 3 (30.10.)“
+function seatChangeNote(r) {
+  const ch = r.seat_changes || [];
+  if (!ch.length) return '';
+  const all = ch.map((c) => `${day(c.at)}: ${c.from} → ${c.to}`).join('\n');
+  return `<br><span class="seat-change" title="${esc(all)}">geändert: ${ch[0].from} → ${r.seats} (${day(ch.at(-1).at)})</span>`;
+}
+
+let seatReg = null;
+const seatCount = () => Math.min(20, Math.max(1, Number.parseInt($('#seat-count').value, 10) || 1));
+const companionInputs = () => [...document.querySelectorAll('#seat-companions input')];
+
+function openSeatDialog(reg) {
+  if (!reg) return;
+  seatReg = reg;
+  $('#seat-who').textContent = `${reg.name} · ${LABEL[reg.status]} · bisher ${plaetze(reg.seats)}`;
+  $('#seat-count').value = reg.seats;
+  renderSeatFields(reg.companions || []);
+  // Mail an den Gast nur bei bestätigten – und erst, wenn der Text freigegeben ist (event.mjs → mailStatus.aenderung)
+  const released = (data.mails || []).find((m) => m.key === 'aenderung')?.status === 'aktiv';
+  $('#seat-notify-wrap').hidden = reg.status !== 'confirmed';
+  $('#seat-notify').checked = released;
+  $('#seat-notify').disabled = !released;
+  $('#seat-notify-note').textContent = released
+    ? 'Mail „Ihre Anmeldung wurde aktualisiert“ mit neuer Platzzahl, Namen und Kalender-Knopf.'
+    : 'Die Mail „Anmeldung aktualisiert“ ist noch ein Entwurf (Ansehen: unten bei „E-Mails ansehen“). '
+      + 'Bis zur Freigabe nach dem Speichern „Mail erneut“ drücken – das schickt die normale Bestätigung mit der neuen Platzzahl.';
+  $('#seat-dialog').showModal();
+}
+
+// Namensfelder für die Begleitung (Plätze − 1) – Eingetipptes bleibt beim Ändern der Zahl erhalten
+function renderSeatFields(names = companionInputs().map((i) => i.value)) {
+  const n = seatCount();
+  $('#seat-companions').innerHTML = Array.from({ length: n - 1 }, (_, i) => `<label>Begleitung ${i + 1} – Name (optional)
+    <input type="text" maxlength="120" value="${esc(names[i] || '')}"></label>`).join('');
+  renderSeatCheck();
+}
+
+// Was passiert beim Speichern? Rechnet live mit (in Plätzen)
+function renderSeatCheck() {
+  const n = seatCount();
+  const diff = n - seatReg.seats;
+  const free = data.status.free;
+  const out = [];
+  let cls = '';
+  if (seatReg.status === 'confirmed') {
+    if (diff > free) {
+      cls = 'bad';
+      out.push(`Nicht genug frei: ${plaetze(free)} frei, ${diff} gebraucht. Erst oben „Plätze gesamt“ erhöhen.`);
+    } else if (diff > 0) {
+      out.push(`${diff} ${diff === 1 ? 'Platz' : 'Plätze'} nachbuchen → ${plaetze(n)}. ${free - diff ? `Danach noch ${plaetze(free - diff)} frei.` : 'Danach ist alles belegt.'}`);
+    } else if (diff < 0) {
+      const next = wouldPromote(free - diff);
+      out.push(`${plaetze(-diff)} werden frei → ${plaetze(n)}.`
+        + (next.length ? ` Dafür ${next.length === 1 ? 'rückt' : 'rücken'} von der Warteliste nach: ${next.map((r) => r.name).join(', ')} (Einladung per E-Mail).` : ''));
+    } else out.push(`Platzzahl bleibt bei ${n} – nur die Namen werden gespeichert.`);
+  } else {
+    const self = wouldPromote(free, { id: seatReg.id, seats: n }).some((r) => r.id === seatReg.id);
+    out.push(self
+      ? `Mit ${plaetze(n)} passt diese Anmeldung in die freien Plätze und rückt sofort nach (Einladung per E-Mail).`
+      : `Bleibt auf der Warteliste an derselben Stelle – jetzt mit ${plaetze(n)}.`);
+  }
+  if (n > data.status.max_per_person && cls !== 'bad') {
+    cls = 'warn';
+    out.push(`Mehr als das Maximum pro Person (${data.status.max_per_person}) – hier in der Verwaltung erlaubt.`);
+  }
+  $('#seat-check').className = cls;
+  $('#seat-check').textContent = out.join(' ');
+  $('#seat-save').disabled = cls === 'bad';
+}
+
+$('#seat-count').addEventListener('input', () => renderSeatFields());
+$('#seat-minus').onclick = () => { $('#seat-count').value = seatCount() - 1; renderSeatFields(); };
+$('#seat-plus').onclick = () => { $('#seat-count').value = seatCount() + 1; renderSeatFields(); };
+$('#seat-cancel').onclick = () => $('#seat-dialog').close();
+
+$('#seat-save').onclick = async () => {
+  const btnEl = $('#seat-save');
+  btnEl.disabled = true;
+  try {
+    const r = await api('POST', {
+      action: 'seats', id: seatReg.id, seats: seatCount(),
+      companions: companionInputs().map((i) => i.value), notify: $('#seat-notify').checked && !$('#seat-notify-wrap').hidden,
+    });
+    $('#seat-dialog').close();
+    if (r.mailError) alert(r.mailError);
+    if (r.promoted?.length) return sendInvites(r.promoted);
+    await load();
+    alert(r.unchanged ? 'Nichts geändert.' : `Gespeichert.${r.mailed ? ' Die Mail an den Gast ist raus.' : ''}`);
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    btnEl.disabled = false;
+  }
+};
 
 $('#csv').onclick = () => {
   const cols = ['status', 'created_at', 'name', 'email', 'phone', 'seats', 'companions', 'street', 'zip', 'city', 'address_consent', 'questions', 'source',
