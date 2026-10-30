@@ -44,7 +44,7 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
 | Google Ads + Meta-Pixel mit Einwilligungs-Hinweis | `public/consent.js`, IDs über `/api/config` (`netlify/functions/config.mjs`: Google Ads `AW-17036255610`, Conversion „Anmeldung Infoabend“; Meta über `META_PIXEL_ID`) – nie ohne Einwilligung laden |
 | Speicher für Anmeldungen (Netlify Blobs) + Buchungslogik | `netlify/lib/db.mjs` – nur mit Niklas ändern; Speicher „infoabend“ im Netlify-Dashboard nie löschen |
 | Plätze, Max. pro Person, Warteliste, knappe Anzeige | keine Datei – Verwaltung unter `/admin` |
-| Plätze nachbuchen / ändern („Plätze ändern“ je Anmeldung in `/admin`) | Logik `changeSeats` in `netlify/lib/db.mjs` (Verlauf `seat_changes`), Aktion `seats` in `netlify/functions/admin.mjs`, Fenster in `public/admin.html`/`admin.js`, kurze Mail „Anmeldung aktualisiert“ = `seatChangeHtml`/`sendSeatChange` in `netlify/lib/mail.mjs` |
+| Plätze nachbuchen / ändern („Plätze ändern“ je Anmeldung in `/admin`) | Logik `changeSeats` in `netlify/lib/db.mjs` (Verlauf `seat_changes`), Aktion `seats` in `netlify/functions/admin.mjs`, Fenster in `public/admin.html`/`admin.js`, kurze Mail „Ein weiterer Platz für Sie“ = `seatChangeHtml`/`sendSeatChange` in `netlify/lib/mail.mjs` |
 | Rechenregel „angezeigte freie Plätze“ (Seite + `/admin`) | `public/plaetze.js` |
 
 ## Regeln

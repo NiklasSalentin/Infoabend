@@ -267,8 +267,8 @@ In der Liste in `/admin` je Zeile:
   sind – sonst erst oben **Plätze gesamt** erhöhen. Weniger Plätze: die frei gewordenen gehen sofort der Reihe nach an
   die Warteliste (wie beim Stornieren). Auf der Warteliste bleibt der Platz in der Reihe. Das Maximum pro Person gilt
   hier nicht (Entscheidung des Teams). In der Spalte **Plätze** steht danach z. B. „geändert: 2 → 3 (30.10.)“, in der
-  Update-Mail „1 Platz nachgebucht“. Häkchen **Gast per E-Mail informieren** schickt die kurze Mail „Ihre Anmeldung
-  wurde aktualisiert“ (neue Platzzahl, Namen, Kalender-Knopf) – erst nach Freigabe (`mailStatus.aenderung`); bis dahin danach **Mail erneut** drücken (normale
+  Update-Mail „1 Platz nachgebucht“. Häkchen **Gast per E-Mail informieren** schickt die kurze Mail „Ein weiterer Platz
+  für Sie“ (nur die Änderung: neue Platzzahl und Namen) – erst nach Freigabe (`mailStatus.aenderung`); bis dahin danach **Mail erneut** drücken (normale
   Bestätigung mit neuer Platzzahl).
 - **Stornieren** – die Plätze werden sofort wieder frei und gehen der Reihe nach an die Warteliste.
 - **Mail erneut** – schickt die Einladung noch einmal (z. B. „Mail nicht angekommen“).
@@ -279,7 +279,7 @@ In der Liste in `/admin` je Zeile:
   Häkchen **„Nur zeigen: ohne Kalendereintrag“** filtert die Liste – z. B. um diese Gäste gezielt zu erinnern.
   Hinweis: Wer den Termin von Hand einträgt, steht trotzdem als „nicht eingetragen“ da.
 - **E-Mails ansehen** – Liste aller Mails mit Anlass und Status, **Ansehen** zeigt die Mail mit Beispiel-Gast.
-  Status **„Entwurf – wird nicht verschickt“**: Erinnerungs-Mails, Kalender-Erinnerung und „Anmeldung aktualisiert“ gehen erst raus, wenn der
+  Status **„Entwurf – wird nicht verschickt“**: Erinnerungs-Mails, Kalender-Erinnerung und „Platz hinzugefügt“ gehen erst raus, wenn der
   Text abgestimmt und in `netlify/lib/event.mjs` → `mailStatus` auf „freigegeben“ gestellt ist.
 - **Kalender-Erinnerung** – Knopf „Jetzt verschicken“: einmalig an alle bestätigten Gäste ohne Kalendereintrag
   (nicht an Abbesteller, niemand doppelt). Gesperrt, solange Entwurf.

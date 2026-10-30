@@ -15,7 +15,7 @@ export function mailCatalog() {
   return [
     { key: 'bestaetigung', name: 'Bestätigung', when: 'sofort nach der Anmeldung', status: 'aktiv' },
     { key: 'nachgerueckt', name: 'Bestätigung nach Nachrücken', when: 'wenn ein Platz frei wird und jemand von der Warteliste nachrückt', status: 'aktiv' },
-    { key: 'aenderung', name: 'Anmeldung aktualisiert', when: 'nach „Plätze ändern“ in /admin, wenn das Häkchen „Gast per E-Mail informieren“ gesetzt ist', status: released('aenderung') ? 'aktiv' : 'entwurf' },
+    { key: 'aenderung', name: 'Platz hinzugefügt', when: 'nach „Plätze ändern“ in /admin, wenn das Häkchen „Gast per E-Mail informieren“ gesetzt ist', status: released('aenderung') ? 'aktiv' : 'entwurf' },
     { key: 'warteliste', name: 'Warteliste', when: 'sofort nach einer Anmeldung auf die Warteliste', status: 'aktiv' },
     ...EVENT.reminders.map((r) => ({
       key: `erinnerung-${r.key}`, name: `Erinnerung ${r.label.replace(/\s*\(.*\)$/, '')}`, when: `automatisch ${r.label}`,
@@ -34,7 +34,7 @@ export function previewMail(key) {
     return { subject: 'Gute Nachricht: Ihr Sitzplatz ist gesichert!', html: confirmationHtml({ ...SAMPLE, promoted_at: new Date().toISOString() }, LINKS) };
   }
   if (key === 'aenderung') {
-    return { subject: seatChangeSubject(), html: seatChangeHtml({ ...SAMPLE, seats: 3, companions: ['Peter Muster', 'Lena Muster'] }, { ...LINKS, changedFrom: 2 }) };
+    return { subject: seatChangeSubject(1), html: seatChangeHtml({ ...SAMPLE, seats: 3, companions: ['Peter Muster', 'Lena Muster'] }, { changedFrom: 2 }) };
   }
   if (key === 'warteliste') return { subject: 'Sie stehen auf der Warteliste – Infoabend Baufinanz Düren', html: waitlistHtml(SAMPLE) };
   if (key.startsWith('erinnerung-')) {

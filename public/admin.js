@@ -403,8 +403,8 @@ function openSeatDialog(reg) {
   $('#seat-notify').checked = released;
   $('#seat-notify').disabled = !released;
   $('#seat-notify-note').textContent = released
-    ? 'Mail „Ihre Anmeldung wurde aktualisiert“ mit neuer Platzzahl, Namen und Kalender-Knopf.'
-    : 'Die Mail „Anmeldung aktualisiert“ ist noch ein Entwurf (Ansehen: unten bei „E-Mails ansehen“). '
+    ? 'Kurze Mail „Ein weiterer Platz für Sie“ mit der neuen Platzzahl und den Namen.'
+    : 'Die Mail „Platz hinzugefügt“ ist noch ein Entwurf (Ansehen: unten bei „E-Mails ansehen“). '
       + 'Bis zur Freigabe nach dem Speichern „Mail erneut“ drücken – das schickt die normale Bestätigung mit der neuen Platzzahl.';
   $('#seat-dialog').showModal();
 }

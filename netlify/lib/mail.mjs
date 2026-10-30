@@ -174,39 +174,37 @@ export async function sendConfirmation(reg) {
   });
 }
 
-export const seatChangeSubject = () => 'Ihre Anmeldung wurde aktualisiert – Infoabend Baufinanz Düren';
+// Kurze Mail nach „Plätze ändern“ in /admin – nur die Änderung, nichts wiederholen (Wunsch Niklas).
+// Beispiel: 2 → 3 Plätze → „Ein weiterer Platz für Sie“. Freigabe: event.mjs → mailStatus.aenderung
+const seatChangeTitle = (diff) => (diff === 1 ? 'Ein weiterer Platz für Sie' : diff > 1 ? `${diff} weitere Plätze für Sie` : 'Ihre Anmeldung ist aktualisiert');
+export const seatChangeSubject = (diff = 1) => `${seatChangeTitle(diff)} – Infoabend Baufinanz Düren`;
 
-/**
- * Kurze Mail nach „Plätze ändern“ in /admin: neue Platzzahl + Begleitung bestätigen.
- * Gleicher Rahmen und gleiche Navy-Karte wie die Bestätigung, aber nur das Nötigste (kein „Gut zu wissen“, keine Werbung).
- * changedFrom = bisherige Platzzahl (gleiche Zahl = nur Namen der Begleitung geändert).
- */
-export function seatChangeHtml(reg, { calendarUrl: calUrl, changedFrom } = {}) {
-  const more = changedFrom !== undefined && changedFrom !== reg.seats ? ` (bisher ${changedFrom})` : '';
+/** changedFrom = bisherige Platzzahl */
+export function seatChangeHtml(reg, { changedFrom = reg.seats } = {}) {
+  const diff = reg.seats - changedFrom;
+  const companions = (reg.companions || []).filter(Boolean);
+  const names = companions.length ? ` – für Sie mit ${esc(companions.join(', ').replace(/, ([^,]*)$/, ' und $1'))}` : '';
+  const what = diff === 1 ? 'Ihrer Anmeldung einen weiteren Platz hinzugefügt'
+    : diff > 1 ? `Ihrer Anmeldung ${diff} weitere Plätze hinzugefügt`
+      : 'Ihre Anmeldung angepasst';
   return layout({
-    preheader: `Ihre Anmeldung ist aktualisiert: ${seatsText(reg.seats)} am ${EVENT.dateLabel}, ${EVENT.venue}.`,
-    hero: heroTitle(`Alles notiert, ${firstName(reg.name)}!`, '✓ Anmeldung aktualisiert') + seatCard(reg),
+    preheader: `${seatChangeTitle(diff)}: jetzt ${seatsText(reg.seats)} beim Infoabend am ${EVENT.dateLabel}.`,
+    hero: heroTitle(`${seatChangeTitle(diff)}, ${firstName(reg.name)}!`, diff > 0 ? '✓ Platz hinzugefügt' : '✓ Anmeldung aktualisiert',
+      `Infoabend am ${EVENT.dateLabel} · ${EVENT.venue}`),
     body: `
       <p style="margin:0 0 14px">Hallo ${esc(reg.name)},</p>
-      <p style="margin:0 0 22px">gern haben wir Ihre Anmeldung angepasst: Für Sie sind jetzt <strong>${seatsText(reg.seats)}</strong> reserviert${more}.
-      ${reg.seats > 1 ? 'Sie und Ihre Begleitung stehen' : 'Sie stehen'} auf unserer Gästeliste – ein Ticket brauchen Sie nicht.</p>
-      <p style="margin:0">${btn(calUrl || siteUrl() + '/kalender', 'Termin in den Kalender eintragen')}</p>
-      <p style="margin:0 0 22px;font-size:13px;color:${C.muted}">Falls noch nicht geschehen – für iPhone, Android, Outlook und Google.</p>
-      <p style="margin:0 0 22px">Es ändert sich noch etwas? Antworten Sie einfach auf diese E-Mail.</p>
-      <p style="margin:0 0 18px">Wir freuen uns auf Sie!<br><strong>Ihr Team der Baufinanz Düren</strong></p>
-      <p style="margin:0 0 26px;font-size:13px;color:${C.muted}">Übrigens: Am Abend entstehen Fotos und Videos –
-      <a href="${EVENT.privacyUrl}#aufnahmen" style="color:${C.muted}">mehr dazu in den Datenschutzhinweisen</a>.</p>`,
+      <p style="margin:0 0 22px">wir haben ${what}. Reserviert sind jetzt <strong>${seatsText(reg.seats)}</strong>${names}.</p>
+      <p style="margin:0 0 26px">Wir freuen uns auf Sie!<br><strong>Ihr Team der Baufinanz Düren</strong></p>`,
   });
 }
 
-/** Versand der kurzen Mail. Freigabe: event.mjs → mailStatus.aenderung */
 export async function sendSeatChange(reg, changedFrom) {
   await smtp().sendMail({
     from: from(),
     to: reg.email,
     replyTo: EVENT.notifyEmail,
-    subject: seatChangeSubject(),
-    html: seatChangeHtml(reg, { calendarUrl: await calendarUrl(reg.id, 'mail'), changedFrom }),
+    subject: seatChangeSubject(reg.seats - changedFrom),
+    html: seatChangeHtml(reg, { changedFrom }),
   });
 }
 

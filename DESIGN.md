@@ -73,12 +73,13 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
-- **Anmeldung aktualisiert** (nach „Plätze ändern“ in `/admin`, Häkchen „Gast per E-Mail informieren“): **kurz** (Wunsch Niklas) –
-  gleicher Rahmen und gleiche Navy-Karte wie die Bestätigung, Etikett „✓ Anmeldung aktualisiert“, Überschrift „Alles notiert, Vorname!“,
-  ein Absatz „gern haben wir Ihre Anmeldung angepasst: Für Sie sind jetzt **3 Plätze** reserviert (bisher 2). …“, Kalender-Knopf,
-  „Es ändert sich noch etwas? Antworten Sie einfach auf diese E-Mail.“, Gruß, ganz klein der Satz zu Fotos/Videos (neue Begleitung kennt ihn
-  sonst nicht). **Kein** „Gut zu wissen“, keine Beratungs-Werbung. Betreff „Ihre Anmeldung wurde aktualisiert – Infoabend Baufinanz Düren“.
-  Funktion `seatChangeHtml`; geht erst raus, wenn `mailStatus.aenderung` auf „freigegeben“ steht.
+- **Platz hinzugefügt** (nach „Plätze ändern“ in `/admin`, Häkchen „Gast per E-Mail informieren“): **nur die Änderung, nichts
+  wiederholen** (Wunsch Niklas, 30.10.) – Logo-Blau-Kopf mit Gold-Etikett „✓ Platz hinzugefügt“, Überschrift „Ein weiterer Platz für Sie,
+  Vorname!“, Zeile „Infoabend am Mittwoch, 9. Dezember 2026 · Festhalle Birkesdorf“, dann zwei Sätze („wir haben Ihrer Anmeldung einen
+  weiteren Platz hinzugefügt. Reserviert sind jetzt **3 Plätze** – für Sie mit Peter Muster und Lena Muster.“) und der Gruß.
+  **Keine** Navy-Karte, kein Kalender-Knopf, kein „Gut zu wissen“. Betreff „Ein weiterer Platz für Sie – Infoabend Baufinanz Düren“
+  (2 Plätze mehr: „2 weitere Plätze für Sie“, weniger: „Ihre Anmeldung ist aktualisiert“). Funktion `seatChangeHtml`; geht erst raus,
+  wenn `mailStatus.aenderung` auf „freigegeben“ steht.
 - **Erinnerungs-Mails** (zwei Wochen, eine Woche vorher, Vortag – an alle bestätigten Gäste, abbestellbar): gleicher Rahmen und gleiche Navy-Karte wie die
   Bestätigung, Gold-Etikett „Erinnerung“, Überschrift „Noch zwei Wochen, …“ / „Nur noch eine Woche, Vorname!“ / „Morgen ist es so weit, Vorname!“,
   Kalender-Knopf nicht in der Vortags-Mail, optional **Zusatzinfo-Kasten** (Navy, Gold-Pill mit Titel, weißer Text) vor „Gut zu wissen“, „Gut zu wissen“, hellgrauer Kasten „Sie können doch nicht kommen?“ mit weißem
