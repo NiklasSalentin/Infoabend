@@ -18,7 +18,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | Navy-Beschriftung `--navy-label` | `#C9CEEA` | „MITTWOCH“, Adresse im Datumsfeld |
 | Dunkelblau `--primary` | `#1A3569` | Überschriften, Hauptknöpfe (Hauptseite) |
 | Blau `--secondary` | `#3C59AD` | Icons, Rahmen-Knöpfe, Akzentlinien, Häkchen |
-| Gelb-Orange `--orange` | `#f0a63a` | **nur** „Jetzt Platz sichern“ (pulsiert) und „Persönliche Beratung buchen“ in Mails; Schrift darauf dunkel (`#1a1206` bzw. Navy) |
+| Gelb-Orange `--orange` | `#f0a63a` | **nur** „Persönliche Beratung buchen“ in Mails (der pulsierende Knopf „Jetzt Platz sichern“ ist entfernt); Schrift darauf dunkel (`#1a1206` bzw. Navy) |
 | Text `--text` | `#191919` | Fließtext |
 | Grau-Blau `--muted` | `#7C829A` | Kleingedrucktes, Hinweise, „optional“ |
 | Hellgrau-Blau `--light` | `#F0F2F9` | Abschnitt „Jetzt anmelden“, Kästen, Adress-Klappfeld, Mail-Hintergrund |
@@ -37,9 +37,9 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | Baustein | So sieht er aus |
 |---|---|
 | **Kopf** | nur Logo (weiß) links und rechts dezent „Persönliche Beratung buchen ↗“ (Rahmen-Knopf, weiß); kein Menü |
-| **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, oranger pulsierender Knopf „Jetzt Platz sichern ↓“, darunter goldene Pill |
+| **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, (Schild „Noch … Plätze frei“, falls eingeschaltet), goldene Pill. **Kein Knopf „Jetzt Platz sichern“ mehr** (Wunsch Nov. 2026 – Formular steht direkt unter dem Datumsfeld) |
 | **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld**; **Handy:** Siegel klein (124 px hoch) in der rechten unteren Ecke im Datumsfeld neben der Adresse (stand vorher allein darunter) |
-| **Freie Plätze** | Schild direkt neben „Jetzt Platz sichern“: Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett), **gleich hoch und gleiche Schrift wie der Knopf** (62 px, 18 px fett); **Handy:** kompakt rechts neben dem Knopf in zwei Zeilen „Noch 117“ / „Plätze frei“, Punkt oben am Rand; unter 420 px Breite Knopf und Schild etwas kleiner (60 px), damit beide in eine Zeile passen; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet; **Schalter „Freie Plätze auf der Seite anzeigen“ in `/admin` aus:** Schild weg (außer „Ausgebucht – Warteliste offen“), über dem Formular nur „Max. 3 Begleitpersonen pro Anmeldung“. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
+| **Freie Plätze** | Schild unter dem Untertitel (früher neben „Jetzt Platz sichern“): Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett) **in einer Zeile**, auch am Handy; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet; **Schalter „Freie Plätze auf der Seite anzeigen“ in `/admin` aus:** Schild weg (außer „Ausgebucht – Warteliste offen“), über dem Formular nur „Max. 3 Begleitpersonen pro Anmeldung“. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
 | **Zahlen-Streifen** | **entfernt** (Wunsch Niklas, 25.10.): weder „Personen bereits angemeldet“ noch Countdown „Tage bis zum Infoabend“. Unter dem Datumsfeld folgt direkt der nächste Abschnitt. Die echte Zahl steht nur im kleinen Zähler neben dem Schloss unten rechts |
 | **Inhaltsblöcke** | weiß, Bild + Text zweispaltig, Eyebrow-Pill (hellgrau, blaue Schrift) über H2 |
 | **Festhalle** | Blau-Verlauf, Gradient-Pill, „Route planen“ |
@@ -71,7 +71,7 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - Betreff: „Ihr Sitzplatz ist gesichert!“ · keine Ticketnummer.
 - Von der Warteliste nachgerückt: gleiche Mail, Etikett „✓ Platz frei geworden“, erster Satz „gute Nachricht: Für Sie
   ist ein Platz frei geworden!“, Betreff „Gute Nachricht: Ihr Sitzplatz ist gesichert!“.
-- Freie Plätze (Schild neben „Jetzt Platz sichern“): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
+- Freie Plätze (Schild im Kopfbereich): „Noch 120 Plätze frei“ – **ohne „von 400“**, die echte Gesamtzahl steht nie auf der Seite.
   Nach einem Nachschub steht über dem Formular „Weitere Plätze freigegeben: Noch 119 Plätze frei …“ (gleicher Stil wie der Hinweis).
 - Anrede: Vorname; bei „Herr/Frau/Dr./Familie“ oder Initiale („S. Salentin“) der volle Name.
 - **Platz hinzugefügt** (nach „Plätze ändern“ in `/admin`, Häkchen „Gast per E-Mail informieren“): **nur die Änderung, nichts
@@ -109,7 +109,7 @@ blau umrandet. Orange nur für die eine wichtigste Handlung.
 - **Bilder immer mit `width`/`height`** im HTML (echte Pixelmaße der Datei): Ohne sie haben nachgeladene Bilder
   (`loading="lazy"`) erst keine Höhe, die Seite wächst beim Laden um ~1000 px und springt nach dem Neuladen an eine
   falsche Stelle (z. B. zum Notar-Abschnitt).
-- **Keine `#anmeldung` in der Adresse:** „Jetzt Platz sichern“ und das Siegel scrollen per JavaScript weich zur
+- **Keine `#anmeldung` in der Adresse:** Das Siegel (und jeder Link auf `#anmeldung`) scrollt per JavaScript weich zur
   Anmeldung (`public/app.js`), sonst springt die Seite nach jedem Neuladen dorthin.
 
 ## Arbeitsweise bei Design-Wünschen

@@ -56,8 +56,8 @@ https://anmeldung.baufinanz-dueren.de (Netlify-Projekt `baufiabend`).
   deutsche Zeit minus 1 Stunde (18:00 → `170000Z`).
 - `id="…"`/`name="…"` im Formular nicht ändern – `public/app.js` hängt daran.
 - Kopf und Fuß sind 1:1 von baufinanz-dueren.de; der obere Abschnitt folgt dem Infoabend-Plakat
-  (Logo-Blau `#323D8D`, Navy `#1C2350`, Gold `#D9B56C`); „Jetzt Platz sichern“ ist Gelb-Orange
-  `#f0a63a` und pulsiert.
+  (Logo-Blau `#323D8D`, Navy `#1C2350`, Gold `#D9B56C`). Den Knopf „Jetzt Platz sichern“ im Kopfbereich gibt es
+  nicht mehr (Wunsch Nov. 2026) – das Formular steht direkt unter dem Datumsfeld.
 - Das Repo ist **öffentlich**: keine Passwörter/Schlüssel (nur Netlify-Umgebungsvariablen),
   keine Anmeldelisten oder andere personenbezogenen Daten, keine Bilder mit ungeklärten Rechten
   (z. B. Canva-Stockfotos).

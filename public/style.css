@@ -15,7 +15,7 @@
   --text: #191919;
   --muted: #7C829A;       /* Grau-Blau: Linien, Kleingedrucktes */
   --light: #F0F2F9;       /* Hellblau-Grau: Kästen */
-  --orange: #f0a63a;      /* Gelb-Orange wie AskMeSomething: „Jetzt Platz sichern“ */
+  --orange: #f0a63a;      /* Gelb-Orange – auf der Seite derzeit ungenutzt (Mails haben eigene Farben in mail.mjs) */
   --orange-text: #1a1206; /* dunkle Schrift auf Orange (gut lesbar) */
   /* Farben des Infoabend-Plakats (oberer Abschnitt) */
   --poster-blue: #323D8D; /* Logo-Blau */
@@ -72,20 +72,6 @@ p { margin: 0 0 1em; }
 .button-secondary { background: var(--secondary); }
 .button-secondary .button-icon { background: var(--primary); }
 
-/* „Jetzt Platz sichern“: Orange mit Puls, damit man ihn auf jeden Fall sieht */
-.button-orange { background: var(--orange); color: var(--orange-text); animation: pulse 2s ease-in-out infinite; }
-.button-orange .button-icon { background: var(--primary); }
-.button-orange:hover, .button-orange:focus-visible { animation: none; }
-@keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(240,166,58,.8); transform: scale(1); }
-  40%  { transform: scale(1.04); }
-  70%  { box-shadow: 0 0 0 18px rgba(240,166,58,0); }
-  100% { box-shadow: 0 0 0 0 rgba(240,166,58,0); transform: scale(1); }
-}
-/* Wer im Betriebssystem „Bewegung reduzieren“ eingestellt hat, bekommt keinen Puls */
-@media (prefers-reduced-motion: reduce) {
-  .button-orange { animation: none; }
-}
 .button-block { width: 100%; padding-top: 18px; padding-bottom: 18px; }
 
 .btn { display: inline-block; padding: 10px 24px; border-radius: 120px; font-family: var(--font); font-size: 16px; font-weight: 700; text-decoration: none; cursor: pointer; border: 2px solid transparent; transition: .3s; }
@@ -132,8 +118,11 @@ p { margin: 0 0 1em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 16px; }
 .button-navy { background: var(--navy); }
 .button-navy .button-icon { background: var(--secondary); }
-/* Freie Plätze direkt neben „Jetzt Platz sichern“: Navy-Schild, Gold-Zahl, blinkender Punkt („live“) */
+/* Freie Plätze unter dem Untertitel: Navy-Schild, Gold-Zahl, blinkender Punkt („live“).
+   Knopf „Jetzt Platz sichern“ entfernt (Wunsch Nov. 2026) – ist das Schild aus, fällt die ganze Zeile weg */
 .hero-cta { align-items: center; }
+.hero-cta:has(> .seats-badge[hidden]) { display: none; }
+.hero-cta:has(> .seats-badge[hidden]) + .pill-gold { margin-top: 0; }
 /* gleiche Höhe, Schrift und Innenabstand wie der Knopf (.button-main: 12px oben/unten + 38px Icon = 62px) */
 .seats-badge { box-sizing: border-box; display: inline-flex; align-items: center; gap: 6px; min-height: 62px; margin: 0; padding: 12px 27px; border-radius: 120px; background: rgba(28,35,80,.55); border: 1px solid rgba(255,255,255,.22); color: var(--white); font-size: 18px; font-weight: 700; line-height: 1.5em; }
 .seats-badge[hidden] { display: none; }
@@ -311,7 +300,7 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   h2 { font-size: 36px; }
   .button-main { font-size: 16px; }
   .button-main .button-icon { padding: 15px; }
-  .seats-badge { min-height: 68px; font-size: 16px; } /* wie der Knopf hier: 12px + 44px Icon + 12px */
+  .seats-badge { min-height: 0; padding: 10px 22px; font-size: 16px; }
   .seats-badge strong { font-size: 16px; }
   .header-nav { display: none; }
   .menu-toggle { display: inline-flex; }
@@ -365,15 +354,6 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .date { font-size: 52px; }
   .date-details { flex-direction: column; gap: 14px; }
   .gradient-box { margin-bottom: 16px; font-size: 14px; }
-  /* Freie Plätze kompakt rechts neben „Jetzt Platz sichern“: „Noch 117“ / „Plätze frei“ in zwei Zeilen */
-  .hero-cta { flex-wrap: nowrap; gap: 10px; }
-  .hero-cta .button-main { flex: none; padding: 12px 18px; gap: 12px; }
-  .seats-badge { position: relative; display: inline-grid; grid-template-columns: auto auto; justify-content: center; column-gap: 5px; row-gap: 0; padding: 8px 14px; text-align: center; font-size: 15px; line-height: 1.25; }
-  .seats-badge strong { font-size: 17px; }
-  .seats-badge #seats-label { grid-column: 1 / -1; font-size: 13px; font-weight: 600; }
-  .seats-badge strong:empty + #seats-label { grid-column: 1 / -1; }
-  .live-dot { position: absolute; top: -3px; right: 16px; width: 10px; height: 10px; margin: 0; border: 2px solid var(--poster-blue); box-sizing: content-box; }
-  .seats-badge.full #seats-label::before { content: none; } /* zweizeilig: „Ausgebucht“ / „Warteliste offen“ */
   /* Siegel klein in der rechten unteren Ecke des Datumsfelds (wie ein Aufkleber), statt allein darunter */
   .eckdaten-row { display: block; }
   .seal { position: absolute; right: calc(var(--pad-x) + 16px); bottom: 18px; }
@@ -388,7 +368,6 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .grid.grid-street { grid-template-columns: 2fr 1fr; }
   .grid.grid-city { grid-template-columns: 1fr 2fr; }
   .button-main { padding: 12px 22px; }
-  .seats-badge { padding: 12px 22px; }
 }
 
 /* iPhone (viewport-fit=cover): Inhalte im Querformat nicht unter die Notch schieben */
@@ -422,12 +401,8 @@ form.termin-actions, .termin-actions { display: flex; flex-wrap: wrap; align-ite
 .consent-buttons { display: flex; gap: 10px; }
 .consent-buttons button { flex: 1; padding: 11px 16px; border: 2px solid var(--primary); border-radius: 999px; background: var(--white); color: var(--primary); font: inherit; font-weight: 700; cursor: pointer; }
 
-/* Schmale Handys (z. B. iPhone 13/14 mit 390 px): Knopf und Schild etwas kompakter, damit beide nebeneinander passen */
+/* Schmale Handys: Schild „Noch … Plätze frei“ etwas kleiner, damit „Ausgebucht – Warteliste offen“ in eine Zeile passt */
 @media (max-width: 420px) {
-  .hero-cta { flex-wrap: wrap; } /* passt es trotzdem nicht (z. B. „Ausgebucht“ auf sehr schmalen Handys), rutscht das Schild darunter */
-  .hero-cta .button-main { font-size: 15px; padding: 12px 12px 12px 18px; gap: 8px; }
-  .hero-cta .button-main .button-icon { padding: 11px; }
-  .seats-badge { min-height: 60px; padding: 6px 12px; font-size: 14px; }
-  .seats-badge strong { font-size: 16px; }
-  .seats-badge #seats-label { font-size: 12px; }
+  .seats-badge { padding: 8px 16px; font-size: 15px; }
+  .seats-badge strong { font-size: 15px; }
 }

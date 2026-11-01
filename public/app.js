@@ -67,7 +67,7 @@ const syncSeal = () => {
 new ResizeObserver(syncSeal).observe(dateBox);
 syncSeal();
 
-// „Jetzt Platz sichern“ & Siegel: weich zur Anmeldung scrollen, ohne „#anmeldung“ in die Adresse zu schreiben –
+// Siegel (und alle Links auf #anmeldung): weich zur Anmeldung scrollen, ohne „#anmeldung“ in die Adresse zu schreiben –
 // sonst springt die Seite nach dem Neuladen wieder dorthin (und landet, solange Bilder noch laden, daneben)
 const toForm = (e) => { e.preventDefault(); $('#anmeldung').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
 document.querySelectorAll('a[href="#anmeldung"]').forEach((a) => a.addEventListener('click', toForm));
@@ -91,7 +91,7 @@ async function loadStatus() {
     const s = await (await fetch('/api/status')).json();
     if (s.error) return;
     state = s;
-    // Schild neben „Jetzt Platz sichern“. s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) –
+    // Schild „Noch … Plätze frei“ im Kopfbereich. s.free ist die angezeigte Zahl (Kontingent, public/plaetze.js) –
     // keine Gesamtzahl auf der Seite
     const full = s.free === 0;
     $('#seats-badge').classList.toggle('full', full);
