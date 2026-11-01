@@ -117,7 +117,7 @@ async function loadStatus() {
       hint.textContent = showFree
         ? `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} ${s.free === 1 ? 'Platz' : 'Plätze'} frei`
         : '';
-      btn.textContent = 'Platz verbindlich reservieren';
+      btn.textContent = 'Platz reservieren';
     }
     renderSeats();
   } catch {}

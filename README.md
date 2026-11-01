@@ -172,7 +172,7 @@ dort sollte `baufinanz-dueren.de` mit grünem Haken stehen. Falls nicht: dort �
 1. Events Manager → Pixel wählen → Reiter **„Ereignisse testen“** → Adresse
    `https://anmeldung.baufinanz-dueren.de` eingeben → **„Website öffnen“**.
 2. Auf der Seite **„Erlauben“** klicken → im Events Manager erscheint **„PageView“**.
-3. Testanmeldung machen („Platz verbindlich reservieren“) → es erscheint **„Lead“** mit
+3. Testanmeldung machen („Platz reservieren“) → es erscheint **„Lead“** mit
    `content_name: Infoabend 09.12.2026` und `content_category: Anmeldung`.
    Wartelisten-Anmeldungen melden ebenfalls **„Lead“**, aber mit `content_category: Warteliste`.
 4. Testanmeldung in `/admin` stornieren und löschen.
