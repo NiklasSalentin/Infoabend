@@ -14,11 +14,11 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 |---|---|---|
 | Logo-Blau `--poster-blue` | `#323D8D` | Kopfbereich (Hero) wie Plakat, Mail-Kopf, Favicon-Haus |
 | Navy `--navy` | `#1C2350` | Datumsfeld, Bestätigungskarte in der Mail, Mail-Fuß |
-| Gold `--gold` | `#D9B56C` | Datum, Pill „Die Teilnahme … ist kostenlos.“, Etikett „✓ Anmeldung bestätigt“, Links im Navy-Feld |
+| Gold `--gold` | `#D9B56C` | Datum, Etikett „✓ Anmeldung bestätigt“, Links im Navy-Feld |
 | Navy-Beschriftung `--navy-label` | `#C9CEEA` | „MITTWOCH“, Adresse im Datumsfeld |
 | Dunkelblau `--primary` | `#1A3569` | Überschriften, Hauptknöpfe (Hauptseite) |
 | Blau `--secondary` | `#3C59AD` | Icons, Rahmen-Knöpfe, Akzentlinien, Häkchen |
-| Gelb-Orange `--orange` | `#f0a63a` | **nur** „Persönliche Beratung buchen“ in Mails (der pulsierende Knopf „Jetzt Platz sichern“ ist entfernt); Schrift darauf dunkel (`#1a1206` bzw. Navy) |
+| Gelb-Orange `--orange` | `#f0a63a` | Pill „Die Teilnahme am Infoabend ist kostenlos.“ im Kopfbereich (Navy-Schrift, seit Nov. 2026, vorher Gold) und „Persönliche Beratung buchen“ in Mails (der pulsierende Knopf „Jetzt Platz sichern“ ist entfernt); Schrift darauf dunkel (`#1a1206` bzw. Navy) |
 | Text `--text` | `#191919` | Fließtext |
 | Grau-Blau `--muted` | `#7C829A` | Kleingedrucktes, Hinweise, „optional“ |
 | Hellgrau-Blau `--light` | `#F0F2F9` | Abschnitt „Jetzt anmelden“, Kästen, Adress-Klappfeld, Mail-Hintergrund |
@@ -37,7 +37,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 | Baustein | So sieht er aus |
 |---|---|
 | **Kopf** | nur Logo (weiß) links und rechts dezent „Persönliche Beratung buchen ↗“ (Rahmen-Knopf, weiß); kein Menü |
-| **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, (Schild „Noch … Plätze frei“, falls eingeschaltet), goldene Pill. **Kein Knopf „Jetzt Platz sichern“ mehr** (Wunsch Nov. 2026 – Formular steht direkt unter dem Datumsfeld) |
+| **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, (Schild „Noch … Plätze frei“, falls eingeschaltet), **orange** Pill „kostenlos“. **Eng gesetzt** (Wunsch Nov. 2026): Titel → Untertitel 16 px, → Pill 20 px, Pill → Datumsfeld ca. 30 px, Datumsfeld → „Jetzt anmelden“ ca. 45 px. **Kein Knopf „Jetzt Platz sichern“ mehr** (Wunsch Nov. 2026 – Formular steht direkt unter dem Datumsfeld) |
 | **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld**; **Handy:** Siegel klein (124 px hoch) in der rechten unteren Ecke im Datumsfeld neben der Adresse (stand vorher allein darunter) |
 | **Freie Plätze** | Schild unter dem Untertitel (früher neben „Jetzt Platz sichern“): Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett) **in einer Zeile**, auch am Handy; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet; **Schalter „Freie Plätze auf der Seite anzeigen“ in `/admin` aus:** Schild weg (außer „Ausgebucht – Warteliste offen“), über dem Formular nur „Max. 3 Begleitpersonen pro Anmeldung“. Grund: im Zahlen-Streifen wurde die Zahl übersehen |
 | **Zahlen-Streifen** | **entfernt** (Wunsch Niklas, 25.10.): weder „Personen bereits angemeldet“ noch Countdown „Tage bis zum Infoabend“. Unter dem Datumsfeld folgt direkt der nächste Abschnitt. Die echte Zahl steht nur im kleinen Zähler neben dem Schloss unten rechts |
