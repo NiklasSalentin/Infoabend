@@ -36,7 +36,7 @@ Hausfoto, Navy-Datumsfeld mit Gold-Datum), darunter ruhige weiße und hellgraue 
 
 | Baustein | So sieht er aus |
 |---|---|
-| **Kopf** | nur Logo (weiß) links und rechts dezent „Persönliche Beratung buchen ↗“ (Rahmen-Knopf, weiß); kein Menü |
+| **Kopf** | nur Logo (weiß) links; kein Menü, **kein Knopf „Persönliche Beratung buchen“ mehr** (Wunsch Nov. 2026, auch nicht auf `/datenschutz`). In den Mails und auf `/absagen` bleibt der Knopf |
 | **Hero** | Logo-Blau, Hausfoto rechts mit Blau-Verlauf (Plakat-Stil), großer Titel, Untertitel, (Schild „Noch … Plätze frei“, falls eingeschaltet), **orange** Pill „kostenlos“. **Eng gesetzt** (Wunsch Nov. 2026): Titel → Untertitel 16 px, → Pill 20 px, Pill → Datumsfeld ca. 30 px, Datumsfeld → „Jetzt anmelden“ ca. 45 px. **Kein Knopf „Jetzt Platz sichern“ mehr** (Wunsch Nov. 2026 – Formular steht direkt unter dem Datumsfeld) |
 | **Datumsfeld** | Navy, Radius 28 px, Schatten; Wochentag, Gold-Datum, Trennlinie, Einlass + Ort (Ort klickbar → Auswahl Google Maps / Apple Karten); rechts daneben das Siegel „Kundenliebling 2026“ **genau so hoch wie das Datumsfeld**; **Handy:** Siegel klein (124 px hoch) in der rechten unteren Ecke im Datumsfeld neben der Adresse (stand vorher allein darunter) |
 | **Freie Plätze** | Schild unter dem Untertitel (früher neben „Jetzt Platz sichern“): Navy halbdurchsichtig, Pillen-Form, Gold-Punkt blinkt („live“), „Noch **117** Plätze frei“ (Zahl Gold, fett) **in einer Zeile**, auch am Handy; voll: „Ausgebucht – Warteliste offen“; Anmeldung zu: ausgeblendet; **Schalter „Freie Plätze auf der Seite anzeigen“ in `/admin` aus:** Schild weg (außer „Ausgebucht – Warteliste offen“), über dem Formular keine Zeile. Grund: im Zahlen-Streifen wurde die Zahl übersehen |

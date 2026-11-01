@@ -19,7 +19,7 @@ Anmeldeseite für den Infoabend **„Wie können wir uns heute noch ein Eigenhei
 
 | Adresse | Für wen | Was passiert dort |
 |---|---|---|
-| `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 Plätze frei“ (Kontingent, siehe unten), Anmeldeformular, Knopf **Persönliche Beratung buchen** (→ kontakt.baufinanz-dueren.de; auch in den Mails und auf `/absagen`, Adresse in `event.mjs` → `contactUrl`) |
+| `anmeldung.baufinanz-dueren.de/` | Besucher | Infos zum Abend, Countdown, „Noch 37 Plätze frei“ (Kontingent, siehe unten), Anmeldeformular. Knopf **Persönliche Beratung buchen** (→ kontakt.baufinanz-dueren.de) nur noch in den Mails und auf `/absagen` (Adresse in `event.mjs` → `contactUrl`), nicht mehr im Seitenkopf |
 | `…/zeitung`, `…/flyer`, `…/plakat` | QR-Codes | Kurzlinks: leiten auf die Anmeldeseite weiter und merken sich den Werbekanal |
 | `…/admin` | Team (Passwort) | Plätze einstellen, Anmeldeliste, Warteliste, Nachrücken, Plätze nachbuchen/ändern, Stornieren, CSV-Export |
 
