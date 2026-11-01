@@ -191,6 +191,8 @@ p { margin: 0 0 1em; }
 /* ---------- Anmeldung ---------- */
 .signup { background: var(--light); padding: 90px 0; }
 .signup h2 { margin-bottom: .3em; }
+/* Formular steht direkt unter dem Datumsfeld (Wunsch Nov. 2026) – kein großer Abstand dazwischen */
+.eckdaten + .signup { padding-top: 24px; }
 .limited { font-size: 20px; font-weight: 600; }
 .seat-hint { color: var(--secondary); font-weight: 700; }
 form { margin-top: 24px; padding: 36px; border-radius: var(--radius-lg); background: var(--white); box-shadow: 0 10px 30px rgba(26,53,105,.08); }
@@ -229,8 +231,6 @@ input[type=checkbox] { accent-color: var(--secondary); }
 .check { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0; font-weight: 600; }
 .check input { width: 18px; height: 18px; margin-top: .2em; flex: none; }
 .check.small { font-size: 14px; font-weight: 400; line-height: 1.5em; }
-.recording-note { margin: -4px 0 14px 28px; font-size: 13px; line-height: 1.5em; } /* eingerückt unter dem Datenschutz-Häkchen */
-.recording-note a { color: inherit; }
 fieldset { margin: 20px 0; padding: 16px 18px; border: 1px solid #d5daea; border-radius: var(--radius); }
 legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary); }
 .note { color: var(--muted); font-size: 15px; }
