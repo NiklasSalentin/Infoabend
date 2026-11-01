@@ -92,18 +92,21 @@
           <label>E-Mail*<input name="email" type="email" autocomplete="email" required></label>
           <label class="span2">Telefonnummer*<input name="phone" type="tel" autocomplete="tel" required></label>
         </div>
-        <details class="address-toggle">
-          <summary><span class="address-plus" aria-hidden="true"></span><span class="address-text"><strong>Adresse ergänzen</strong> <span class="optional">optional</span></span></summary>
-          <div class="grid grid-street">
-            <label>Straße<input name="street" autocomplete="address-line1"></label>
-            <label>Hausnummer<input name="houseNumber" autocomplete="off"></label>
-          </div>
-          <div class="grid grid-city">
-            <label>PLZ<input name="zip" autocomplete="postal-code" inputmode="numeric"></label>
-            <label>Ort<input name="city" autocomplete="address-level2"></label>
-          </div>
-          <p class="note address-note">Wir nutzen Ihre Adresse, um Sie persönlich zu kontaktieren – auch per Post, z. B. mit Informationen rund um Baufinanzierung. Dem können Sie jederzeit widersprechen, z. B. per E-Mail an info@baufinanz-dueren.de. <a href="/datenschutz" target="_blank" rel="noopener">Mehr dazu</a></p>
-        </details>
+        <!-- Adresse ergänzen: abgeschaltet (Wunsch Nov. 2026). Wieder einschalten: „hidden disabled“ am fieldset entfernen. -->
+        <fieldset class="form-off" hidden disabled>
+          <details class="address-toggle">
+            <summary><span class="address-plus" aria-hidden="true"></span><span class="address-text"><strong>Adresse ergänzen</strong> <span class="optional">optional</span></span></summary>
+            <div class="grid grid-street">
+              <label>Straße<input name="street" autocomplete="address-line1"></label>
+              <label>Hausnummer<input name="houseNumber" autocomplete="off"></label>
+            </div>
+            <div class="grid grid-city">
+              <label>PLZ<input name="zip" autocomplete="postal-code" inputmode="numeric"></label>
+              <label>Ort<input name="city" autocomplete="address-level2"></label>
+            </div>
+            <p class="note address-note">Wir nutzen Ihre Adresse, um Sie persönlich zu kontaktieren – auch per Post, z. B. mit Informationen rund um Baufinanzierung. Dem können Sie jederzeit widersprechen, z. B. per E-Mail an info@baufinanz-dueren.de. <a href="/datenschutz" target="_blank" rel="noopener">Mehr dazu</a></p>
+          </details>
+        </fieldset>
         <div class="grid">
           <label class="span2">Anzahl Begleitpersonen*
             <select name="seats" id="seats"><option value="1">Keine</option></select>
@@ -111,9 +114,12 @@
         </div>
         <div id="companions" class="grid" hidden></div>
 
-        <label>Ihre Fragen vorab <span class="optional">optional</span>
-          <textarea name="questions" rows="3" maxlength="300" placeholder="Was möchten Sie an dem Abend unbedingt erfahren?"></textarea></label>
-        <p class="note char-count"><span class="questions-hint">Wir geben Ihre Frage mit Ihrem Vornamen an die Referenten weiter.</span><span id="questions-count" aria-live="polite">0 / 300 Zeichen</span></p>
+        <!-- Fragen vorab: abgeschaltet (Wunsch Nov. 2026). Wieder einschalten: „hidden disabled“ am fieldset entfernen. -->
+        <fieldset class="form-off" hidden disabled>
+          <label>Ihre Fragen vorab <span class="optional">optional</span>
+            <textarea name="questions" rows="3" maxlength="300" placeholder="Was möchten Sie an dem Abend unbedingt erfahren?"></textarea></label>
+          <p class="note char-count"><span class="questions-hint">Wir geben Ihre Frage mit Ihrem Vornamen an die Referenten weiter.</span><span id="questions-count" aria-live="polite">0 / 300 Zeichen</span></p>
+        </fieldset>
 
         <label class="check small"><input type="checkbox" name="privacyConsent" required>
           <span>Ich habe die <a href="/datenschutz" target="_blank" rel="noopener">Datenschutzhinweise</a> zur Kenntnis genommen – einschließlich der Hinweise zu den Erinnerungs-Mails.*</span></label>

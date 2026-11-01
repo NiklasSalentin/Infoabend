@@ -222,6 +222,8 @@ input[type=checkbox] { accent-color: var(--secondary); }
 .check input { width: 18px; height: 18px; margin-top: .2em; flex: none; }
 .check.small { font-size: 14px; font-weight: 400; line-height: 1.5em; }
 fieldset { margin: 20px 0; padding: 16px 18px; border: 1px solid #d5daea; border-radius: var(--radius); }
+/* Abgeschaltete Formularteile (Adresse, Fragen vorab): nur eine unsichtbare Hülle, kein Rahmen, falls wieder eingeschaltet */
+.form-off { margin: 0; padding: 0; border: 0; min-width: 0; }
 legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary); }
 .note { color: var(--muted); font-size: 15px; }
 .center { text-align: center; }
