@@ -24,7 +24,7 @@ export const EVENT = {
   venue: 'Festhalle Birkesdorf',
   address: 'An der Festhalle 3, 52353 Düren-Birkesdorf',
   organizer: 'Baufinanz Düren GmbH & Co. KG',
-  contactUrl: 'https://baufinanz-dueren.de/kontakt/',
+  contactUrl: 'https://kontakt.baufinanz-dueren.de/',
   privacyUrl: 'https://anmeldung.baufinanz-dueren.de/datenschutz',
   imprintUrl: 'https://baufinanz-dueren.de/impressum/',
   notifyEmail: 'info@baufinanz-dueren.de',
