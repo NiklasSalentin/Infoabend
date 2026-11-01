@@ -368,6 +368,39 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .button-main { padding: 12px 22px; }
 }
 
+/* Handy kompakt (Wunsch Nov. 2026): das Namensfeld soll schon beim Öffnen der Seite zu sehen sein –
+   kleineres Logo, engere Abstände, flacheres Datumsfeld mit dem Siegel oben rechts neben dem Datum */
+@media (max-width: 767px) {
+  .header-logo img, .mobile-menu-logo img { width: 150px; }
+  .hero { padding-top: calc(80px + env(safe-area-inset-top)); padding-bottom: 124px; }
+  .hero h1 { margin-bottom: 10px; font-size: 34px; }
+  .hero-lead { margin-bottom: 14px; font-size: 16px; }
+  .pill-gold { margin-top: 14px; }
+  .eckdaten-row { margin-top: -108px; }
+  .date-box { padding: 16px 18px 18px; gap: 12px; }
+  .date-top { gap: 2px; padding-right: 62px; }
+  .weekday { font-size: 14px; }
+  .date { font-size: 42px; }
+  .date-details { gap: 10px; }
+  .date-item { gap: 10px; }
+  .date-item svg { width: 24px; height: 24px; }
+  .date-strong { font-size: 18px; }
+  .date-sub { font-size: 14px; line-height: 1.35; }
+  .date-details .date-item:last-child { padding-right: 0; }
+  .date-line { display: none; } /* Trennlinie würde unter dem Siegel durchlaufen */
+  .seal { top: 14px; bottom: auto; right: calc(var(--pad-x) + 14px); }
+  .seal img { height: 92px; }
+  .eckdaten { padding-bottom: 8px; }
+  .eckdaten + .signup { padding-top: 14px; }
+  .signup h2 { margin-bottom: 0; }
+  form { margin-top: 10px; padding: 18px; }
+}
+
+/* sehr schmale Handys (z. B. 360 px): Datum etwas kleiner, damit es nicht ans Siegel stößt */
+@media (max-width: 380px) {
+  .date { font-size: 37px; }
+}
+
 /* iPhone (viewport-fit=cover): Inhalte im Querformat nicht unter die Notch schieben */
 .container, .header-inner, .footer-inner {
   padding-left: max(var(--pad-x), env(safe-area-inset-left));
