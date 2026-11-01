@@ -112,12 +112,11 @@ async function loadStatus() {
       hint.textContent = 'Der Abend ist aktuell ausgebucht. Tragen Sie sich gern auf die Warteliste ein – wird ein Platz frei, melden wir uns.';
       btn.textContent = 'Auf die Warteliste setzen';
     } else {
-      // maxPerPerson zählt den Anmelder mit – angezeigt werden nur die Begleitpersonen (max. 4 Plätze → „max. 3 Begleitpersonen“)
-      const companions = s.maxPerPerson - 1;
-      const companionText = companions < 1 ? '' : ` · max. ${companions} ${companions === 1 ? 'Begleitperson' : 'Begleitpersonen'}`;
+      // Kein Hinweis „max. … Begleitpersonen“ mehr (Wunsch Nov. 2026) – die Auswahl zeigt die Grenze ohnehin.
+      // Freie Plätze nur, wenn in /admin eingeschaltet; sonst bleibt die Zeile leer und ist ausgeblendet.
       hint.textContent = showFree
-        ? `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} ${s.free === 1 ? 'Platz' : 'Plätze'} frei${companionText}`
-        : companionText.replace(' · m', 'M') + (companionText ? ' pro Anmeldung' : '');
+        ? `${s.released ? 'Weitere Plätze freigegeben: ' : ''}Noch ${s.free} ${s.free === 1 ? 'Platz' : 'Plätze'} frei`
+        : '';
       btn.textContent = 'Platz verbindlich reservieren';
     }
     renderSeats();
