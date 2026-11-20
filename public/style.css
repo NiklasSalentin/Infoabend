@@ -164,8 +164,8 @@ p { margin: 0 0 1em; }
 .block { padding-top: 90px; padding-bottom: 90px; }
 .two-col { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: center; }
 .two-col.reverse > img { order: 2; }
+.two-col.team { grid-template-columns: 1.15fr 1fr; } /* Teamfoto quer: Bild breiter als Text */
 .photo { border-radius: var(--radius-lg); box-shadow: 0 10px 30px rgba(26,53,105,.12); }
-.portrait { max-height: 640px; width: 100%; object-fit: cover; object-position: top; }
 .magazine { max-width: 320px; justify-self: center; }
 
 .venue { background: linear-gradient(118deg, var(--secondary) 19.71%, var(--primary) 77.03%); color: var(--white); padding: 90px 0; }
@@ -325,7 +325,7 @@ legend { padding: 0 6px; font-size: 16px; font-weight: 700; color: var(--primary
   .menu-toggle { top: 18px; }
   .hero { padding-top: calc(112px + env(safe-area-inset-top)); }
   .eckdaten-row { gap: 20px; }
-  .two-col { grid-template-columns: 1fr; }
+  .two-col, .two-col.team { grid-template-columns: 1fr; }
   .two-col.reverse > img { order: 0; }
   .footer-inner { padding: 20px var(--pad-x) 52px; } /* unten Platz für das Verwaltungs-Schloss */
   .footer-top { flex-direction: column; gap: 40px; }
